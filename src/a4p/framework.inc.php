@@ -87,7 +87,7 @@ END;
 		$phpself = $_SERVER["PHP_SELF"];
 		$phpsessid = session_id();
 		$phpquery = $_SERVER["QUERY_STRING"];
-		$prefix = "/" . dirname(substr( __FILE__, strlen($_SERVER["DOCUMENT_ROOT"]) + 1));
+		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen($_SERVER["DOCUMENT_ROOT"]) + 1)));
 		$param1 = $param;
 		$param2 = $param . "ui";
 		print <<< END
