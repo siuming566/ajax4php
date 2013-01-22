@@ -9,13 +9,9 @@ require_once "a4p/framework.inc.php";
 <?php a4p::loadScript(); // Need to load required script in header ?>
 </head>
 <body>
-<form>
-<p>Type something here and press "Go"</p>
 <p>
-<input type="text" name="textfield1">
-<input type="button" value="Go" onclick="a4p.action({controller: 'page1Controller', method: 'go'});">
+<input type="button" value="Popup" onclick="ui.popup('popup2.php?id=12', 400, 300).onLoad(function () { alert('You can add handler to onLoad event'); }).onClose(function () { alert('You can add handler to onClose event'); });">
 </p>
 <p><a href="index.html">Back to index</a></p>
-</form>
 </body>
 </html>

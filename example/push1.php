@@ -10,10 +10,12 @@ require_once "a4p/framework.inc.php";
 </head>
 <body>
 <form>
-<p>Type something here and press "Go"</p>
 <p>
-<input type="text" name="textfield1">
-<input type="button" value="Go" onclick="a4p.action({controller: 'page1Controller', method: 'go'});">
+<input type="button" value="Start Push" onclick="a4p.action({controller: 'push1Controller', method: 'start', push: true});">
+<br/>
+<textarea id="outputtext" rows="12" style="width: 300px;"></textarea>
+<br/>
+<div id="progressbar" style="width: 0px; height: 20px; background-color: blue;"></div>
 </p>
 <p><a href="index.html">Back to index</a></p>
 </form>

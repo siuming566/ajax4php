@@ -2,8 +2,7 @@
 // include the framework
 require_once "a4p/framework.inc.php";
 
-// load the controller
-$controller = a4p::Controller("calculator1Controller");
+// load the model
 $model = a4p::Model("calculator1Model");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
@@ -25,5 +24,6 @@ $model = a4p::Model("calculator1Model");
 </p>
 </div>
 <p><a href="index.html">Back to index</a></p>
+</form>
 </body>
 </html>
