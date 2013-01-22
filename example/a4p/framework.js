@@ -155,7 +155,12 @@ _phpCall: function (token, controller, method, param) {
 		type: 'POST',
 		async: false,
 		success: function (response) {
-			result = response;
+			if (response.startsWith('@')) {
+				if (response.length > 1)
+					result = response.substring(1);
+			}
+			else
+				document.body.innerHTML = response;
 		}
 	});
 	return result;
