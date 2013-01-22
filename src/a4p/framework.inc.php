@@ -27,7 +27,20 @@ if (!isset($_SESSION["a4p._map"])) {
 
 class a4p
 {
-	public static function loadClass($classpath)
+	public static function Controller($classpath)
+	{
+		$classname = basename($classpath);
+		if (!class_exists($classpath))
+			require_once "$classpath.class.php";
+
+		$instance = new $classname();
+		if (method_exists($instance, 'init'))
+			$instance->init();
+		
+		return $instance;
+	}
+
+	public static function Model($classpath)
 	{
 		$classname = basename($classpath);
 		if (!class_exists($classpath)) {
@@ -41,19 +54,12 @@ class a4p
 		if (!isset($_SESSION["a4p." . $classname]))
 		{
 			$instance = new $classname();
-			if (method_exists($instance, 'init'))
-				$instance->init();
 			$_SESSION["a4p." . $classname] = $instance;
 		}
 	
 		$instance = $_SESSION["a4p." . $classname];
 		
 		return $instance;
-	}
-	
-	public static function unloadClass($classpath)
-	{
-		unset($_SESSION["a4p." . basename($classpath)]);
 	}
 	
 	private static $js_name = "a4p";
@@ -63,7 +69,7 @@ class a4p
 		$phpself = $_SERVER["PHP_SELF"];
 		$phpsessid = session_id();
 		$phpquery = $_SERVER["QUERY_STRING"];
-		$prefix = "/" . dirname(substr( __FILE__, strlen($_SERVER["DOCUMENT_ROOT"]) + 1));
+		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen($_SERVER["DOCUMENT_ROOT"]) + 1)));
 		print <<< END
 <link href="$prefix/framework.css" type="text/css" rel="Stylesheet" />
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
@@ -120,18 +126,18 @@ END;
 		$pos = -1;
 		while ($pos = strpos($buffer, $js_call, $pos + 1))
 		{
-			$classname_start = strpos($buffer, "classname:", $pos) + strlen("classname:");
-			if ($classname_start === false || $classname_start - $pos > 100)
+			$controller_start = strpos($buffer, "controller:", $pos) + strlen("controller:");
+			if ($controller_start === false || $controller_start - $pos > 100)
 				continue;
-			$classname_end1 = strpos($buffer, ",", $classname_start);
-			$classname_end2 = strpos($buffer, "}", $classname_start);
-			if ($classname_end1 === false)
-				$classname_end1 = $classname_end2;
-			$classname_end = $classname_end1 < $classname_end2 ? $classname_end1 : $classname_end2;
-			if ($classname_end === false || $classname_end - $classname_start > 100)
+			$controller_end1 = strpos($buffer, ",", $controller_start);
+			$controller_end2 = strpos($buffer, "}", $controller_start);
+			if ($controller_end1 === false)
+				$controller_end1 = $controller_end2;
+			$controller_end = $controller_end1 < $controller_end2 ? $controller_end1 : $controller_end2;
+			if ($controller_end === false || $controller_end - $controller_start > 100)
 				continue;
-			$classname_raw = substr($buffer, $classname_start, $classname_end - $classname_start);
-			$classname = trim(str_replace("'", "", $classname_raw));
+			$controller_raw = substr($buffer, $controller_start, $controller_end - $controller_start);
+			$controller = trim(str_replace("'", "", $controller_raw));
 			
 			$method_start = strpos($buffer, "method:", $pos) + strlen("method:");
 			if ($method_start === false || $method_start - $pos > 100)
@@ -146,7 +152,7 @@ END;
 			$method_raw = substr($buffer, $method_start, $method_end - $method_start);
 			$method = trim(str_replace("'", "", $method_raw));
 
-			$token = a4p_sec::shiftString($_SESSION["a4p._map"], $method . $classname);
+			$token = a4p_sec::shiftString($_SESSION["a4p._map"], $method . $controller);
 
 			$pos += strlen($js_call);
 			$buffer = substr($buffer, 0, $pos) . "token: '$token', " . substr($buffer, $pos);
@@ -162,7 +168,7 @@ END;
 	}
 }
 
-a4p::loadClass("Container");
+a4p::Model("Container");
 
 $ui = "ui";
 

@@ -48,10 +48,10 @@ ajaxCall: function (arg) {
 	var element = document.getElementById(formname);
 	if (element == null)
 		document.forms[0].id = formname;
-	return this._ajaxCall(arg.token, arg.classname, arg.method, arg.param, formname, arg.rerender, arg.push);
+	return this._ajaxCall(arg.token, arg.controller, arg.method, arg.param, formname, arg.rerender, arg.push);
 },
 
-_ajaxCall: function (token, classname, method, param, formname, rerender, push) {
+_ajaxCall: function (token, controller, method, param, formname, rerender, push) {
 	if (typeof param == 'undefined')
 		param = '';
 	var target = this;
@@ -64,7 +64,7 @@ _ajaxCall: function (token, classname, method, param, formname, rerender, push) 
 		setTimeout(function() { a4p._ajaxPoll(poll_id, 0, ''); }, 100);
 	}
 	jQuery.ajax({
-		url: this.prefix + '/ajaxcall.php?classname=' + classname + '&method=' + method + '&param=' + escape(param) + '&token=' + token + '&time=' + (new Date()).getTime() + poll_str + '&' + this.phpquery,
+		url: this.prefix + '/ajaxcall.php?controller=' + controller + '&method=' + method + '&param=' + escape(param) + '&token=' + token + '&time=' + (new Date()).getTime() + poll_str + '&' + this.phpquery,
 		type: 'POST',
 		data: jQuery('#' + formname).serialize(),
 		success: function(response) {
@@ -143,15 +143,15 @@ JSONEncode: function (obj) {
 },
 
 phpCall: function (arg) {
-	return this._phpCall(arg.token, arg.classname, arg.method, arg.param);
+	return this._phpCall(arg.token, arg.controller, arg.method, arg.param);
 },
 
-_phpCall: function (token, classname, method, param) {
+_phpCall: function (token, controller, method, param) {
 	var result = '';
 	if (typeof param == 'undefined')
 		param = '';
 	jQuery.ajax({
-		url: this.prefix + '/ajaxcall.php?classname=' + classname + '&method=' + method + '&param=' + escape(param) + '&token=' + token + '&time=' + (new Date()).getTime() + '&' + this.phpquery,
+		url: this.prefix + '/ajaxcall.php?controller=' + controller + '&method=' + method + '&param=' + escape(param) + '&token=' + token + '&time=' + (new Date()).getTime() + '&' + this.phpquery,
 		type: 'POST',
 		async: false,
 		success: function (response) {

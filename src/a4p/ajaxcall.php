@@ -6,7 +6,7 @@
 if (!$_SERVER['REQUEST_METHOD'] === 'POST')
 	exit();
 
-$classpath = $_GET["classname"];
+$controller = $_GET["controller"];
 $method = $_GET["method"];
 $param = $_GET["param"];
 $token = $_GET["token"];
@@ -16,22 +16,19 @@ $ajaxcall = true;
 
 require_once "framework.inc.php";
 require_once "nocache.inc.php";
-include_once "db.inc.php";
 
-if ($token != a4p_sec::shiftString($_SESSION["a4p._map"], $method . $classpath)) {
+if ($token != a4p_sec::shiftString($_SESSION["a4p._map"], $method . $controller)) {
 	echo "Bad token";
 	exit();
 }
 
-if ($classpath != "ui") {
-	require_once "$classpath.class.php";
-	// reload session data
-	$sid = session_id();
-	session_write_close();
-	session_start();
-}
+require_once "$controller.class.php";
+// reload session data
+$sid = session_id();
+session_write_close();
+session_start();
 
-$obj = a4p::loadClass(basename($classpath));
+$obj = a4p::Controller(basename($controller));
 
 $valid = false;
 if (property_exists($obj, "enableAjaxCall"))
