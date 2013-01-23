@@ -17,12 +17,12 @@ $ajaxcall = true;
 require_once "framework.inc.php";
 require_once "nocache.inc.php";
 
-if ($token != a4p_sec::shiftString($_SESSION["a4p._map"], $method . $controller)) {
+if ($controller != "ui" && $token != a4p_sec::shiftString($_SESSION["a4p._map"], $method . $controller)) {
 	echo "Bad token";
 	exit();
 }
 
-require_once "$controller.class.php";
+include_once "$controller.class.php";
 // reload session data
 $sid = session_id();
 session_write_close();
