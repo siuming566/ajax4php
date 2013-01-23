@@ -6,6 +6,7 @@ require_once "container.inc.php";
 require_once "form.inc.php";
 require_once "push.inc.php";
 require_once "security.inc.php";
+require_once "ui.inc.php";
 
 error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
 
@@ -56,8 +57,8 @@ class a4p
 			$instance = new $classname();
 			$_SESSION["a4p." . $classname] = $instance;
 		}
-	
-		$instance = $_SESSION["a4p." . $classname];
+		else
+			$instance = $_SESSION["a4p." . $classname];
 		
 		return $instance;
 	}
@@ -69,7 +70,7 @@ class a4p
 		$phpself = $_SERVER["PHP_SELF"];
 		$phpsessid = session_id();
 		$phpquery = $_SERVER["QUERY_STRING"];
-		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"]) + 1)));
+		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
 		print <<< END
 <link href="$prefix/framework.css" type="text/css" rel="Stylesheet" />
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>

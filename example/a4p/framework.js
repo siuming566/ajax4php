@@ -341,6 +341,30 @@ modalHide: function (overlay, modalWindow, modalRerender) {
 	modalWindow.remove();
 	if (typeof modalRerender == 'string')
 		this.target.rerender(modalRerender);
+},
+
+sortBy: function (table, column) {
+	this.target.action({controller: 'ui', method: 'sortBy', param: this.target.JSONEncode({name: table, sortBy: column}), rerender: table});
+},
+
+firstPage: function (table, pager) {
+	this.target.action({controller: 'ui', method: 'firstPage', param: table, rerender: table + ',' + pager});
+},
+
+previousPage: function(table, pager) {
+	this.target.action({controller: 'ui', method: 'previousPage', param: table, rerender: table + ',' + pager});
+},
+
+nextPage: function (table, pager) {
+	this.target.action({controller: 'ui', method: 'nextPage', param: table, rerender: table + ',' + pager});
+},
+
+lastPage: function (table, pager) {
+	this.target.action({controller: 'ui', method: 'lastPage', param: table, rerender: table + ',' + pager});
+},
+
+gotoPage: function (table, pager, page) {
+	this.target.action({controller: 'ui', method: 'gotoPage', param: this.target.JSONEncode({name: table, page: page}), rerender: table + ',' + pager});
 }
 
 };
