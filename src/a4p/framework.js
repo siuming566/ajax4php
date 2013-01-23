@@ -85,7 +85,7 @@ ajaxResponse: function (response, target, rerender, event) {
 	if (typeof rerender == 'string')
 		target._ajaxRerender(rerender, event);
 	else
-		event._success();
+		event._onComplete();
 },
 
 ajaxRerender: function (id) {
@@ -104,7 +104,7 @@ _ajaxRerender: function (id, event) {
 			time: (new Date()).getTime() },
 		success: function (response) {
 			a4p.ajaxDisplay(response, id);
-			event._success();
+			event._onComplete();
 		}
 	});
 },
@@ -195,14 +195,14 @@ get: function (url) {
 
 var _event = {
 
-_success: function () {},
+_onComplete: function () {},
 
 _onLoad: function () {},
 
 _onClose: function () {},
 
-success: function (f) {
-	this._success = f;
+onComplete: function (f) {
+	this._onComplete = f;
 	return this;
 },
 

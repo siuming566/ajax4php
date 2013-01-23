@@ -69,7 +69,7 @@ class a4p
 		$phpself = $_SERVER["PHP_SELF"];
 		$phpsessid = session_id();
 		$phpquery = $_SERVER["QUERY_STRING"];
-		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen($_SERVER["DOCUMENT_ROOT"]) + 1)));
+		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"]) + 1)));
 		print <<< END
 <link href="$prefix/framework.css" type="text/css" rel="Stylesheet" />
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
@@ -87,7 +87,7 @@ END;
 		$phpself = $_SERVER["PHP_SELF"];
 		$phpsessid = session_id();
 		$phpquery = $_SERVER["QUERY_STRING"];
-		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen($_SERVER["DOCUMENT_ROOT"]) + 1)));
+		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
 		$param1 = $param;
 		$param2 = $param . "ui";
 		print <<< END
