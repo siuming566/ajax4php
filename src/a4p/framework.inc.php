@@ -163,8 +163,10 @@ END;
 
 	public static function postProcess($buffer)
 	{
+		global $ui;
 		$buffer = self::processBuffer($buffer, self::$js_name . ".action({");
 		$buffer = self::processBuffer($buffer, self::$js_name . ".call({");
+		$buffer = self::processBuffer($buffer, $ui . ".fileupload({");
 		return $buffer;
 	}
 }

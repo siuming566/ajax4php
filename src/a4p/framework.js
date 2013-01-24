@@ -82,7 +82,7 @@ ajaxResponse: function (response, target, rerender, event) {
 	else
 		document.body.innerHTML = response;
 
-	if (typeof rerender == 'string')
+	if (typeof rerender == 'string' && rerender.length > 0)
 		target._ajaxRerender(rerender, event);
 	else
 		event._onComplete();
@@ -365,6 +365,17 @@ lastPage: function (table, pager) {
 
 gotoPage: function (table, pager, page) {
 	this.target.action({controller: 'ui', method: 'gotoPage', param: this.target.JSONEncode({name: table, page: page}), rerender: table + ',' + pager});
+},
+
+fileupload: function(arg) {
+	var response = arg.frame.contentDocument.body.innerHTML;
+	if (response.length > 1) {
+		arg.frame.contentDocument.body.innerHTML = '';
+		if (response.startsWith('@'))
+			this.target.action({token: arg.token, controller: arg.controller, method: arg.method, param: response.substring(1), rerender: arg.rerender});
+		else
+			document.body.innerHTML = response;
+	}
 }
 
 };

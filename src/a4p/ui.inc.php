@@ -222,4 +222,23 @@ class ui
 		$dataTable->currentPage = $obj->page - 1;
 		return "";
 	}
+
+	private static $iframe = false;
+
+	public static function fileupload($controller, $method, $rerender = "") {
+		global $ui;
+		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
+		echo <<< END
+<form action="$prefix/upload.php" method="post" enctype="multipart/form-data" target="fileupload_iframe">
+<label for="file">Filename:</label>
+<input type="file" name="file" id="file"><br>
+<input type="submit" name="submit" value="Submit">
+</form>
+END;
+		if (self::$iframe == false)
+			echo <<< END
+<iframe name="fileupload_iframe" style="display: none;" onload="$ui.fileupload({controller: '$controller', method: '$method', rerender: '$rerender', frame: this});"></iframe>
+END;
+		self::$iframe = true;
+	}
 }
