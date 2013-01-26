@@ -1,11 +1,10 @@
 <?php 
 // Class file name must be classname.class.php
 
+/** @ajaxenable */
 class fileupload1Controller
 {
-	// setup flag to enable ajax call from browser
-	public $enableAjaxCall = true;
-
+	/** @ajaxcall */
 	public function upload($param)
 	{
 		// decode the param to get the uploaded file

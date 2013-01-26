@@ -1,11 +1,10 @@
 <?php 
 // Class file name must be classname.class.php
 
+/** @ajaxenable */
 class push1Controller
 {
-	// setup flag to enable ajax call from browser
-	public $enableAjaxCall = true;
-
+	/** @ajaxcall */
 	public function start($param)
 	{
 		// push javascript to browser

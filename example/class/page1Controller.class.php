@@ -1,11 +1,10 @@
 <?php 
 // Class file name must be classname.class.php
 
+/** @ajaxenable */
 class page1Controller
 {
-	// setup flag to enable ajax call from browser
-	public $enableAjaxCall = true;
-
+	/** @ajaxcall */
 	public function go($param)
 	{
 		// bind form value to model

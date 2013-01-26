@@ -1,15 +1,13 @@
 <?php 
 // Class file name must be classname.class.php
 
+/** @ajaxenable */
 class javascript1Controller
 {
-	// setup flag to enable ajax call from browser
-	public $enableAjaxCall = true;
-
+	/** @ajaxcall */
 	public function getMessage($param)
 	{
 		$obj = json_decode($param);
 		return "Server Response: " . $obj->a . " " . $obj->b;
 	}
-	
 }

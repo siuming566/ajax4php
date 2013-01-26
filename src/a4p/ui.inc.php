@@ -78,10 +78,9 @@ class ui_dataTable
 	}
 }
 
+/** @ajaxenable */
 class ui
 {
-	public $enableAjaxCall = true;
-	
 	static function &array_sort(&$array, $on, $order="SORT_DESC")
 	{
 		$new_array = array();
@@ -168,6 +167,7 @@ class ui
 		return $dataTable;
 	}
 	
+	/** @ajaxcall */
 	public function sortBy($param)
 	{
 		$obj = json_decode($param);
@@ -190,12 +190,14 @@ class ui
 		return "";
 	}
 
+	/** @ajaxcall */
 	public function firstPage($param) {
 		$dataTable = self::getTable($param);
 		$dataTable->currentPage = 0;
 		return "";
 	}
 
+	/** @ajaxcall */
 	public function previousPage($param) {
 		$dataTable = self::getTable($param);
 		if ($dataTable->currentPage > 0)
@@ -203,6 +205,7 @@ class ui
 		return "";
 	}
 
+	/** @ajaxcall */
 	public function nextPage($param) {
 		$dataTable = self::getTable($param);
 		if ($dataTable->currentPage < $dataTable->totalPage - 1)
@@ -210,12 +213,14 @@ class ui
 		return "";
 	}
 
+	/** @ajaxcall */
 	public function lastPage($param) {
 		$dataTable = self::getTable($param);
 		$dataTable->currentPage = $dataTable->totalPage - 1;
 		return "";
 	}
 
+	/** @ajaxcall */
 	public function gotoPage($param) {
 		$obj = json_decode($param);
 		$dataTable = self::getTable($obj->name);

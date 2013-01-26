@@ -1,11 +1,10 @@
 <?php 
 // Class file name must be classname.class.php
 
+/** @ajaxenable */
 class popup2Controller
 {
-	// setup flag to enable ajax call from browser
-	public $enableAjaxCall = true;
-
+	/** @ajaxcall */
 	public function add($param)
 	{
 		// bind form value to model
