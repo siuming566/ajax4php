@@ -7,6 +7,7 @@ require_once "form.inc.php";
 require_once "push.inc.php";
 require_once "security.inc.php";
 require_once "ui.inc.php";
+include_once "db.inc.php";
 
 error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
 
