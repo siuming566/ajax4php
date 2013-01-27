@@ -41,6 +41,8 @@ class a4p
 		return $instance;
 	}
 
+	private static $viewarray = array();
+
 	public static function Model($classpath)
 	{
 		$classname = basename($classpath);
@@ -52,13 +54,33 @@ class a4p
 			session_start();
 		}
 
-		if (!isset($_SESSION["a4p." . $classname]))
-		{
+		$class = new ReflectionClass($classname);
+		$comment = $class->getDocComment();
+		
+		$scope = "request";
+		if (strpos($comment, "@viewscope") !== false)
+			$scope = "view";
+		if (strpos($comment, "@sessionscope") !== false)
+			$scope = "session";
+
+		if ($scope == "request")
 			$instance = new $classname();
-			$_SESSION["a4p." . $classname] = $instance;
+
+		if ($scope == "view") {
+			if (!a4p::isPostBack() && !a4p::isAjaxCall() && !in_array($classname, a4p::$viewarray)) {
+				$instance = new $classname();
+				$_SESSION["a4p." . $classname] = $instance;
+				a4p::$viewarray[] = $classname;
+			}
 		}
-		else
-			$instance = $_SESSION["a4p." . $classname];
+
+		if ($scope == "view" || $scope == "session") {
+			if (!isset($_SESSION["a4p." . $classname]))	{
+				$instance = new $classname();
+				$_SESSION["a4p." . $classname] = $instance;
+			} else
+				$instance = $_SESSION["a4p." . $classname];
+		}
 		
 		return $instance;
 	}
@@ -122,6 +144,14 @@ END;
 		return false;
 	}
 
+	public static function isAjaxCall()
+	{
+		global $ajaxcall;
+		if (isset($ajaxcall) && $ajaxcall === true)
+			return true;
+		return false;
+	}
+
 	private static function processBuffer($buffer, $js_call)
 	{
 		$pos = -1;
@@ -175,5 +205,5 @@ a4p::Model("Container");
 
 $ui = "ui";
 
-if (!(isset($ajaxcall) && $ajaxcall === true))
+if (!a4p::isAjaxCall())
 	ob_start("a4p::postProcess");
