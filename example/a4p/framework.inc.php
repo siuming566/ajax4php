@@ -42,6 +42,7 @@ class a4p
 		return $instance;
 	}
 
+	private static $scopearray = array();
 	private static $viewarray = array();
 
 	public static function Model($classpath)
@@ -64,8 +65,13 @@ class a4p
 		if (strpos($comment, "@sessionscope") !== false)
 			$scope = "session";
 
-		if ($scope == "request")
-			$instance = new $classname();
+		if ($scope == "request") {
+			if (!isset(a4p::$scopearray["a4p." . $classname])) {
+				$instance = new $classname();
+				a4p::$scopearray["a4p." . $classname] = $instance;
+			} else
+				$instance = a4p::$scopearray["a4p." . $classname];
+		}
 
 		if ($scope == "view") {
 			if (!a4p::isPostBack() && !a4p::isAjaxCall() && !in_array($classname, a4p::$viewarray)) {
