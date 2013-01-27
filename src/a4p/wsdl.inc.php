@@ -149,6 +149,18 @@ class wsdl
 		return "void";
 	}
 
+	private function getVarType($comment)
+	{
+		$params = array();
+		foreach (explode("\n", $comment) as $line) {
+			if (preg_match("/^\*\s+@(.[^\s]+)\s+(.[^\s]+)/", trim($line), $match)) {
+				if ($match[1] == "var")
+					return $match[2];
+			}
+		}
+		return "void";
+	}
+
 	private function createArrayType($type)
 	{
 		$name = $type . "Array";
@@ -175,6 +187,38 @@ class wsdl
 		return $name;
 	}
 
+	private function createComplexType($className)
+	{
+		if (in_array($className, $this->createdTypes) == true)
+			return $className;
+
+		$this->createdTypes[] = $className;
+
+		$complextype = $this->dom->createElementNS(self::NS_XSD, "complexType");
+		$complextype->setAttribute("name", $className);
+
+		$all = $this->dom->createElementNS(self::NS_XSD, "all");
+
+		$reflection = new ReflectionClass($className);
+		$properties = $reflection->getProperties();
+		foreach($properties as $property) {
+			if ($property->isPublic() && !$property->isStatic()) {
+				$comment = $property->getDocComment();
+				$type = $this->getVarType($comment);
+
+				$element = $this->dom->createElementNS(self::NS_XSD, "element");
+				$element->setAttribute("name", $property->name);
+				$element->setAttribute("type", $this->createType($type));
+
+				$all->appendChild($element);
+			}
+		}
+		$complextype->appendChild($all);
+		$this->schemas->appendChild($complextype);
+
+		return $name;
+	}
+
 	private function createType($type)
 	{
 		$depth = 0;
@@ -184,8 +228,8 @@ class wsdl
 		}
 
 		$xsd_type = $this->convertType($type);
-		//if (substr(xsd_type, 0, 2) == "tns")
-		//	$this->createComplexType($type);
+		if (substr($xsd_type, 0, 2) == "tns")
+			$this->createComplexType($type);
 
 		if ($depth > 0) {
 			for (; $depth > 0; $depth--)
