@@ -19,7 +19,7 @@ class wsdl
 	private $portType;
 	private $binding;
 
-	private $createdType = array();
+	private $createdTypes = array();
 	
 	public function __construct($classname, $uri)
 	{
@@ -163,7 +163,7 @@ class wsdl
 
 	private function createArrayType($type)
 	{
-		$name = $type . "Array";
+		$name = "ArrayOf" . $type;
 		if (in_array($name, $this->createdTypes) == true)
 			return $name;
 
@@ -172,16 +172,18 @@ class wsdl
 		$complextype = $this->dom->createElementNS(self::NS_XSD, "complexType");
 		$complextype->setAttribute("name", $name);
 
-		$sequence = $this->dom->createElementNS(self::NS_XSD, "sequence");
-		
-		$element = $this->dom->createElementNS(self::NS_XSD, "xsd:element");
-		$element->setAttribute("name", $type);
-		$element->setAttribute("type", $this->convertType($type));
-		$element->setAttribute("minOccurs","0");
-		$element->setAttribute("maxOccurs","unbounded");
-		
-		$sequence->appendChild($element);
-		$complextype->appendChild($sequence);
+		$content = $this->dom->createElementNS(self::NS_XSD, "complexContent");
+
+		$restriction = $this->dom->createElementNS(self::NS_XSD, "restriction");
+		$restriction->setAttribute("base", "soap-enc:Array");
+
+		$attribute = $this->dom->createElementNS(self::NS_XSD, "attribute");
+		$attribute->setAttribute("ref", "soap-enc:arrayType");
+		$attribute->setAttribute("wsdl:arrayType", $this->convertType($type) . "[]");
+
+		$restriction->appendChild($attribute);
+		$content->appendChild($restriction);
+		$complextype->appendChild($content);
 		$this->schemas->appendChild($complextype);
 
 		return $name;
@@ -201,7 +203,7 @@ class wsdl
 
 		$reflection = new ReflectionClass($className);
 		$properties = $reflection->getProperties();
-		foreach($properties as $property) {
+		foreach ($properties as $property) {
 			if ($property->isPublic() && !$property->isStatic()) {
 				$comment = $property->getDocComment();
 				$type = $this->getVarType($comment);
