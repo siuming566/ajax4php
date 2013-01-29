@@ -2,6 +2,7 @@
 //
 // framework.inc - A simple PHP AJAX Toolkit
 //
+require_once "session.inc.php";
 require_once "container.inc.php";
 require_once "form.inc.php";
 require_once "push.inc.php";
@@ -19,13 +20,19 @@ if (isset($_GET["rerender"]) && $_GET["rerender"] == true) {
 session_cache_limiter("nocache");
 session_start();
 
-if (isset($_GET["rerender"]) && $_GET["rerender"] == true) {
-	$_COOKIE = $_SESSION["a4p._cookie"];
-}
+a4p_session::$sid = session_id();
+a4p_session::init();
 
-if (!isset($_SESSION["a4p._map"])) {
+if (isset($_GET["rerender"]) && $_GET["rerender"] == true)
+	$_COOKIE = $_SESSION["a4p._cookie"];
+
+if (!isset($_SESSION["a4p._map"]))
 	$_SESSION["a4p._map"] = a4p_sec::randomString(26 * 2 + 10);
-}
+
+a4p_sec::$map = $_SESSION["a4p._map"];
+a4p_sec::$auth = isset($_SESSION["a4p._auth"]) && ($_SESSION["a4p._auth"] == true);
+
+session_write_close();
 
 class a4p
 {
@@ -48,13 +55,8 @@ class a4p
 	public static function Model($classpath)
 	{
 		$classname = basename($classpath);
-		if (!class_exists($classpath)) {
+		if (!class_exists($classpath))
 			require_once "$classpath.class.php";
-			// reload session data
-			$sid = session_id();
-			session_write_close();
-			session_start();
-		}
 
 		$class = new ReflectionClass($classname);
 		$comment = $class->getDocComment();
@@ -76,17 +78,17 @@ class a4p
 		if ($scope == "view") {
 			if (!a4p::isPostBack() && !a4p::isAjaxCall() && !in_array($classname, a4p::$viewarray)) {
 				$instance = new $classname();
-				$_SESSION["a4p." . $classname] = $instance;
+				a4p_session::set("a4p." . $classname, $instance);
 				a4p::$viewarray[] = $classname;
 			}
 		}
 
 		if ($scope == "view" || $scope == "session") {
-			if (!isset($_SESSION["a4p." . $classname]))	{
+			if (!a4p_session::exists("a4p." . $classname))	{
 				$instance = new $classname();
-				$_SESSION["a4p." . $classname] = $instance;
+				a4p_session::set("a4p." . $classname, $instance);
 			} else
-				$instance = $_SESSION["a4p." . $classname];
+				$instance = a4p_session::get("a4p." . $classname);
 		}
 		
 		return $instance;
@@ -133,15 +135,21 @@ END;
 	
 	public static function setAuth($param)
 	{
+		session_start();
+
 		if ($param == true)
-			$_SESSION["a4p._auth"] = true;
-		else
+			$_SESSION["a4p._auth"] = a4p_sec::$auth = true;
+		else {
+			a4p_sec::$auth = false;
 			unset($_SESSION["a4p._auth"]);
+		}
+
+		session_write_close();
 	}
 	
 	public static function isLoggedIn()
 	{
-		return isset($_SESSION["a4p._auth"]) && ($_SESSION["a4p._auth"] == true);
+		return a4p_sec::$auth == true;
 	}
 
 	public static function isPostBack()
@@ -190,7 +198,7 @@ END;
 			$method_raw = substr($buffer, $method_start, $method_end - $method_start);
 			$method = trim(str_replace("'", "", $method_raw));
 
-			$token = a4p_sec::shiftString($_SESSION["a4p._map"], $method . $controller);
+			$token = a4p_sec::shiftString(a4p_sec::$map, $method . $controller);
 
 			$pos += strlen($js_call);
 			$buffer = substr($buffer, 0, $pos) . "token: '$token', " . substr($buffer, $pos);
@@ -204,6 +212,12 @@ END;
 		$buffer = self::processBuffer($buffer, self::$js_name . ".action({");
 		$buffer = self::processBuffer($buffer, self::$js_name . ".call({");
 		$buffer = self::processBuffer($buffer, $ui . ".fileupload({");
+		return self::finalize($buffer);
+	}
+
+	public static function finalize($buffer)
+	{
+		a4p_session::flush();
 		return $buffer;
 	}
 }
@@ -214,3 +228,5 @@ $ui = "ui";
 
 if (!a4p::isAjaxCall())
 	ob_start("a4p::postProcess");
+else
+	ob_start("a4p::finalize");

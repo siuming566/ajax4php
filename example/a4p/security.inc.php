@@ -5,6 +5,10 @@
 
 class a4p_sec
 {
+	public static $map;
+
+	public static $auth = false;
+
     private static $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
 
 	public static function randomString($length) {

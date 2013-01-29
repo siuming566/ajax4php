@@ -23,7 +23,13 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
 	$protocol = "https";
 else
 	$protocol = "http";
-$url = $protocol . "://" . $_SERVER['HTTP_HOST'] . $page . "?PHPSESSID=" . $sessid . "&rerender=true&" . $_SERVER['QUERY_STRING'];
+
+if (strpos($_SERVER["HTTP_HOST"], ":" . $_SERVER["SERVER_PORT"]) == false)
+	$host = $_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"];
+else
+	$host = $_SERVER["HTTP_HOST"];
+
+$url = $protocol . "://" . $host . $page . "?PHPSESSID=" . $sessid . "&rerender=true&" . $_SERVER['QUERY_STRING'];
 
 libxml_use_internal_errors(true);
 

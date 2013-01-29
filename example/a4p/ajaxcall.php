@@ -17,7 +17,7 @@ $ajaxcall = true;
 require_once "framework.inc.php";
 require_once "nocache.inc.php";
 
-if ($controller != "ui" && $token != a4p_sec::shiftString($_SESSION["a4p._map"], $method . $controller)) {
+if ($controller != "ui" && $token != a4p_sec::shiftString(a4p_sec::$map, $method . $controller)) {
 	echo "Bad token";
 	exit();
 }
@@ -39,11 +39,6 @@ if (strpos($comment, "@ajaxcall") == false) {
 	echo "Not a ajax method";
 	exit();
 }
-
-// reload session data
-$sid = session_id();
-session_write_close();
-session_start();
 
 $class = a4p::Controller(basename($controller));
 
