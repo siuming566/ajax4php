@@ -140,9 +140,9 @@ END;
 	
 	public static function setAuth($param)
 	{
-		$sid = session_id();
+		$session_started = (session_status() == PHP_SESSION_ACTIVE);
 
-		if ($sid == "")
+		if (!$session_started)
 			session_start();
 
 		if ($param == true)
@@ -152,7 +152,7 @@ END;
 			unset($_SESSION["a4p._auth"]);
 		}
 
-		if ($sid == "")
+		if ($session_started)
 			session_write_close();
 	}
 	
