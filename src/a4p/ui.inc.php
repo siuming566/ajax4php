@@ -131,18 +131,17 @@ class ui
 		return $new_array;
 	}
 	
-	public static function getTable($name)
+	public static function getTable($name, $reset = false)
 	{
-		if (!isset($_SESSION["a4p.ui_" . $name]))
-			$_SESSION["a4p.ui_" . $name] = new ui_dataTable();
+		if ($reset || !a4p_session::exists("a4p.ui_" . $name))
+			a4p_session::set("a4p.ui_" . $name, new ui_dataTable());
 	
-		return $_SESSION["a4p.ui_" . $name];
+		return a4p_session::get("a4p.ui_" . $name);
 	}
 	
 	public static function resetTable($name)
 	{
-		unset($_SESSION["a4p.ui_" . $name]);
-		return getTable($name);
+		return getTable($name, true);
 	}
 	
 	public static function dataTable($name, &$data, $rowcount, $pager = "")
