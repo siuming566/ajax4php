@@ -13,19 +13,11 @@ include_once "db.inc.php";
 
 error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
 
-if (isset($_GET["rerender"]) && $_GET["rerender"] == true) {
-	if (isset($_GET["PHPSESSID"]))
-		session_id($_GET["PHPSESSID"]);
-}
-
 session_cache_limiter("nocache");
 session_start();
 
 a4p_session::$sid = session_id();
 a4p_session::init();
-
-if (isset($_GET["rerender"]) && $_GET["rerender"] == true)
-	$_COOKIE = $_SESSION["a4p._cookie"];
 
 if (!isset($_SESSION["a4p._map"]))
 	$_SESSION["a4p._map"] = a4p_sec::randomString(26 * 2 + 10);
@@ -171,7 +163,8 @@ END;
 
 	public static function isPostBack()
 	{
-		if (isset($_GET["rerender"]) && $_GET["rerender"] == "true")
+		global $rerender;
+		if (isset($rerender) && $rerender == true)
 			return true;
 		return false;
 	}

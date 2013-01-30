@@ -7,36 +7,20 @@ if (!$_SERVER['REQUEST_METHOD'] === 'POST')
 	exit();
 
 $page = $_POST["page"];
-$sessid = $_POST["sessid"];
 $ids = $_POST["id"];
-
-require_once "nocache.inc.php";
-
-session_start();
-$_SESSION["a4p._cookie"] = $_COOKIE;
-session_write_close();
+$rerender = true;
 
 $contents = array();
 $arr = explode(",", $ids);
 
-if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
-	$protocol = "https";
-else
-	$protocol = "http";
-
-if (strpos($_SERVER["HTTP_HOST"], ":" . $_SERVER["SERVER_PORT"]) == false)
-	$host = $_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"];
-else
-	$host = $_SERVER["HTTP_HOST"];
-
-$url = $protocol . "://" . $host . $page . "?PHPSESSID=" . $sessid . "&rerender=true&" . $_SERVER['QUERY_STRING'];
-
-libxml_use_internal_errors(true);
+ob_start();
+require $_SERVER["DOCUMENT_ROOT"] . $page;
+ob_end_flush();
+$html = ob_get_contents();
+ob_end_clean();
 
 $dom = new DOMDocument();
-$dom->preserveWhiteSpace = false;
-$dom->loadHTMLFile($url);
-
+$dom->loadHTML($html);
 $tags = $dom->getElementsByTagName("div");
 foreach ($tags as $tag) {
 	$id = $tag->getAttribute("id");
