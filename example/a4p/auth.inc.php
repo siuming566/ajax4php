@@ -3,7 +3,7 @@
 // auth.inc - Auth checker
 //
 
-if (!isset($_SESSION["a4p._auth"]))
+if (!a4p::isLoggedIn())
 {
 	header("Location: index.php");
 	exit();
