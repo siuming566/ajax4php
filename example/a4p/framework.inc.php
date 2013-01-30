@@ -8,6 +8,7 @@ require_once "form.inc.php";
 require_once "push.inc.php";
 require_once "security.inc.php";
 require_once "ui.inc.php";
+require_once "model.inc.php";
 include_once "db.inc.php";
 
 error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
@@ -36,13 +37,16 @@ session_write_close();
 
 class a4p
 {
-	public static function Controller($classpath)
+	public static function Controller($classpath, $param = null)
 	{
 		$classname = basename($classpath);
 		if (!class_exists($classpath))
 			require_once "$classpath.class.php";
 
-		$instance = new $classname();
+		if ($param != null)
+			$instance = new $classname($param);
+		else
+			$instance = new $classname();
 		if (method_exists($instance, 'init'))
 			$instance->init();
 		
@@ -52,7 +56,7 @@ class a4p
 	private static $scopearray = array();
 	private static $viewarray = array();
 
-	public static function Model($classpath)
+	public static function Model($classpath, $defaults = null)
 	{
 		$classname = basename($classpath);
 		if (!class_exists($classpath))
@@ -69,7 +73,10 @@ class a4p
 
 		if ($scope == "request") {
 			if (!isset(a4p::$scopearray["a4p." . $classname])) {
-				$instance = new $classname();
+				if ($defaults != null)
+					$instance = new $classname($defaults);
+				else
+					$instance = new $classname();
 				a4p::$scopearray["a4p." . $classname] = $instance;
 			} else
 				$instance = a4p::$scopearray["a4p." . $classname];
@@ -77,7 +84,10 @@ class a4p
 
 		if ($scope == "view") {
 			if (!a4p::isPostBack() && !a4p::isAjaxCall() && !in_array($classname, a4p::$viewarray)) {
-				$instance = new $classname();
+				if ($defaults != null)
+					$instance = new $classname($defaults);
+				else
+					$instance = new $classname();
 				a4p_session::set("a4p." . $classname, $instance);
 				a4p::$viewarray[] = $classname;
 			}
@@ -85,7 +95,10 @@ class a4p
 
 		if ($scope == "view" || $scope == "session") {
 			if (!a4p_session::exists("a4p." . $classname))	{
-				$instance = new $classname();
+				if ($defaults != null)
+					$instance = new $classname($defaults);
+				else
+					$instance = new $classname();
 				a4p_session::set("a4p." . $classname, $instance);
 			} else
 				$instance = a4p_session::get("a4p." . $classname);
@@ -135,7 +148,10 @@ END;
 	
 	public static function setAuth($param)
 	{
-		session_start();
+		$sid = session_id();
+
+		if ($sid == "")
+			session_start();
 
 		if ($param == true)
 			$_SESSION["a4p._auth"] = a4p_sec::$auth = true;
@@ -144,7 +160,8 @@ END;
 			unset($_SESSION["a4p._auth"]);
 		}
 
-		session_write_close();
+		if ($sid == "")
+			session_write_close();
 	}
 	
 	public static function isLoggedIn()
@@ -165,6 +182,11 @@ END;
 		if (isset($ajaxcall) && $ajaxcall === true)
 			return true;
 		return false;
+	}
+
+	public static function Container()
+	{
+		return a4p::Model("Container");
 	}
 
 	private static function processBuffer($buffer, $js_call)
@@ -221,8 +243,6 @@ END;
 		return $buffer;
 	}
 }
-
-a4p::Model("Container");
 
 $ui = "ui";
 
