@@ -4,21 +4,19 @@ var a4p = {
 
 prefix: '',
 phpself: '',
-phpsessid: '',
 phpquery: '',
 
-init: function (prefix, phpself, phpsessid, phpquery) {
+init: function (prefix, phpself, phpquery) {
 	this.prefix = prefix;
 	this.phpself = phpself;
-	this.phpsessid = phpsessid;
 	this.phpquery = phpquery;
 },
 
-setup: function (prefix, phpself, phpsessid, phpquery) {
+setup: function (prefix, phpself, phpquery) {
 	var type = function() {};
 	type.prototype = a4p;
 	var obj = new type;
-	obj.init(prefix, phpself, phpsessid, phpquery);
+	obj.init(prefix, phpself, phpquery);
 	return obj;
 },
 
@@ -99,7 +97,6 @@ _ajaxRerender: function (id, event) {
 		url: this.prefix + '/rerender.php?' + this.phpquery,
 		type: 'POST',
 		data: {	page: this.phpself,
-			sessid: this.phpsessid,
 			id: id,
 			time: (new Date()).getTime() },
 		success: function (response) {

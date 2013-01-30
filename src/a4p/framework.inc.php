@@ -104,7 +104,6 @@ class a4p
 	public static function loadScript()
 	{
 		$phpself = $_SERVER["PHP_SELF"];
-		$phpsessid = session_id();
 		$phpquery = $_SERVER["QUERY_STRING"];
 		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
 		print <<< END
@@ -113,7 +112,7 @@ class a4p
 <script type="text/javascript" src="http://jquery-json.googlecode.com/files/jquery.json-2.4.min.js"></script>
 <script type="text/javascript" src="$prefix/framework.js"></script>
 <script type="text/javascript">
-a4p.init('$prefix', '$phpself', '$phpsessid', '$phpquery');
+a4p.init('$prefix', '$phpself', '$phpquery');
 ui.init(a4p);
 </script>
 END;
@@ -122,14 +121,13 @@ END;
 	public static function localScript($param)
 	{
 		$phpself = $_SERVER["PHP_SELF"];
-		$phpsessid = session_id();
 		$phpquery = $_SERVER["QUERY_STRING"];
 		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
 		$param1 = $param;
 		$param2 = $param . "ui";
 		print <<< END
 <script type="text/javascript">
-$param1 = a4p.setup('$prefix', '$phpself', '$phpsessid', '$phpquery');
+$param1 = a4p.setup('$prefix', '$phpself', '$phpquery');
 $param2 = ui.setup($param1);
 </script>
 END;
