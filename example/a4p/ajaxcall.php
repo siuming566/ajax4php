@@ -10,8 +10,7 @@ $controller = $_GET["controller"];
 $method = $_GET["method"];
 $param = $_GET["param"];
 $token = $_GET["token"];
-$_GET["rerender"] = "true";
-
+$rerender = true;
 $ajaxcall = true;
 
 require_once "framework.inc.php";
