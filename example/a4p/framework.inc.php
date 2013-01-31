@@ -108,6 +108,7 @@ class a4p
 		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
 		print <<< END
 <link href="$prefix/framework.css" type="text/css" rel="Stylesheet" />
+<link href="$prefix/ui.css" type="text/css" rel="Stylesheet" />
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script type="text/javascript" src="http://jquery-json.googlecode.com/files/jquery.json-2.4.min.js"></script>
 <script type="text/javascript" src="$prefix/framework.js"></script>

@@ -11,21 +11,11 @@ $model = a4p::Model("datatable1Model");
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <?php a4p::loadScript(); // Need to load required script in header ?>
-<style>
-table
-{
-	border-collapse: collapse;
-}
-table, td, th
-{
-	border: 1px solid black;
-}
-</style>
 </head>
 <body>
 <form>
 <?php $table1 = ui::dataTable("table1", $model->data, 20) ?>
-<table>
+<table id="datatable">
 <tr>
 	<?php $table1->headerColumn("Column A", "colA") ?>
 	<?php $table1->headerColumn("Column B", "colB") ?>
