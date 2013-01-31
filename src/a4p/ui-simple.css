@@ -1,0 +1,40 @@
+body {
+	font-family: Arial,"Bitstream Vera Sans",Helvetica,Verdana,sans-serif;
+}
+#datatable {
+	border: 1px solid #DFDFDF;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+#datatable td, #datatable th {
+	border-top-color: white;
+	border-bottom: 1px solid #DFDFDF;
+}
+#datatable th {
+	text-shadow: rgba(255, 255, 255, 0.796875) 0px 1px 0px;
+	font-weight: normal;
+	padding: 7px 7px 8px;
+	text-align: left;
+	line-height: 1.3em;
+	font-size: 14px;
+}
+#datatable td {
+	font-size: 12px;
+	padding: 4px 7px 2px;
+	vertical-align: top;
+}
+textarea, select, input {
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	border: 1px solid #dcdcdc;
+	display: inline-block;
+	padding: 4px 4px;
+}
+textarea {
+	font-family: Arial,"Bitstream Vera Sans",Helvetica,Verdana,sans-serif;
+}
+input {
+	padding: 4px 8px;
+}
