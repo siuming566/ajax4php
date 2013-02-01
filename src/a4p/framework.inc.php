@@ -26,6 +26,7 @@ a4p_sec::$map = $_SESSION["a4p._map"];
 a4p_sec::$auth = isset($_SESSION["a4p._auth"]) && ($_SESSION["a4p._auth"] == true);
 
 session_write_close();
+$_SESSION = array();
 
 class a4p
 {
@@ -139,7 +140,7 @@ END;
 	
 	public static function setAuth($param)
 	{
-		$session_started = (session_status() == PHP_SESSION_ACTIVE);
+		$session_started = isset($_SESSION["a4p._map"]);
 
 		if (!$session_started)
 			session_start();
@@ -151,8 +152,10 @@ END;
 			unset($_SESSION["a4p._auth"]);
 		}
 
-		if ($session_started)
+		if ($session_started) {
 			session_write_close();
+			$_SESSION = array();
+		}
 	}
 	
 	public static function isLoggedIn()
