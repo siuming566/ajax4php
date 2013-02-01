@@ -3,16 +3,19 @@ body {
 }
 #datatable {
 	border: 1px solid #DFDFDF;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	border-spacing: 0px;
 }
 #datatable td, #datatable th {
 	border-top-color: white;
 	border-bottom: 1px solid #DFDFDF;
+	color: #333333;
 }
 #datatable th {
 	text-shadow: rgba(255, 255, 255, 0.796875) 0px 1px 0px;
+	background-color: #F9F9F9;
 	font-weight: normal;
 	padding: 7px 7px 8px;
 	text-align: left;
@@ -20,7 +23,7 @@ body {
 	font-size: 14px;
 }
 #datatable td {
-	font-size: 12px;
+	font-size: 13px;
 	padding: 4px 7px 2px;
 	vertical-align: top;
 }
