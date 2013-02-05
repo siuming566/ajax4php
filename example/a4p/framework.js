@@ -319,17 +319,22 @@ setInnerHTML: function (element, html) {
 	element.parentNode.replaceChild(newElement, element);
 },
 
-control: function (url, id) {
+loadControl: function (url, id) {
 	// request content
 	var self = this;
+	var event = this.newevent();
 	jQuery.ajax({
 		url: url,
 		type: 'POST',
 		success: function (response) {
 			var element = document.getElementById(id);
 			self.setInnerHTML(element, response);
+			jQuery('#' + id).find('script').each(function() { eval(jQuery(this).text()); });
+			event._onComplete();
 		}
 	});
+	
+	return event;
 },
 
 // hide the ModalPanel

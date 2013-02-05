@@ -100,7 +100,7 @@ class a4p
 		return $instance;
 	}
 	
-	private static $js_name = "a4p";
+	private static $js_name = array();
 
 	public static function loadScript()
 	{
@@ -118,6 +118,7 @@ a4p.init('$prefix', '$phpself', '$phpquery');
 ui.init(a4p);
 </script>
 END;
+		self::$js_name[] = $param;
 	}
 	
 	public static function localScript($param)
@@ -135,7 +136,7 @@ $param2 = ui.setup($param1);
 END;
 		global $ui;
 		$ui = $param2;
-		self::$js_name = $param;
+		self::$js_name[] = $param;
 	}
 	
 	public static function setAuth($param)
@@ -226,8 +227,10 @@ END;
 	public static function postProcess($buffer)
 	{
 		global $ui;
-		$buffer = self::processBuffer($buffer, self::$js_name . ".action({");
-		$buffer = self::processBuffer($buffer, self::$js_name . ".call({");
+		foreach(self::$js_name as $name) {
+			$buffer = self::processBuffer($buffer, $name . ".action({");
+			$buffer = self::processBuffer($buffer, $name . ".call({");
+		}
 		$buffer = self::processBuffer($buffer, $ui . ".fileupload({");
 		return self::finalize($buffer);
 	}
