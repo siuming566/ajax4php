@@ -12,5 +12,6 @@ require_once "a4p/framework.inc.php";
 <form>
 <?php include "usercontrol1.php" ?>
 </form>
+<p><a href="index.html">Back to index</a></p>
 </body>
 </html>
