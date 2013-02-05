@@ -319,7 +319,7 @@ setInnerHTML: function (element, html) {
 	element.parentNode.replaceChild(newElement, element);
 },
 
-tab: function (url, id) {
+control: function (url, id) {
 	// request content
 	var self = this;
 	jQuery.ajax({
