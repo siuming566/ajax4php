@@ -4,6 +4,13 @@
 /** @ajaxenable */
 class usercontrol1Controller
 {
+	public function setValue($param)
+	{
+		$model = a4p::Model("usercontrol1Model");
+		
+		$model->textfield1 = $param;
+	}
+
 	/** @ajaxcall */
 	public function add($param)
 	{

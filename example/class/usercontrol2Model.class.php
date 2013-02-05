@@ -3,7 +3,9 @@
 // Class file name must be classname.class.php
 
 /** @sessionscope */
-class usercontrol1Model
+class usercontrol2Model
 {
-	public $textfield1;
+	public $x;
+	public $y;
+	public $z;
 }
