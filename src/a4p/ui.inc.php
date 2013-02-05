@@ -22,9 +22,9 @@ class ui_dataTable
 			if ($this->sortBy == $sortBy)
 			{
 				if ($this->order == "SORT_ASC")
-					echo "&#160;^";
+					echo "<span class=\"arrow-up\"></span>";
 				else 				
-					echo "&#160;v";
+					echo "<span class=\"arrow-down\"></span>";
 			}
 			echo "</th>";
 		} 

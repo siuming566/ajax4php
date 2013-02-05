@@ -27,6 +27,26 @@ body {
 	padding: 4px 7px 2px;
 	vertical-align: top;
 }
+#datatable .arrow-up {
+	width: 0px;
+	height: 0px;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid black;
+	position: relative;
+	top: -10px;
+	margin-left: 5px;
+}
+#datatable .arrow-down {
+	width: 0px;
+	height: 0px;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid black;
+	position: relative;
+	top: 10px;
+	margin-left: 5px;
+}
 input, select, textarea {
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
