@@ -107,15 +107,10 @@ _ajaxRerender: function (id, event) {
 },
 
 setInnerHTML: function (element, html) {
-	$(element).replaceWith(html);
-	$('div.javascript').each(function() {
-		if ($.browser.msie) {
-			eval($(this).children().html());
-		}
-		else {
-			eval($(this).text());
-		}
-		$(this).css('display', 'none');
+	jQuery(element).replaceWith(html);
+	jQuery('div.javascript').each(function() {
+		eval(jQuery(this).text());
+		jQuery(this).css('display', 'none');
 	});
 },
 
@@ -312,15 +307,10 @@ popup: function (url, width, height, rerender) {
 },
 
 setInnerHTML: function (element, html) {
-	$(element).replaceWith(html);
-	$('div.javascript').each(function() {
-		if ($.browser.msie) {
-			eval($(this).children().html());
-		}
-		else {
-			eval($(this).text());
-		}
-		$(this).css('display', 'none');
+	jQuery(element).replaceWith(html);
+	jQuery('div.javascript').each(function() {
+		eval(jQuery(this).text());
+		jQuery(this).css('display', 'none');
 	});
 },
 
