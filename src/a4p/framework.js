@@ -107,9 +107,7 @@ _ajaxRerender: function (id, event) {
 },
 
 setInnerHTML: function (element, html) {
-	var newElement = element.cloneNode(false);
-	newElement.innerHTML = html;
-	element.parentNode.replaceChild(newElement, element);
+	$(element).replaceWith(html);
 	$('div.javascript').each(function() {
 		if ($.browser.msie) {
 			eval($(this).children().html());
@@ -314,9 +312,16 @@ popup: function (url, width, height, rerender) {
 },
 
 setInnerHTML: function (element, html) {
-	var newElement = element.cloneNode(false);
-	newElement.innerHTML = html;
-	element.parentNode.replaceChild(newElement, element);
+	$(element).replaceWith(html);
+	$('div.javascript').each(function() {
+		if ($.browser.msie) {
+			eval($(this).children().html());
+		}
+		else {
+			eval($(this).text());
+		}
+		$(this).css('display', 'none');
+	});
 },
 
 loadControl: function (url, id) {
@@ -329,7 +334,6 @@ loadControl: function (url, id) {
 		success: function (response) {
 			var element = document.getElementById(id);
 			self.setInnerHTML(element, response);
-			jQuery('#' + id).find('script').each(function() { eval(jQuery(this).text()); });
 			event._onComplete();
 		}
 	});
