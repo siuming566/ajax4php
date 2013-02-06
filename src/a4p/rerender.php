@@ -6,7 +6,7 @@
 if (!$_SERVER['REQUEST_METHOD'] === 'POST')
 	exit();
 
-$page = $_POST["page"];
+$page = $_SERVER["PHP_SELF"] = $_POST["page"];
 $ids = $_POST["id"];
 $rerender = true;
 
