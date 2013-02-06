@@ -20,14 +20,13 @@ $html = ob_get_contents();
 ob_end_clean();
 
 $dom = new DOMDocument();
+$dom->preserveWhiteSpace = false;
 $dom->loadHTML($html);
 $tags = $dom->getElementsByTagName("div");
 foreach ($tags as $tag) {
 	$id = $tag->getAttribute("id");
 	if ($id != "" && in_array($id, $arr)) {
-		$content = new DOMDocument();
-		$content->appendChild($content->importNode($tag, true));
-		$contents[$id] = $content->saveHTML();
+		$contents[$id] = $dom->saveHTML($tag);
 		if (count(array_keys($contents)) == count($arr))
 			break;
 	}
