@@ -118,7 +118,7 @@ a4p.init('$prefix', '$phpself', '$phpquery');
 ui.init(a4p);
 </script>
 END;
-		self::$js_name[] = $param;
+		self::$js_name[] = "a4p";
 	}
 	
 	public static function localScript($param)
@@ -187,31 +187,32 @@ END;
 
 	private static function processBuffer($buffer, $js_call)
 	{
+		$max_len = 200;
 		$pos = -1;
 		while ($pos = strpos($buffer, $js_call, $pos + 1))
 		{
 			$controller_start = strpos($buffer, "controller:", $pos) + strlen("controller:");
-			if ($controller_start === false || $controller_start - $pos > 100)
+			if ($controller_start === false || $controller_start - $pos > $max_len)
 				continue;
 			$controller_end1 = strpos($buffer, ",", $controller_start);
 			$controller_end2 = strpos($buffer, "}", $controller_start);
 			if ($controller_end1 === false)
 				$controller_end1 = $controller_end2;
 			$controller_end = $controller_end1 < $controller_end2 ? $controller_end1 : $controller_end2;
-			if ($controller_end === false || $controller_end - $controller_start > 100)
+			if ($controller_end === false || $controller_end - $controller_start > $max_len)
 				continue;
 			$controller_raw = substr($buffer, $controller_start, $controller_end - $controller_start);
 			$controller = trim(str_replace("'", "", $controller_raw));
 			
 			$method_start = strpos($buffer, "method:", $pos) + strlen("method:");
-			if ($method_start === false || $method_start - $pos > 100)
+			if ($method_start === false || $method_start - $pos > $max_len)
 				continue;
 			$method_end1 = strpos($buffer, ",", $method_start);
 			$method_end2 = strpos($buffer, "}", $method_start);
 			if ($method_end1 === false)
 				$method_end1 = $method_end2;
 			$method_end = $method_end1 < $method_end2 ? $method_end1 : $method_end2;
-			if ($method_end === false || $method_end - $method_start > 100)
+			if ($method_end === false || $method_end - $method_start > $max_len)
 				continue;
 			$method_raw = substr($buffer, $method_start, $method_end - $method_start);
 			$method = trim(str_replace("'", "", $method_raw));
