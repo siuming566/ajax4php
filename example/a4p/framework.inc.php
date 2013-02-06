@@ -104,12 +104,19 @@ class a4p
 
 	public static function loadScript()
 	{
+		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
+
+		$isIE = false;
+		$user_agent = $_SERVER['HTTP_USER_AGENT'];
+		if (preg_match("/(?i)MSIE [6-8]/", $user_agent) == 0)
+			print <<< END
+<link href="$prefix/ui.css" type="text/css" rel="Stylesheet" />
+END;
+
 		$phpself = $_SERVER["PHP_SELF"];
 		$phpquery = $_SERVER["QUERY_STRING"];
-		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
 		print <<< END
 <link href="$prefix/framework.css" type="text/css" rel="Stylesheet" />
-<link href="$prefix/ui.css" type="text/css" rel="Stylesheet" />
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script type="text/javascript" src="http://jquery-json.googlecode.com/files/jquery.json-2.4.min.js"></script>
 <script type="text/javascript" src="$prefix/framework.js"></script>
