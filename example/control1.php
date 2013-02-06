@@ -11,20 +11,15 @@ require_once "a4p/framework.inc.php";
 <body>
 <form>
 <div>
-<?php 
-	$control1 = a4p::Controller("usercontrol1Controller");
-	if (!a4p::isPostBack())
-		$control1->setValue("1");
-	include "usercontrol1.php" 
-?>
+<?php include "usercontrol1.php" ?>
 </div>
 <p>
 <div>
 <?php 
-	$control2 = a4p::Controller("usercontrol2Controller");
+	$control = a4p::Controller("usercontrol2Controller");
 	if (!a4p::isPostBack()) {
-		$control2->setX("2");
-		$control2->setY("3");
+		$control->setX("2");
+		$control->setY("3");
 	}
 	include "usercontrol2.php" 
 ?>

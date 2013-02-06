@@ -8,12 +8,14 @@ class usercontrol2Controller
 	{
 		$model = a4p::Model("usercontrol2Model");
 		$model->x = $param;
+		$model->z = "";
 	}
 
 	public function setY($param)
 	{
 		$model = a4p::Model("usercontrol2Model");
 		$model->y = $param;
+		$model->z = "";
 	}
 
 	/** @ajaxcall */

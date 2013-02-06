@@ -9,7 +9,6 @@ require_once "a4p/framework.inc.php";
 <?php a4p::loadScript(); // Need to load required script in header ?>
 <script type="text/javascript">
 function loadUserControl1() {
-	a4p.call({controller: 'control2Controller', method: 'initUserControl1'});
 	ui.loadControl('usercontrol1.php', 'place1');
 }
 function loadUserControl2() {
