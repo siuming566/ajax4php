@@ -22,14 +22,9 @@ ob_end_clean();
 $dom = new DOMDocument();
 $dom->preserveWhiteSpace = false;
 $dom->loadHTML($html);
-$tags = $dom->getElementsByTagName("div");
-foreach ($tags as $tag) {
-	$id = $tag->getAttribute("id");
-	if ($id != "" && in_array($id, $arr)) {
-		$contents[$id] = $dom->saveHTML($tag);
-		if (count(array_keys($contents)) == count($arr))
-			break;
-	}
+foreach ($arr as $id) {
+	$tag = $dom->getElementById($id);
+	$contents[$id] = $dom->saveHTML($tag);
 }
 
 $json = json_encode($contents);
