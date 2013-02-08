@@ -7,6 +7,7 @@ require_once "container.inc.php";
 require_once "form.inc.php";
 require_once "push.inc.php";
 require_once "security.inc.php";
+require_once "ssl.inc.php";
 require_once "ui.inc.php";
 require_once "model.inc.php";
 include_once "db.inc.php";
@@ -30,24 +31,31 @@ $_SESSION = array();
 
 class a4p
 {
+	public static $ssl_port;
+
+	private static $requestscopestack = array();
+	private static $viewscopestack = array();
+
 	public static function Controller($classpath, $param = null)
 	{
 		$classname = basename($classpath);
 		if (!class_exists($classpath))
 			require_once "$classpath.class.php";
 
-		if ($param != null)
-			$instance = new $classname($param);
-		else
-			$instance = new $classname();
+		if (!isset(a4p::$requestscopestack["a4p." . $classname])) {
+			if ($param != null)
+				$instance = new $classname($param);
+			else
+				$instance = new $classname();
+			a4p::$requestscopestack["a4p." . $classname] = $instance;
+		} else
+			$instance = a4p::$requestscopestack["a4p." . $classname];
+		
 		if (method_exists($instance, 'init'))
 			$instance->init();
 		
 		return $instance;
 	}
-
-	private static $scopearray = array();
-	private static $viewarray = array();
 
 	public static function Model($classpath, $defaults = null)
 	{
@@ -65,24 +73,24 @@ class a4p
 			$scope = "session";
 
 		if ($scope == "request") {
-			if (!isset(a4p::$scopearray["a4p." . $classname])) {
+			if (!isset(a4p::$requestscopestack["a4p." . $classname])) {
 				if ($defaults != null)
 					$instance = new $classname($defaults);
 				else
 					$instance = new $classname();
-				a4p::$scopearray["a4p." . $classname] = $instance;
+				a4p::$requestscopestack["a4p." . $classname] = $instance;
 			} else
-				$instance = a4p::$scopearray["a4p." . $classname];
+				$instance = a4p::$requestscopestack["a4p." . $classname];
 		}
 
 		if ($scope == "view") {
-			if (!a4p::isPostBack() && !a4p::isAjaxCall() && !in_array($classname, a4p::$viewarray)) {
+			if (!a4p::isPostBack() && !a4p::isAjaxCall() && !in_array($classname, a4p::$viewscopestack)) {
 				if ($defaults != null)
 					$instance = new $classname($defaults);
 				else
 					$instance = new $classname();
 				a4p_session::set("a4p." . $classname, $instance);
-				a4p::$viewarray[] = $classname;
+				a4p::$viewscopestack[] = $classname;
 			}
 		}
 
@@ -247,6 +255,24 @@ END;
 	{
 		a4p_session::flush();
 		return $buffer;
+	}
+
+	public static function requireSSL()
+	{
+		if($_SERVER["HTTPS"] != "on") {
+			header("HTTP/1.1 301 Moved Permanently");
+			header("Location: https://" . $_SERVER["SERVER_NAME"] . ":" . self::$ssl_port . $_SERVER["REQUEST_URI"]);
+			exit();
+		}
+	}
+
+	public static function requireAuth()
+	{
+		if (!a4p::isLoggedIn())
+		{
+			header("Location: index.php");
+			exit();
+		}
 	}
 }
 
