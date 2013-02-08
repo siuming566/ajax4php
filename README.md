@@ -18,7 +18,7 @@ Features
 Requirements
 ============
 
-- PHP 5.3.6+
+- PHP 5.3+
 - jQuery 1.7+
 
 

@@ -24,7 +24,7 @@ $dom->preserveWhiteSpace = false;
 $dom->loadHTML($html);
 foreach ($arr as $id) {
 	$tag = $dom->getElementById($id);
-	$contents[$id] = $dom->saveHTML($tag);
+	$contents[$id] = $dom->saveXML($tag);
 }
 
 $json = json_encode($contents);
