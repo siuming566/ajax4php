@@ -108,10 +108,6 @@ _ajaxRerender: function (id, event) {
 
 setInnerHTML: function (element, html) {
 	jQuery(element).replaceWith(html);
-	jQuery('div.javascript').each(function() {
-		eval(jQuery(this).text());
-		jQuery(this).css('display', 'none');
-	});
 },
 
 ajaxDisplay: function (response, id) {
@@ -308,10 +304,6 @@ popup: function (url, width, height, rerender) {
 
 setInnerHTML: function (element, html) {
 	jQuery(element).replaceWith(html);
-	jQuery('div.javascript').each(function() {
-		eval(jQuery(this).text());
-		jQuery(this).css('display', 'none');
-	});
 },
 
 loadControl: function (url, id) {
