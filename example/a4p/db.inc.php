@@ -9,12 +9,16 @@ class db
 	private static $user = "";
 	private static $pass = "";
 
-	public static function getConnection()
+	private static $conn = null;
+
+	public static function getConnection($new_connection = false)
 	{
-		$conn = new PDO(self::$connect_string, self::$user, self::$pass);
-		$conn->exec("SET CHARACTER SET utf8");
-		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		return $conn;
+		if (self::$conn == null || $new_connection == true) {
+			self::$conn = new PDO(self::$connect_string, self::$user, self::$pass);
+			self::$conn->exec("SET CHARACTER SET utf8");
+			self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		}
+		return self::$conn;
 	}
 	
 	public static function map($row, $obj)

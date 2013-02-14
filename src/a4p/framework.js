@@ -460,23 +460,19 @@ _resizeHorizontal: function(table, width, height) {
 },
 
 resize: function() {
-	if (typeof window.innerWidth != 'undefined')
-	{
-		width = window.innerWidth;
-		height = window.innerHeight;
-	}
-	else if (typeof document.documentElement != 'undefined')
-	{
-		width = document.documentElement.clientWidth;
-		height = document.documentElement.clientHeight;
-	}
-	else
-	{
-		width = document.getElementsByTagName('body')[0].clientWidth;
-		height = document.getElementsByTagName('body')[0].clientHeight;
-	}
- 	
- 	layout._resize(layout_info[0], width - 20, height - 20);
+	if (typeof layout_info != 'undefined') {
+		if (typeof window.innerWidth != 'undefined') {
+			width = window.innerWidth;
+			height = window.innerHeight;
+		} else if (typeof document.documentElement != 'undefined') {
+			width = document.documentElement.clientWidth;
+			height = document.documentElement.clientHeight;
+		} else {
+			width = document.getElementsByTagName('body')[0].clientWidth;
+			height = document.getElementsByTagName('body')[0].clientHeight;
+		}
+	 	layout._resize(layout_info[0], width - 20, height - 20);
+ 	}
 }
 
 }
