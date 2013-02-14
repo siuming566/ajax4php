@@ -52,6 +52,7 @@ body {
 }
 .layouttable .layoutcell, .layouttable .layoutrow {
 	vertical-align: top;
+	padding: 0px;
 }
 .layouttable .layoutdiv {
 	overflow: auto;

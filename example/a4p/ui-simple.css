@@ -49,6 +49,7 @@ body {
 }
 .layouttable {
 	border-spacing: 0px;
+	padding: 0px;
 }
 .layouttable .layoutcell, .layouttable .layoutrow {
 	vertical-align: top;
