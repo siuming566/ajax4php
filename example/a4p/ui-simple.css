@@ -1,19 +1,19 @@
 body {
 	font-family: Arial,"Bitstream Vera Sans",Helvetica,Verdana,sans-serif;
 }
-#datatable {
+.datatable {
 	border: 1px solid #DFDFDF;
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
 	border-radius: 6px;
 	border-spacing: 0px;
 }
-#datatable td, #datatable th {
+.datatable td, .datatable th {
 	border-top-color: white;
 	border-bottom: 1px solid #DFDFDF;
 	color: #333333;
 }
-#datatable th {
+.datatable th {
 	text-shadow: rgba(255, 255, 255, 0.796875) 0px 1px 0px;
 	background-color: #F9F9F9;
 	font-weight: normal;
@@ -22,12 +22,12 @@ body {
 	line-height: 1.3em;
 	font-size: 14px;
 }
-#datatable td {
+.datatable td {
 	font-size: 13px;
 	padding: 4px 7px 2px;
 	vertical-align: top;
 }
-#datatable .arrow-up {
+.datatable .arrow-up {
 	width: 0px;
 	height: 0px;
 	border-left: 5px solid transparent;
@@ -37,7 +37,7 @@ body {
 	top: -10px;
 	margin-left: 5px;
 }
-#datatable .arrow-down {
+.datatable .arrow-down {
 	width: 0px;
 	height: 0px;
 	border-left: 5px solid transparent;
@@ -46,6 +46,15 @@ body {
 	position: relative;
 	top: 10px;
 	margin-left: 5px;
+}
+.layouttable {
+	border-spacing: 0px;
+}
+.layouttable .layoutcell, .layouttable .layoutrow {
+	vertical-align: top;
+}
+.layouttable .layoutdiv {
+	overflow: auto;
 }
 textarea, select, input {
 	-moz-border-radius: 6px;

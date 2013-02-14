@@ -15,7 +15,7 @@ $model = a4p::Model("datatable1Model");
 <body>
 <form>
 <?php $table1 = ui::dataTable("table1", $model->data, 20) ?>
-<table id="datatable">
+<table class="datatable">
 <tr>
 	<?php $table1->headerColumn("Column A", "colA") ?>
 	<?php $table1->headerColumn("Column B", "colB") ?>
