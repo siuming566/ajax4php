@@ -10,6 +10,7 @@ require_once "security.inc.php";
 require_once "ssl.inc.php";
 require_once "ui.inc.php";
 require_once "model.inc.php";
+require_once "layout.inc.php";
 include_once "db.inc.php";
 
 error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
@@ -131,6 +132,7 @@ END;
 <script type="text/javascript">
 a4p.init('$prefix', '$phpself', '$phpquery');
 ui.init(a4p);
+<!-- layout info here -->
 </script>
 END;
 		self::$js_name[] = "a4p";
@@ -251,8 +253,20 @@ END;
 		return self::finalize($buffer);
 	}
 
+	private static function processLayout($buffer)
+	{
+		if (count(layout::$layout_info) > 0) {
+			$placement = "<!-- layout info here -->";
+			$json = json_encode(layout::$layout_info);
+			$pos = strpos($buffer, $placement);
+			$buffer = substr($buffer, 0, $pos) . "var layout_info = eval('($json)');" . substr($buffer, $pos + strlen($placement));
+		}
+		return $buffer;
+	}
+
 	public static function finalize($buffer)
 	{
+		$buffer = self::processLayout($buffer);
 		a4p_session::flush();
 		return $buffer;
 	}

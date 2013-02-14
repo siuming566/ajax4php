@@ -368,6 +368,119 @@ fileupload: function(arg) {
 
 };
 
+var layout = {
+
+_resize: function(table, width, height) {
+	var element = document.getElementById(table.id);
+	if (table.width.endsWith('%'))
+		element.style.width = Math.round(width * parseInt(table.width, 10) / 100) + 'px';
+	if (table.width.endsWith('px'))
+		element.style.width = table.width;
+	if (table.height.endsWith('%'))
+		element.style.height = Math.round(height * parseInt(table.height, 10) / 100) + 'px';
+	if (table.height.endsWith('px'))
+		element.style.height = table.height;
+
+	if (table.type == 'vertical')
+		layout._resizeVertical(table, width, height);
+	if (table.type == 'horizontal')
+		layout._resizeHorizontal(table, width, height);
+},
+
+_resizeVertical: function(table, width, height) {
+	var total_height = 0
+	var total_auto_rows = 0;
+	var rows = table.rows;
+	for (var i = 0; i < rows.length; i++) {
+		var row = rows[i];
+		var actualHeight = 0;
+		if (row.height.endsWith('%'))
+			actualHeight = Math.round(height * parseInt(row.height, 10) / 100);
+		if (row.height.endsWith('px'))
+			actualHeight = parseInt(row.height, 10);
+		if (row.height == '*')
+			total_auto_rows++;
+		if (actualHeight > 0) {
+			var element = document.getElementById(row.id);
+			element.style.height = actualHeight + 'px';
+			if (row.nested != null)
+				layout._resize(layout_info[row.nested], width, actualHeight);
+		}
+		total_height += actualHeight;
+	}
+
+	if (total_auto_rows > 0) {
+		var auto_height = Math.round((height - total_height) / total_auto_rows);
+		for (var i = 0; i < rows.length; i++) {
+			var row = rows[i];
+			if (row.height == '*') {
+				var element = document.getElementById(row.id);
+				element.style.height = auto_height + 'px';
+				if (row.nested != null)
+					layout._resize(layout_info[row.nested], width, auto_height);
+			}
+		}
+	}
+},
+
+_resizeHorizontal: function(table, width, height) {
+	var total_width = 0;
+	var total_auto_columns = 0;
+	var columns = table.columns;
+	for (var i = 0; i < columns.length; i++) {
+		var column = columns[i];
+		var actualWidth = 0;
+		if (column.width.endsWith('%'))
+			actualWidth = Math.round(width * parseInt(column.width, 10) / 100);
+		if (column.width.endsWith('px'))
+			actualWidth = parseInt(column.width, 10);
+		if (column.width == '*')
+			total_auto_columns++;
+		if (actualWidth > 0) {
+			var element = document.getElementById(column.id);
+			element.style.width = actualWidth + 'px';
+			if (column.nested != null)
+				layout._resize(layout_info[column.nested], actualWidth - 8, height - 8);
+		}
+		total_width += actualWidth;
+	}
+
+	if (total_auto_columns > 0) {
+		var auto_width = Math.round((width - total_width) / total_auto_columns);
+		for (var i = 0; i < columns.length; i++) {
+			var column = columns[i];
+			if (column.width == '*') {
+				var element = document.getElementById(column.id);
+				element.style.width = auto_width + 'px';
+				if (column.nested != null)
+					layout._resize(layout_info[column.nested], auto_width - 8, height - 8);
+			}
+		}
+	}
+},
+
+resize: function() {
+	if (typeof window.innerWidth != 'undefined')
+	{
+		width = window.innerWidth;
+		height = window.innerHeight;
+	}
+	else if (typeof document.documentElement != 'undefined')
+	{
+		width = document.documentElement.clientWidth;
+		height = document.documentElement.clientHeight;
+	}
+	else
+	{
+		width = document.getElementsByTagName('body')[0].clientWidth;
+		height = document.getElementsByTagName('body')[0].clientHeight;
+	}
+ 	
+ 	layout._resize(layout_info[0], width - 20, height - 20);
+}
+
+}
+
 if (typeof String.prototype.startsWith != 'function') {
 	String.prototype.startsWith = function (str) {
 		return this.slice(0, str.length) == str;
@@ -379,3 +492,6 @@ if (typeof String.prototype.endsWith != 'function') {
 		return this.slice(-str.length) == str;
 	};
 }
+
+jQuery(window).resize(function() { layout.resize(); });
+jQuery(document).ready(function() { layout.resize(); });
