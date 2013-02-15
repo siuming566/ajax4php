@@ -9,9 +9,9 @@ $model = a4p::Model("usercontrol3Model");
 <?php a4p::localScript("usercontrol3"); // add local script tags. give local script a unique namespace ?>
 <meta http-equiv="Content-type" content="text/html;charset=utf-8" /> 
 <form id="form2">
-<?php $layout3 = layout::vertical("100%", "100%", "30px,*,*")->begin("border-bottom: 1px solid lightgrey;"); ?>
+<?php $layout3 = layout::vertical("100%", "100%", "30px,*,*")->begin(); ?>
 Title
-<?php $layout3->next("border-bottom: 1px solid lightgrey;"); ?>
+<?php $layout3->next(); ?>
 <div id="panel2">
 <p>
 <input type="text" name="textfield1" value="<?= $model->textfield1 ?>">

@@ -11,7 +11,7 @@ require_once "a4p/framework.inc.php";
 <body>
 <form>
 <div>
-<?php a4p::loadControl(SITE_ROOT . "/usercontrol1.php") ?>
+<?php a4p::loadControl("usercontrol1.php") ?>
 </div>
 <p>
 <div>
@@ -21,7 +21,7 @@ require_once "a4p/framework.inc.php";
 		$control->setX("2");
 		$control->setY("3");
 	}
-	a4p::loadControl(SITE_ROOT . "/usercontrol2.php");
+	a4p::loadControl("usercontrol2.php");
 ?>
 </div>
 </form>
