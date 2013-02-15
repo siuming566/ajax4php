@@ -149,6 +149,7 @@ END;
 <script type="text/javascript">
 $param1 = a4p.setup('$prefix', '$phpself', '$phpquery');
 $param2 = ui.setup($param1);
+<!-- control layout info here -->
 </script>
 END;
 		global $ui;
@@ -257,12 +258,28 @@ END;
 	{
 		if (count(layout::$layout_info) > 0) {
 			$placement = "<!-- layout info here -->";
-			$json = json_encode(layout::$layout_info);
 			$pos = strpos($buffer, $placement);
-			$bodypadding = layout::$bodypadding;
-			$cellpadding = layout::$cellpadding;
-			$buffer = substr($buffer, 0, $pos) . "var layout_info = eval('($json)');\nvar layout_padding = { bodypadding: $bodypadding, cellpadding: $cellpadding };" . substr($buffer, $pos + strlen($placement));
+			if ($pos > 0) {
+				$json = json_encode(layout::$layout_info);
+				$bodypadding = layout::$bodypadding;
+				$cellpadding = layout::$cellpadding;
+				$buffer = substr($buffer, 0, $pos) . "var layout_info = eval('($json)');\nvar layout_padding = { bodypadding: $bodypadding, cellpadding: $cellpadding };" . substr($buffer, $pos + strlen($placement));
+				layout::$layout_info = array();
+			} else
+				a4p::$control_layout_info = array_merge(layout::$layout_info, a4p::$control_layout_info);
 		}
+
+		if (count(a4p::$control_layout_info) > 0) {
+			$placement = "<!-- control layout info here -->";
+			$pos = strpos($buffer, $placement);
+			if ($pos > 0) {
+				$json = json_encode(a4p::$control_layout_info);
+				$bodypadding = layout::$bodypadding;
+				$cellpadding = layout::$cellpadding;
+				$buffer = substr($buffer, 0, $pos) . "var control_layout_info = eval('($json)');\nvar layout_padding = { bodypadding: $bodypadding, cellpadding: $cellpadding };" . substr($buffer, $pos + strlen($placement));
+			}
+		}
+
 		return $buffer;
 	}
 
@@ -289,6 +306,29 @@ END;
 			header("Location: index.php");
 			exit();
 		}
+	}
+
+	private static $control_layout_info = array();
+
+	private static $layout_info = array();
+
+	private static $layout_stack = array();
+
+	public static function loadControl($file)
+	{
+		layout::$offset += count(layout::$layout_info);
+		a4p::$layout_info[] = layout::$layout_info;
+		layout::$layout_info = array();
+		a4p::$layout_stack[] = layout::$layout_stack;
+		layout::$layout_stack = array();
+
+		require($file);
+
+		a4p::$control_layout_info = array_merge(a4p::$control_layout_info, layout::$layout_info);
+
+		layout::$layout_stack = array_pop(a4p::$layout_stack);
+		layout::$layout_info = array_pop(a4p::$layout_info);
+		layout::$offset -= count(layout::$layout_info);
 	}
 }
 

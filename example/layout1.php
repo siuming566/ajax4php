@@ -15,11 +15,7 @@ Header - Fixed 100px
 	<?php $panel2 = layout::horizontal("100%", "100%", "150px,*")->begin("border-right: 1px solid lightgrey;"); ?>
 	Menu - Fixed 150px
 	<?php $panel2->next(); ?>
-		<?php $panel3 = layout::vertical("100%", "100%", "10%,*")->begin("border-bottom: 1px solid lightgrey;"); ?>
-		Title - 10%
-		<?php $panel3->next(); ?>
-		<?php include "popup2.php" ?>
-		<?php $panel3->end(); ?>
+	<?php a4p::loadControl(SITE_ROOT . "/popup2.php") ?>
 	<?php $panel2->end(); ?>
 <?php $panel1->next("border-top: 1px solid lightgrey;"); ?>
 Footer - 20%

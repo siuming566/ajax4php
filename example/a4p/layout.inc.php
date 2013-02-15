@@ -72,7 +72,7 @@ class layout_vertical_meta {
 		print <<< END
 <table class="layouttable" id="$id">
 <tr class="layoutcell">
-<td class="layoutrow" $style><div class="layoutdiv" id="$rowid">
+<td class="layoutrow" valign="top" $style><div class="layoutdiv" id="$rowid">
 END;
 		return $this;
 	}
@@ -87,7 +87,7 @@ END;
 </td>
 </tr>
 <tr class="layoutcell">
-<td class="layoutrow" $style><div class="layoutdiv" id="$rowid">
+<td class="layoutrow" valign="top" $style><div class="layoutdiv" id="$rowid">
 END;
 		return $this;
 	}
@@ -131,7 +131,7 @@ class layout_horizontal_meta {
 		print <<< END
 <table class="layouttable" id="$id">
 <tr class="layoutcell">
-<td class="layoutrow" id="$colid" $style><div class="layoutdiv">
+<td class="layoutrow" valign="top" $style><div class="layoutdiv" id="$colid">
 END;
 		return $this;
 	}
@@ -144,7 +144,7 @@ END;
 		print <<< END
 	</div>
 </td>
-<td class="layoutrow" id="$colid" $style><div class="layoutdiv">
+<td class="layoutrow" valign="top" $style><div class="layoutdiv" id="$colid">
 END;
 		return $this;
 	}
@@ -162,9 +162,11 @@ END;
 
 class layout
 {
-	public static $bodypadding = 20;
+	public static $offset = 0;
+
+	public static $bodypadding = 18;
 	
-	public static $cellpadding = 8;
+	public static $cellpadding = 2;
 
 	public static $layout_stack = array();
 
@@ -172,7 +174,7 @@ class layout
 
 	public static function vertical($width, $height, $rows)
 	{
-		$count = count(self::$layout_info);
+		$count = count(self::$layout_info) + self::$offset;
 		$id = "table" . ($count + 1);
 
 		$table = new layout_table($id, $width, $height, "vertical");
@@ -188,7 +190,7 @@ class layout
 
 	public static function horizontal($width, $height, $columns)
 	{
-		$count = count(self::$layout_info);
+		$count = count(self::$layout_info) + self::$offset;
 		$id = "table" . ($count + 1);
 
 		$table = new layout_table($id, $width, $height, "horizontal");
