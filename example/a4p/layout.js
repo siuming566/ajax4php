@@ -115,12 +115,14 @@ resize: function() {
 		if (typeof window.innerWidth != 'undefined') {
 			width = window.innerWidth;
 			height = window.innerHeight;
-		} else if (typeof document.documentElement != 'undefined') {
-			width = document.documentElement.clientWidth;
-			height = document.documentElement.clientHeight;
+		} else if (typeof document.documentElement != 'undefined' &&
+					document.documentElement.clientWidth > 0 &&
+					document.documentElement.clientHeight > 0) {
+			width = document.documentElement.clientWidth - 4;
+			height = document.documentElement.clientHeight - 16;
 		} else {
-			width = document.getElementsByTagName('body')[0].clientWidth;
-			height = document.getElementsByTagName('body')[0].clientHeight;
+			width = document.getElementsByTagName('body')[0].clientWidth - 4;
+			height = document.getElementsByTagName('body')[0].clientHeight - 16;
 		}
 
 		// browser body margin
