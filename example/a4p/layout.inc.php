@@ -64,16 +64,32 @@ class layout_vertical_meta {
 		return $rowid;
 	}
 
-	public function next() {
+	public function begin($style = "") {
+		if (strlen($style) > 0)
+			$style = "style=\"$style\"";
+		$id = $this->table->id;
+		$rowid = $this->new_row();
+		print <<< END
+<table class="layouttable" id="$id">
+<tr class="layoutcell">
+<td class="layoutrow"><div class="layoutdiv" id="$rowid" $style>
+END;
+		return $this;
+	}
+
+	public function next($style = "") {
 		array_pop(layout::$layout_stack);
+		if (strlen($style) > 0)
+			$style = "style=\"$style\"";
 		$rowid = $this->new_row();
 		print <<< END
 	</div>
 </td>
 </tr>
 <tr class="layoutcell">
-<td class="layoutrow"><div class="layoutdiv" id="$rowid">
+<td class="layoutrow"><div class="layoutdiv" id="$rowid" $style>
 END;
+		return $this;
 	}
 
 	public function end() {
@@ -83,6 +99,7 @@ END;
 </tr>
 </table>
 END;
+		return $this;
 	}
 }
 
@@ -106,14 +123,30 @@ class layout_horizontal_meta {
 		return $colid;
 	}
 
-	public function next() {
+	public function begin($style = "") {
+		if (strlen($style) > 0)
+			$style = "style=\"$style\"";
+		$id = $this->table->id;
+		$colid = $this->new_column();
+		print <<< END
+<table class="layouttable" id="$id">
+<tr class="layoutcell">
+<td class="layoutrow" id="$colid"><div class="layoutdiv" $style>
+END;
+		return $this;
+	}
+
+	public function next($style = "") {
 		array_pop(layout::$layout_stack);
+		if (strlen($style) > 0)
+			$style = "style=\"$style\"";
 		$colid = $this->new_column();
 		print <<< END
 	</div>
 </td>
-<td class="layoutrow" id="$colid"><div class="layoutdiv">
+<td class="layoutrow" id="$colid"><div class="layoutdiv" $style>
 END;
+		return $this;
 	}
 
 	public function end() {
@@ -123,11 +156,16 @@ END;
 </tr>
 </table>
 END;
+		return $this;
 	}
 }
 
 class layout
 {
+	public static $bodypadding = 20;
+	
+	public static $cellpadding = 8;
+
 	public static $layout_stack = array();
 
 	public static $layout_info = array();
@@ -145,12 +183,6 @@ class layout
 		self::$layout_info[] = $table;
 
 		$meta = new layout_vertical_meta($table, $rows);
-		$rowid = $meta->new_row();
-		print <<< END
-<table class="layouttable" id="$id">
-<tr class="layoutcell">
-<td class="layoutrow"><div class="layoutdiv" id="$rowid">
-END;
 		return $meta;
 	}
 
@@ -167,12 +199,6 @@ END;
 		self::$layout_info[] = $table;
 
 		$meta = new layout_horizontal_meta($table, $columns);
-		$colid = $meta->new_column();
-		print <<< END
-<table class="layouttable" id="$id">
-<tr class="layoutcell">
-<td class="layoutrow" id="$colid"><div class="layoutdiv">
-END;
 		return $meta;
 	}
 }

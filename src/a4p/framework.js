@@ -404,7 +404,7 @@ _resizeVertical: function(table, width, height) {
 			var element = document.getElementById(row.id);
 			element.style.height = actualHeight + 'px';
 			if (row.nested != null)
-				layout._resize(layout_info[row.nested], width, actualHeight);
+				layout._resize(layout_info[row.nested], width - layout_padding.cellpadding, actualHeight - layout_padding.cellpadding);
 		}
 		total_height += actualHeight;
 	}
@@ -417,7 +417,7 @@ _resizeVertical: function(table, width, height) {
 				var element = document.getElementById(row.id);
 				element.style.height = auto_height + 'px';
 				if (row.nested != null)
-					layout._resize(layout_info[row.nested], width, auto_height);
+					layout._resize(layout_info[row.nested], width - layout_padding.cellpadding, auto_height - layout_padding.cellpadding);
 			}
 		}
 	}
@@ -440,7 +440,7 @@ _resizeHorizontal: function(table, width, height) {
 			var element = document.getElementById(column.id);
 			element.style.width = actualWidth + 'px';
 			if (column.nested != null)
-				layout._resize(layout_info[column.nested], actualWidth - 8, height - 8);
+				layout._resize(layout_info[column.nested], actualWidth - layout_padding.cellpadding, height - layout_padding.cellpadding);
 		}
 		total_width += actualWidth;
 	}
@@ -453,7 +453,7 @@ _resizeHorizontal: function(table, width, height) {
 				var element = document.getElementById(column.id);
 				element.style.width = auto_width + 'px';
 				if (column.nested != null)
-					layout._resize(layout_info[column.nested], auto_width - 8, height - 8);
+					layout._resize(layout_info[column.nested], auto_width - layout_padding.cellpadding, height - layout_padding.cellpadding);
 			}
 		}
 	}
@@ -471,7 +471,7 @@ resize: function() {
 			width = document.getElementsByTagName('body')[0].clientWidth;
 			height = document.getElementsByTagName('body')[0].clientHeight;
 		}
-	 	layout._resize(layout_info[0], width - 20, height - 20);
+	 	layout._resize(layout_info[0], width - layout_padding.bodypadding, height - layout_padding.bodypadding);
  	}
 }
 

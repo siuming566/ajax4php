@@ -259,7 +259,9 @@ END;
 			$placement = "<!-- layout info here -->";
 			$json = json_encode(layout::$layout_info);
 			$pos = strpos($buffer, $placement);
-			$buffer = substr($buffer, 0, $pos) . "var layout_info = eval('($json)');" . substr($buffer, $pos + strlen($placement));
+			$bodypadding = layout::$bodypadding;
+			$cellpadding = layout::$cellpadding;
+			$buffer = substr($buffer, 0, $pos) . "var layout_info = eval('($json)');\nvar layout_padding = { bodypadding: $bodypadding, cellpadding: $cellpadding };" . substr($buffer, $pos + strlen($placement));
 		}
 		return $buffer;
 	}
