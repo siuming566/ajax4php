@@ -72,7 +72,7 @@ class layout_vertical_meta {
 		print <<< END
 <table class="layouttable" id="$id">
 <tr class="layoutcell">
-<td class="layoutrow"><div class="layoutdiv" id="$rowid" $style>
+<td class="layoutrow" $style><div class="layoutdiv" id="$rowid">
 END;
 		return $this;
 	}
@@ -87,7 +87,7 @@ END;
 </td>
 </tr>
 <tr class="layoutcell">
-<td class="layoutrow"><div class="layoutdiv" id="$rowid" $style>
+<td class="layoutrow" $style><div class="layoutdiv" id="$rowid">
 END;
 		return $this;
 	}
@@ -131,7 +131,7 @@ class layout_horizontal_meta {
 		print <<< END
 <table class="layouttable" id="$id">
 <tr class="layoutcell">
-<td class="layoutrow" id="$colid"><div class="layoutdiv" $style>
+<td class="layoutrow" id="$colid" $style><div class="layoutdiv">
 END;
 		return $this;
 	}
@@ -144,7 +144,7 @@ END;
 		print <<< END
 	</div>
 </td>
-<td class="layoutrow" id="$colid"><div class="layoutdiv" $style>
+<td class="layoutrow" id="$colid" $style><div class="layoutdiv">
 END;
 		return $this;
 	}
