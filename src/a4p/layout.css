@@ -1,0 +1,14 @@
+form {
+	margin: 0px;
+	padding: 0px;
+}
+.layouttable {
+	border-spacing: 0px;
+}
+.layouttable .layoutcell, .layouttable .layoutrow {
+	vertical-align: top;
+	padding: 0px;
+}
+.layouttable .layoutdiv {
+	overflow: auto;
+}

@@ -164,10 +164,6 @@ class layout
 {
 	public static $offset = 0;
 
-	public static $bodypadding = 12;
-	
-	public static $cellpadding = 2;
-
 	public static $layout_stack = array();
 
 	public static $layout_info = array();

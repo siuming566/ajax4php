@@ -126,9 +126,12 @@ END;
 		$phpquery = $_SERVER["QUERY_STRING"];
 		print <<< END
 <link href="$prefix/framework.css" type="text/css" rel="Stylesheet" />
+<link href="$prefix/layout.css" type="text/css" rel="Stylesheet" />
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://jquery-json.googlecode.com/files/jquery.json-2.4.min.js"></script>
 <script type="text/javascript" src="$prefix/framework.js"></script>
+<script type="text/javascript" src="$prefix/ui.js"></script>
+<script type="text/javascript" src="$prefix/layout.js"></script>
 <script type="text/javascript">
 a4p.init('$prefix', '$phpself', '$phpquery');
 ui.init(a4p);
@@ -261,9 +264,7 @@ END;
 		if ($pos > 0) {
 			if (count(layout::$layout_info) > 0) {
 				$json = json_encode(layout::$layout_info);
-				$bodypadding = layout::$bodypadding;
-				$cellpadding = layout::$cellpadding;
-				$buffer = substr($buffer, 0, $pos) . "var layout_info = eval('($json)');\nvar layout_padding = { bodypadding: $bodypadding, cellpadding: $cellpadding };" . substr($buffer, $pos + strlen($placement));
+				$buffer = substr($buffer, 0, $pos) . "var layout_info = eval('($json)');" . substr($buffer, $pos + strlen($placement));
 				layout::$layout_info = array();
 			} else {
 				$buffer = substr($buffer, 0, $pos) . substr($buffer, $pos + strlen($placement));
@@ -276,9 +277,7 @@ END;
 		if ($pos > 0) {
 			if (count(a4p::$control_layout_info) > 0) {
 				$json = json_encode(a4p::$control_layout_info);
-				$bodypadding = layout::$bodypadding;
-				$cellpadding = layout::$cellpadding;
-				$buffer = substr($buffer, 0, $pos) . "var control_layout_info = eval('($json)');\nvar layout_padding = { bodypadding: $bodypadding, cellpadding: $cellpadding };" . substr($buffer, $pos + strlen($placement));
+				$buffer = substr($buffer, 0, $pos) . "var control_layout_info = eval('($json)');" . substr($buffer, $pos + strlen($placement));
 			} else
 				$buffer = substr($buffer, 0, $pos) . substr($buffer, $pos + strlen($placement));
 		}
