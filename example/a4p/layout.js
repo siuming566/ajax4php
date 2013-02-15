@@ -15,10 +15,14 @@ _resize: function(table, width, height) {
 	width = parseInt(element.style.width);
 	height = parseInt(element.style.height);
 
-	if (table.type == 'vertical')
+	if (table.type == 'vertical') {
+		height -= table.padding;
 		layout._resizeVertical(table, width, height);
-	if (table.type == 'horizontal')
+	}
+	if (table.type == 'horizontal') {
+		width -= table.padding;
 		layout._resizeHorizontal(table, width, height);
+	}
 },
 
 _resizeControl: function(table) {
@@ -120,7 +124,7 @@ resize: function() {
 		}
 
 		// browser body margin
-		width -= 8;
+		width -= 16;
 		height -= 16;
 
 	 	layout._resize(layout_info[0], width, height);
