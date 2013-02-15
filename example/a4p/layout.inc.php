@@ -164,7 +164,7 @@ class layout
 {
 	public static $offset = 0;
 
-	public static $bodypadding = 18;
+	public static $bodypadding = 20;
 	
 	public static $cellpadding = 2;
 

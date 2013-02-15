@@ -406,9 +406,9 @@ _resizeControl: function(table) {
 		element.style.height = table.height;
 
 	if (table.type == 'vertical')
-		layout._resizeVertical(table, width - layout_padding.bodypadding, height - layout_padding.bodypadding - 14);
+		layout._resizeVertical(table, width - layout_padding.bodypadding, height - layout_padding.bodypadding - 12);
 	if (table.type == 'horizontal')
-		layout._resizeHorizontal(table, width - layout_padding.bodypadding, height - layout_padding.bodypadding - 14);
+		layout._resizeHorizontal(table, width - layout_padding.bodypadding, height - layout_padding.bodypadding - 12);
 },
 
 _resizeVertical: function(table, width, height) {
@@ -491,7 +491,7 @@ resize: function() {
 	if (typeof layout_info != 'undefined') {
 		if (typeof window.innerWidth != 'undefined') {
 			width = window.innerWidth;
-			height = window.innerHeight - 14;
+			height = window.innerHeight - 12;
 		} else if (typeof document.documentElement != 'undefined') {
 			width = document.documentElement.clientWidth;
 			height = document.documentElement.clientHeight;

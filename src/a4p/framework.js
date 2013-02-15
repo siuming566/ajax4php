@@ -108,6 +108,7 @@ _ajaxRerender: function (id, event) {
 
 setInnerHTML: function (element, html) {
 	jQuery(element).replaceWith(html);
+	layout.resize();
 },
 
 ajaxDisplay: function (response, id) {
@@ -295,6 +296,7 @@ popup: function (url, width, height, rerender) {
 		type: 'POST',
 		success: function (response) {
 			modalContent.append(response);
+			layout.resize();
 			event._onLoad();
 		}
 	});
@@ -304,6 +306,7 @@ popup: function (url, width, height, rerender) {
 
 setInnerHTML: function (element, html) {
 	jQuery(element).replaceWith(html);
+	layout.resize();
 },
 
 loadControl: function (url, id) {
@@ -387,6 +390,27 @@ _resize: function(table, width, height) {
 		layout._resizeHorizontal(table, width, height);
 },
 
+_resizeControl: function(table) {
+	var element = document.getElementById(table.id).parentNode;
+	while (element.style.width == '' && element.style.height == '')
+		element = element.parentNode;
+	var width = element.clientWidth;
+	var height = element.clientHeight;
+	if (table.width.endsWith('%'))
+		element.style.width = Math.round(width * parseInt(table.width, 10) / 100) + 'px';
+	if (table.width.endsWith('px'))
+		element.style.width = table.width;
+	if (table.height.endsWith('%'))
+		element.style.height = Math.round(height * parseInt(table.height, 10) / 100) + 'px';
+	if (table.height.endsWith('px'))
+		element.style.height = table.height;
+
+	if (table.type == 'vertical')
+		layout._resizeVertical(table, width - layout_padding.bodypadding, height - layout_padding.bodypadding - 12);
+	if (table.type == 'horizontal')
+		layout._resizeHorizontal(table, width - layout_padding.bodypadding, height - layout_padding.bodypadding - 12);
+},
+
 _resizeVertical: function(table, width, height) {
 	var total_height = 0
 	var total_auto_rows = 0;
@@ -402,6 +426,7 @@ _resizeVertical: function(table, width, height) {
 			total_auto_rows++;
 		if (actualHeight > 0) {
 			var element = document.getElementById(row.id);
+			element.style.width = width;
 			element.style.height = actualHeight + 'px';
 			if (row.nested != null)
 				layout._resize(layout_info[row.nested], width - layout_padding.cellpadding, actualHeight - layout_padding.cellpadding);
@@ -415,6 +440,7 @@ _resizeVertical: function(table, width, height) {
 			var row = rows[i];
 			if (row.height == '*') {
 				var element = document.getElementById(row.id);
+				element.style.width = width;
 				element.style.height = auto_height + 'px';
 				if (row.nested != null)
 					layout._resize(layout_info[row.nested], width - layout_padding.cellpadding, auto_height - layout_padding.cellpadding);
@@ -439,6 +465,7 @@ _resizeHorizontal: function(table, width, height) {
 		if (actualWidth > 0) {
 			var element = document.getElementById(column.id);
 			element.style.width = actualWidth + 'px';
+			element.style.height = height;
 			if (column.nested != null)
 				layout._resize(layout_info[column.nested], actualWidth - layout_padding.cellpadding, height - layout_padding.cellpadding);
 		}
@@ -452,6 +479,7 @@ _resizeHorizontal: function(table, width, height) {
 			if (column.width == '*') {
 				var element = document.getElementById(column.id);
 				element.style.width = auto_width + 'px';
+				element.style.height = height;
 				if (column.nested != null)
 					layout._resize(layout_info[column.nested], auto_width - layout_padding.cellpadding, height - layout_padding.cellpadding);
 			}
@@ -463,7 +491,7 @@ resize: function() {
 	if (typeof layout_info != 'undefined') {
 		if (typeof window.innerWidth != 'undefined') {
 			width = window.innerWidth;
-			height = window.innerHeight;
+			height = window.innerHeight - 12;
 		} else if (typeof document.documentElement != 'undefined') {
 			width = document.documentElement.clientWidth;
 			height = document.documentElement.clientHeight;
@@ -472,6 +500,12 @@ resize: function() {
 			height = document.getElementsByTagName('body')[0].clientHeight;
 		}
 	 	layout._resize(layout_info[0], width - layout_padding.bodypadding, height - layout_padding.bodypadding);
+ 	}
+
+	if (typeof control_layout_info != 'undefined') {
+ 		for (var i = 0; i < control_layout_info.length; i++) {
+ 			layout._resizeControl(control_layout_info[i]);
+ 		}
  	}
 }
 
