@@ -384,6 +384,9 @@ _resize: function(table, width, height) {
 	if (table.height.endsWith('px'))
 		element.style.height = table.height;
 
+	width = parseInt(element.style.width);
+	height = parseInt(element.style.height);
+
 	if (table.type == 'vertical')
 		layout._resizeVertical(table, width, height);
 	if (table.type == 'horizontal')
@@ -404,6 +407,9 @@ _resizeControl: function(table) {
 		element.style.height = Math.round(height * parseInt(table.height, 10) / 100) + 'px';
 	if (table.height.endsWith('px'))
 		element.style.height = table.height;
+
+	width = parseInt(element.style.width);
+	height = parseInt(element.style.height);
 
 	if (table.type == 'vertical')
 		layout._resizeVertical(table, width - layout_padding.bodypadding, height - layout_padding.bodypadding - 12);
