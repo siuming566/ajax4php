@@ -412,9 +412,9 @@ _resizeControl: function(table) {
 	height = parseInt(element.style.height);
 
 	if (table.type == 'vertical')
-		layout._resizeVertical(table, width - layout_padding.bodypadding, height - layout_padding.bodypadding - 12);
+		layout._resizeVertical(table, width - layout_padding.cellpadding, height - layout_padding.bodypadding - 12);
 	if (table.type == 'horizontal')
-		layout._resizeHorizontal(table, width - layout_padding.bodypadding, height - layout_padding.bodypadding - 12);
+		layout._resizeHorizontal(table, width - layout_padding.cellpadding, height - layout_padding.bodypadding - 12);
 },
 
 _resizeVertical: function(table, width, height) {

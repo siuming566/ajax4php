@@ -70,7 +70,7 @@ class layout_vertical_meta {
 		$id = $this->table->id;
 		$rowid = $this->new_row();
 		print <<< END
-<table class="layouttable" id="$id">
+<table class="layouttable" cellspacing="0" cellpadding="0" id="$id">
 <tr class="layoutcell">
 <td class="layoutrow" valign="top" $style><div class="layoutdiv" id="$rowid">
 END;
@@ -129,7 +129,7 @@ class layout_horizontal_meta {
 		$id = $this->table->id;
 		$colid = $this->new_column();
 		print <<< END
-<table class="layouttable" id="$id">
+<table class="layouttable" cellspacing="0" cellpadding="0" id="$id">
 <tr class="layoutcell">
 <td class="layoutrow" valign="top" $style><div class="layoutdiv" id="$colid">
 END;
@@ -164,7 +164,7 @@ class layout
 {
 	public static $offset = 0;
 
-	public static $bodypadding = 20;
+	public static $bodypadding = 12;
 	
 	public static $cellpadding = 2;
 
