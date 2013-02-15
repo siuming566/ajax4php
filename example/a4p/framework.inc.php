@@ -136,6 +136,7 @@ END;
 a4p.init('$prefix', '$phpself', '$phpquery');
 ui.init(a4p);
 <!-- layout info here -->
+var control_layout_info = new Array();
 </script>
 END;
 		self::$js_name[] = "a4p";
@@ -210,8 +211,7 @@ END;
 	{
 		$max_len = 200;
 		$pos = -1;
-		while ($pos = strpos($buffer, $js_call, $pos + 1))
-		{
+		while ($pos = strpos($buffer, $js_call, $pos + 1)) {
 			$controller_start = strpos($buffer, "controller:", $pos) + strlen("controller:");
 			if ($controller_start === false || $controller_start - $pos > $max_len)
 				continue;
@@ -260,24 +260,25 @@ END;
 	private static function processLayout($buffer)
 	{
 		$placement = "<!-- layout info here -->";
-		$pos = strpos($buffer, $placement);
-		if ($pos > 0) {
+		$pos = -1;
+		while ($pos = strpos($buffer, $placement, $pos + 1)){
 			if (count(layout::$layout_info) > 0) {
 				$json = json_encode(layout::$layout_info);
 				$buffer = substr($buffer, 0, $pos) . "var layout_info = eval('($json)');" . substr($buffer, $pos + strlen($placement));
 				layout::$layout_info = array();
-			} else {
+			} else
 				$buffer = substr($buffer, 0, $pos) . substr($buffer, $pos + strlen($placement));
-				a4p::$control_layout_info = array_merge(layout::$layout_info, a4p::$control_layout_info);
-			}
 		}
 
+		a4p::$control_layout_info = array_merge(layout::$layout_info, a4p::$control_layout_info);
+
 		$placement = "<!-- control layout info here -->";
-		$pos = strpos($buffer, $placement);
-		if ($pos > 0) {
+		$pos = -1;
+		while ($pos = strpos($buffer, $placement, $pos + 1)) {
 			if (count(a4p::$control_layout_info) > 0) {
 				$json = json_encode(a4p::$control_layout_info);
-				$buffer = substr($buffer, 0, $pos) . "var control_layout_info = eval('($json)');" . substr($buffer, $pos + strlen($placement));
+				$buffer = substr($buffer, 0, $pos) . "var control_layout_info = control_layout_info.concat(eval('($json)'));" . substr($buffer, $pos + strlen($placement));
+				a4p::$control_layout_info = array();
 			} else
 				$buffer = substr($buffer, 0, $pos) . substr($buffer, $pos + strlen($placement));
 		}
