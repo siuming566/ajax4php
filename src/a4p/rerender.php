@@ -19,6 +19,15 @@ ob_end_flush();
 $html = ob_get_contents();
 ob_end_clean();
 
+$doctype = "<!DOCTYPE HTML";
+
+if (substr($html, 0, strlen($doctype)) != $doctype) {
+	$html4doctype = <<< END
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+END;
+	$html = $html4doctype . $html;
+}
+
 $dom = new DOMDocument();
 $dom->preserveWhiteSpace = false;
 $dom->loadHTML($html);

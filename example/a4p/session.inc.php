@@ -12,6 +12,8 @@ class a4p_session
 
 	private static $stack = array();
 
+	private static $notfound = null;
+
 	public static function exists($name)
 	{
 		if (self::get($name) !== null)
@@ -39,7 +41,7 @@ class a4p_session
 
 		$filename = session_save_path() . DIRECTORY_SEPARATOR . "sess_" . self::$sid . "." . md5($name);
 		$session_var->file = fopen($filename, "w");
-		flock($session_var->file);
+		flock($session_var->file, LOCK_EX);
 
 		self::$stack[$name] = $session_var;
 	}
@@ -61,7 +63,7 @@ class a4p_session
 			return $session_var->value;
 		}
 
-		return null;
+		return self::$notfound;
 	}
 
 	public static function flush()

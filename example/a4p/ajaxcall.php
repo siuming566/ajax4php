@@ -21,7 +21,8 @@ if ($controller != "ui" && $token != a4p_sec::shiftString(a4p_sec::$map, $method
 	exit();
 }
 
-include_once "$controller.class.php";
+if ($controller != "ui")
+	include_once "$controller.class.php";
 
 $_class = new ReflectionClass(basename($controller));
 $comment = $_class->getDocComment();
