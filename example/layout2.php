@@ -9,15 +9,16 @@ require_once "a4p/framework.inc.php";
 <?php a4p::loadScript(); // Need to load required script in header ?>
 </head>
 <body>
-<?php $layout1 = layout::vertical("100%", "100%", "100px,*,20%", 2)->begin(); // pad 2 pixels for border ?>
+<?php layout::bodymargin(0); ?>
+<?php $layout1 = layout::vertical("100%", "100%", "100px,*,20%", 3)->begin("border-bottom: 1px solid lightgrey;"); // pad 3 pixels for borders ?>
 Header - Fixed 100px
-<?php $layout1->next("border-top: 1px solid lightgrey"); ?>
-	<?php $layout2 = layout::horizontal("100%", "100%", "150px,*", 1)->begin(); // pad 1 pixels for border  ?>
+<?php $layout1->next("border-bottom: 1px solid lightgrey;"); ?>
+	<?php $layout2 = layout::horizontal("100%", "100%", "150px,*", 1)->begin("border-right: 1px solid lightgrey;"); // pad 1 pixel for border  ?>
 	Menu - Fixed 150px
-	<?php $layout2->next("border-left: 1px solid lightgrey"); ?>
+	<?php $layout2->next(); ?>
 	<?php a4p::loadControl("usercontrol4.php") ?>
 	<?php $layout2->end(); ?>
-<?php $layout1->next("border-top: 1px solid lightgrey"); ?>
+<?php $layout1->next("border-bottom: 1px solid red;"); ?>
 Footer - 20%
 <p><a href="index.html">Back to index</a></p>
 <?php $layout1->end(); ?>

@@ -59,6 +59,7 @@ _resizeVertical: function(table, width, height) {
 
 	if (total_auto_rows > 0) {
 		var auto_height = Math.floor((height - total_height) / total_auto_rows);
+		if (auto_height < 0) return;
 		for (var i = 0; i < rows.length; i++) {
 			var row = rows[i];
 			if (row.height == '*') {
@@ -97,6 +98,7 @@ _resizeHorizontal: function(table, width, height) {
 
 	if (total_auto_columns > 0) {
 		var auto_width = Math.floor((width - total_width) / total_auto_columns);
+		if (auto_width < 0) return;
 		for (var i = 0; i < columns.length; i++) {
 			var column = columns[i];
 			if (column.width == '*') {
@@ -111,6 +113,10 @@ _resizeHorizontal: function(table, width, height) {
 },
 
 resize: function() {
+
+	if (typeof layout_margin != 'undefined')
+		document.body.style.margin = layout_margin.bodymargin + 'px';
+
 	if (typeof layout_info != 'undefined') {
 		if (typeof window.innerWidth != 'undefined') {
 			width = window.innerWidth;
@@ -118,16 +124,16 @@ resize: function() {
 		} else if (typeof document.documentElement != 'undefined' &&
 					document.documentElement.clientWidth > 0 &&
 					document.documentElement.clientHeight > 0) {
-			width = document.documentElement.clientWidth - 4;
-			height = document.documentElement.clientHeight - 16;
+			width = document.documentElement.clientWidth;
+			height = document.documentElement.clientHeight;
 		} else {
-			width = document.getElementsByTagName('body')[0].clientWidth - 4;
-			height = document.getElementsByTagName('body')[0].clientHeight - 16;
+			width = document.body.clientWidth;
+			height = document.body.clientHeight;
 		}
 
 		// browser body margin
-		width -= 16;
-		height -= 16;
+		width -= layout_margin.bodymargin * 2;
+		height -= layout_margin.bodymargin * 2;
 
 	 	layout._resize(layout_info[0], width, height);
  	}

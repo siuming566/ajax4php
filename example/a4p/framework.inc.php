@@ -264,7 +264,8 @@ END;
 		while ($pos = strpos($buffer, $placement, $pos + 1)){
 			if (count(layout::$layout_info) > 0) {
 				$json = json_encode(layout::$layout_info);
-				$buffer = substr($buffer, 0, $pos) . "var layout_info = eval('($json)');" . substr($buffer, $pos + strlen($placement));
+				$bodymargin = layout::$bodymargin;
+				$buffer = substr($buffer, 0, $pos) . "var layout_info = eval('($json)');var layout_margin = { bodymargin: $bodymargin };" . substr($buffer, $pos + strlen($placement));
 				layout::$layout_info = array();
 			} else
 				$buffer = substr($buffer, 0, $pos) . substr($buffer, $pos + strlen($placement));
@@ -277,7 +278,8 @@ END;
 		while ($pos = strpos($buffer, $placement, $pos + 1)) {
 			if (count(a4p::$control_layout_info) > 0) {
 				$json = json_encode(a4p::$control_layout_info);
-				$buffer = substr($buffer, 0, $pos) . "var control_layout_info = control_layout_info.concat(eval('($json)'));" . substr($buffer, $pos + strlen($placement));
+				$bodymargin = layout::$bodymargin;
+				$buffer = substr($buffer, 0, $pos) . "var control_layout_info = control_layout_info.concat(eval('($json)'));var layout_margin = { bodymargin: $bodymargin };" . substr($buffer, $pos + strlen($placement));
 				a4p::$control_layout_info = array();
 			} else
 				$buffer = substr($buffer, 0, $pos) . substr($buffer, $pos + strlen($placement));

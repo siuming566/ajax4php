@@ -166,9 +166,16 @@ class layout
 {
 	public static $offset = 0;
 
+	public static $bodymargin = 8;
+
 	public static $layout_stack = array();
 
 	public static $layout_info = array();
+
+	public static function bodymargin($bodymargin)
+	{
+		self::$bodymargin = $bodymargin;
+	}
 
 	public static function vertical($width, $height, $rows, $padding = 0)
 	{
