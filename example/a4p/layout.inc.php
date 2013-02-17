@@ -26,7 +26,6 @@ class layout_row
 {
 	public $id;
 	public $height;
-	public $nested;
 
 	public function __construct($id, $height) {
 		$this->id = $id;
@@ -62,7 +61,6 @@ class layout_vertical_meta {
 		$rowheight = $this->rows[$count % count($this->rows)];
 		$row = new layout_row($rowid, $rowheight);
 		$this->table->rows[] = $row;
-		layout::$layout_stack[] = $row;
 		return $rowid;
 	}
 
@@ -80,7 +78,6 @@ END;
 	}
 
 	public function next($style = "") {
-		array_pop(layout::$layout_stack);
 		if (strlen($style) > 0)
 			$style = "style=\"$style\"";
 		$rowid = $this->new_row();
@@ -95,7 +92,6 @@ END;
 	}
 
 	public function end() {
-		array_pop(layout::$layout_stack);
 		print <<< END
 </div></td>
 </tr>
@@ -121,7 +117,6 @@ class layout_horizontal_meta {
 		$colwidth = $this->columns[$count % count($this->columns)];
 		$column = new layout_column($colid, $colwidth);
 		$this->table->columns[] = $column;
-		layout::$layout_stack[] = $column;
 		return $colid;
 	}
 
@@ -139,7 +134,6 @@ END;
 	}
 
 	public function next($style = "") {
-		array_pop(layout::$layout_stack);
 		if (strlen($style) > 0)
 			$style = "style=\"$style\"";
 		$colid = $this->new_column();
@@ -152,7 +146,6 @@ END;
 	}
 
 	public function end() {
-		array_pop(layout::$layout_stack);
 		print <<< END
 </div></td>
 </tr>
@@ -164,11 +157,7 @@ END;
 
 class layout
 {
-	public static $offset = 0;
-
 	public static $bodymargin = 8;
-
-	public static $layout_stack = array();
 
 	public static $layout_info = array();
 
@@ -179,14 +168,9 @@ class layout
 
 	public static function vertical($width, $height, $rows, $padding = 0)
 	{
-		$count = count(self::$layout_info) + self::$offset;
+		$count = count(self::$layout_info);
 		$id = "table" . ($count + 1);
-
 		$table = new layout_table($id, $width, $height, "vertical", $padding);
-		if (count(self::$layout_stack) > 0) {
-			$last = end(self::$layout_stack);
-			$last->nested = $count;
-		}
 		self::$layout_info[] = $table;
 
 		$meta = new layout_vertical_meta($table, $rows);
@@ -195,14 +179,9 @@ class layout
 
 	public static function horizontal($width, $height, $columns, $padding = 0)
 	{
-		$count = count(self::$layout_info) + self::$offset;
+		$count = count(self::$layout_info);
 		$id = "table" . ($count + 1);
-
 		$table = new layout_table($id, $width, $height, "horizontal", $padding);
-		if (count(self::$layout_stack) > 0) {
-			$last = end(self::$layout_stack);
-			$last->nested = $count;
-		}
 		self::$layout_info[] = $table;
 
 		$meta = new layout_horizontal_meta($table, $columns);

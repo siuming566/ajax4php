@@ -1,7 +1,7 @@
 
 var layout = {
 
-_resize: function(table, width, height) {
+_resizeElement: function(table, width, height) {
 	var element = document.getElementById(table.id);
 	if (table.width.endsWith('%'))
 		element.style.width = Math.floor(width * parseInt(table.width, 10) / 100) + 'px';
@@ -25,13 +25,34 @@ _resize: function(table, width, height) {
 	}
 },
 
-_resizeControl: function(table) {
+_resize: function(table) {
 	var element = document.getElementById(table.id).parentNode;
-	while (element.style.width == '' && element.style.height == '')
+	while (element.nodeName != 'BODY' && !(element.style.width.endsWith('px') && element.style.width.endsWith('px')))
 		element = element.parentNode;
+
 	var width = element.clientWidth;
 	var height = element.clientHeight;
-	layout._resize(table, width, height);
+
+	if (element.nodeName == 'BODY') {
+		if (typeof window.innerWidth != 'undefined') {
+			width = window.innerWidth;
+			height = window.innerHeight;
+		} else if (typeof document.documentElement != 'undefined' &&
+					document.documentElement.clientWidth > 0 &&
+					document.documentElement.clientHeight > 0) {
+			width = document.documentElement.clientWidth;
+			height = document.documentElement.clientHeight;
+		} else {
+			width = document.body.clientWidth;
+			height = document.body.clientHeight;
+		}
+
+		// browser body margin
+		width -= layout_margin.bodymargin * 2;
+		height -= layout_margin.bodymargin * 2;
+	}
+
+	layout._resizeElement(table, width, height);
 },
 
 _resizeVertical: function(table, width, height) {
@@ -51,8 +72,6 @@ _resizeVertical: function(table, width, height) {
 			var element = document.getElementById(row.id);
 			element.style.width = width + 'px';
 			element.style.height = actualHeight + 'px';
-			if (row.nested != null)
-				layout._resize(layout_info[row.nested], width, actualHeight);
 		}
 		total_height += actualHeight;
 	}
@@ -66,8 +85,6 @@ _resizeVertical: function(table, width, height) {
 				var element = document.getElementById(row.id);
 				element.style.width = width + 'px';
 				element.style.height = auto_height + 'px';
-				if (row.nested != null)
-					layout._resize(layout_info[row.nested], width, auto_height);
 			}
 		}
 	}
@@ -90,8 +107,6 @@ _resizeHorizontal: function(table, width, height) {
 			var element = document.getElementById(column.id);
 			element.style.width = actualWidth + 'px';
 			element.style.height = height + 'px';
-			if (column.nested != null)
-				layout._resize(layout_info[column.nested], actualWidth, height);
 		}
 		total_width += actualWidth;
 	}
@@ -105,8 +120,6 @@ _resizeHorizontal: function(table, width, height) {
 				var element = document.getElementById(column.id);
 				element.style.width = auto_width + 'px';
 				element.style.height = height + 'px';
-				if (column.nested != null)
-					layout._resize(layout_info[column.nested], auto_width, height);
 			}
 		}
 	}
@@ -118,30 +131,8 @@ resize: function() {
 		document.body.style.margin = layout_margin.bodymargin + 'px';
 
 	if (typeof layout_info != 'undefined') {
-		if (typeof window.innerWidth != 'undefined') {
-			width = window.innerWidth;
-			height = window.innerHeight;
-		} else if (typeof document.documentElement != 'undefined' &&
-					document.documentElement.clientWidth > 0 &&
-					document.documentElement.clientHeight > 0) {
-			width = document.documentElement.clientWidth;
-			height = document.documentElement.clientHeight;
-		} else {
-			width = document.body.clientWidth;
-			height = document.body.clientHeight;
-		}
-
-		// browser body margin
-		width -= layout_margin.bodymargin * 2;
-		height -= layout_margin.bodymargin * 2;
-
-	 	layout._resize(layout_info[0], width, height);
- 	}
-
-	if (typeof control_layout_info != 'undefined') {
- 		for (var i = 0; i < control_layout_info.length; i++) {
- 			layout._resizeControl(control_layout_info[i]);
- 		}
+ 		for (var i = 0; i < layout_info.length; i++)
+		 	layout._resize(layout_info[i]);
  	}
 }
 
