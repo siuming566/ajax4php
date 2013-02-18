@@ -46,6 +46,19 @@ class a4p_session
 		self::$stack[$name] = $session_var;
 	}
 
+	public static function unset($name)
+	{
+		if (exists($name)) {
+			$session_var = self::$stack[$name];
+			fclose($session_var->file);
+			unset(self::$stack[$name]);
+		}
+
+		$filename = session_save_path() . DIRECTORY_SEPARATOR . "sess_" . self::$sid . "." . md5($name);
+		if (file_exists($filename))
+			unlink($filename);
+	}
+
 	public static function &get($name)
 	{
 		if (isset(self::$stack[$name]))

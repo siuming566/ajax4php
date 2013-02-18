@@ -109,6 +109,19 @@ class a4p
 		return $instance;
 	}
 	
+	public static function ResetModel($classpath)
+	{
+		$classname = basename($classpath);
+		
+		if (isset(a4p::$requestscopestack["a4p." . $classname]))
+			unset(a4p::$requestscopestack["a4p." . $classname]);
+
+		if (isset(a4p::$viewscopestack["a4p." . $classname]))
+			unset(a4p::$viewscopestack["a4p." . $classname]);
+
+		a4p_session::unset("a4p." . $classname);
+	}
+
 	private static $js_name = array();
 
 	public static function loadScript()
