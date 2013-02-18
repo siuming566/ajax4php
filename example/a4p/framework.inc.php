@@ -119,7 +119,7 @@ class a4p
 		if (isset(a4p::$viewscopestack["a4p." . $classname]))
 			unset(a4p::$viewscopestack["a4p." . $classname]);
 
-		a4p_session::unset("a4p." . $classname);
+		a4p_session::remove("a4p." . $classname);
 	}
 
 	private static $js_name = array();

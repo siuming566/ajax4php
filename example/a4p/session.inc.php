@@ -46,7 +46,7 @@ class a4p_session
 		self::$stack[$name] = $session_var;
 	}
 
-	public static function unset($name)
+	public static function remove($name)
 	{
 		if (exists($name)) {
 			$session_var = self::$stack[$name];
