@@ -6,6 +6,10 @@ prefix: '',
 phpself: '',
 phpquery: '',
 
+busy_func: function() {},
+
+idle_func: function() {},
+
 init: function (prefix, phpself, phpquery) {
 	this.prefix = prefix;
 	this.phpself = phpself;
@@ -61,6 +65,7 @@ _ajaxCall: function (token, controller, method, param, formname, rerender, push)
 		poll_str = '&poll_id=' + poll_id;
 		setTimeout(function() { a4p._ajaxPoll(poll_id, 0, ''); }, 100);
 	}
+	a4p.busy_func();
 	jQuery.ajax({
 		url: this.prefix + '/ajaxcall.php?controller=' + controller + '&method=' + method + '&param=' + escape(param) + '&token=' + token + '&time=' + (new Date()).getTime() + poll_str + '&' + this.phpquery,
 		type: 'POST',
@@ -82,8 +87,10 @@ ajaxResponse: function (response, target, rerender, event) {
 
 	if (typeof rerender == 'string' && rerender.length > 0)
 		target._ajaxRerender(rerender, event);
-	else
+	else {
 		event._onComplete();
+		a4p.idle_func();		
+	}
 },
 
 ajaxRerender: function (id) {
@@ -102,8 +109,17 @@ _ajaxRerender: function (id, event) {
 		success: function (response) {
 			a4p.ajaxDisplay(response, id);
 			event._onComplete();
+			a4p.idle_func();		
 		}
 	});
+},
+
+onBusy: function (func) {
+	a4p.busy_func = func;
+},
+
+onIdle: function (func) {
+	a4p.idle_func = func;
 },
 
 setInnerHTML: function (element, html) {
