@@ -21,7 +21,7 @@ ob_end_clean();
 
 $doctype = "<!DOCTYPE HTML";
 
-if (substr($html, 0, strlen($doctype)) != $doctype) {
+if (strncasecmp($html, $doctype, strlen($doctype)) != 0) {
 	$html4doctype = <<< END
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 END;
