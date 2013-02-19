@@ -1,12 +1,12 @@
 Order Deny,Allow
 Deny from all
 
-<FilesMatch ".\.(css|js|php)$">
+<FilesMatch "^.*\.(css|js|php)$">
 	Order Allow,Deny
 	Allow from all
 </FilesMatch>
 
-<FilesMatch ".\.inc\.php$">
+<FilesMatch "^.*\.inc\.php$">
 	Order Deny,Allow
 	Deny from all
 </FilesMatch>
