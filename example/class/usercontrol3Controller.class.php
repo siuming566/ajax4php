@@ -7,7 +7,6 @@ class usercontrol3Controller extends Controller
 	public function pageLoad()
 	{
 		// load the model
-		global $model;
 		$model = a4p::Model("usercontrol3Model");
 
 		// Show view

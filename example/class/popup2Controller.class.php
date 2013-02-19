@@ -7,7 +7,6 @@ class popup2Controller extends Controller
 	public function pageLoad()
 	{
 		// load the model
-		global $model;
 		$model = a4p::Model("popup2Model");
 
 		// Show view

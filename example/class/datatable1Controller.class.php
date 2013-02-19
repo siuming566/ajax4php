@@ -7,7 +7,6 @@ class datatable1Controller extends Controller
 	public function pageLoad()
 	{
 		// load the model
-		global $model;
 		$model = a4p::Model("datatable1Model");
 
 		if (!isset($model->data)) {

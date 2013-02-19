@@ -53,10 +53,13 @@ class a4p
 		return $instance;
 	}
 
+	private static $currentModel;
+
 	public static function View($viewpath)
 	{
-		global $model;
 		global $controller;
+		global $model;
+		$model = a4p::$currentModel;
 		require SITE_ROOT . "/view/" . $viewpath;
 	}
 
@@ -107,6 +110,8 @@ class a4p
 			} else
 				$instance = a4p_session::get("a4p." . $classname);
 		}
+
+		a4p::$currentModel = $instance;
 		
 		return $instance;
 	}

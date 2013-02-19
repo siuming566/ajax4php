@@ -7,7 +7,6 @@ class helloworldController extends Controller
 	public function pageLoad()
 	{
 		// load the model
-		global $model;
 		$model = a4p::Model("helloworldModel");
 
 		// Do something
