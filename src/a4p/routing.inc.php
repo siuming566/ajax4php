@@ -14,7 +14,7 @@ class routing
 		if ($rerender == true)
 			$prefix = dirname($prefix);
 
-		if ($prefix == ".")
+		if ($prefix == "." || $prefix == "\\" || $prefix == "/")
 			$prefix = "";
 
 		global $uri;
