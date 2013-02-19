@@ -2,7 +2,7 @@
 // Class file name must be classname.class.php
 
 /** @ajaxenable */
-class javascript1Controller
+class javascript1Controller extends Controller
 {
 	/** @ajaxcall */
 	public function getMessage($param)

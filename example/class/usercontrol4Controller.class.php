@@ -2,23 +2,23 @@
 // Class file name must be classname.class.php
 
 /** @ajaxenable */
-class popup2Controller extends Controller
+class usercontrol4Controller extends Controller
 {
 	public function pageLoad()
 	{
 		// load the model
 		global $model;
-		$model = a4p::Model("popup2Model");
+		$model = a4p::Model("usercontrol4Model");
 
 		// Show view
-		a4p::View("popup2.php");
+		a4p::View("usercontrol4.php");
 	}
 
 	/** @ajaxcall */
 	public function add($param)
 	{
 		// bind form value to model
-		$model = form::bind(a4p::Model("popup2Model"));
+		$model = form::bind(a4p::Model("usercontrol4Model"));
 		
 		$model->textfield1 = $model->textfield1 + 1;
 		return "";

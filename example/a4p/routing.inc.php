@@ -1,0 +1,37 @@
+<?php 
+//
+// routing.inc - Routing
+//
+require "framework.inc.php";
+
+class routing
+{
+	public static function setup($routes)
+	{
+		$prefix = dirname($_SERVER["PHP_SELF"]);
+
+		global $rerender;
+		if ($rerender == true)
+			$prefix = dirname($prefix);
+
+		if ($prefix == ".")
+			$prefix = "";
+
+		global $uri;
+		$uri = substr($_SERVER["REQUEST_URI"], strlen($prefix) + 1);
+		$match = false;
+		foreach ($routes as $route => $classpath) {
+			if (preg_match("/^" . $route . "(\?.*)*$/", $uri)) {
+				global $controller;
+				$controller = a4p::Controller($classpath);
+				if (method_exists($controller, 'pageLoad'))
+					$controller->pageLoad();
+				$match = true;
+				break;
+			}
+		}
+
+		if (!$match)
+			header("Location: notfound.html");
+	}
+}

@@ -1,7 +1,3 @@
-<?php
-// include the framework
-require_once "a4p/framework.inc.php";
-?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
@@ -9,11 +5,11 @@ require_once "a4p/framework.inc.php";
 <?php a4p::loadScript(); // Need to load required script in header ?>
 <script type="text/javascript">
 function loadUserControl1() {
-	ui.loadControl('usercontrol1.php', 'place1');
+	ui.loadControl('usercontrol1Controller', 'place1');
 }
 function loadUserControl2() {
 	a4p.call({controller: 'control2Controller', method: 'initUserControl2'});
-	ui.loadControl('usercontrol2.php', 'place2');
+	ui.loadControl('usercontrol2Controller', 'place2');
 }
 </script>
 </head>

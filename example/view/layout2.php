@@ -1,7 +1,3 @@
-<?php
-// include the framework
-require_once "a4p/framework.inc.php";
-?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
@@ -16,7 +12,7 @@ Header - Fixed 100px
 	<?php $layout2 = layout::horizontal("100%", "100%", "150px,*", 1)->begin("border-right: 1px solid lightgrey;"); // pad 1 pixel for border  ?>
 	Menu - Fixed 150px
 	<?php $layout2->next(); ?>
-	<?php a4p::loadControl("usercontrol4.php") ?>
+	<?php a4p::loadControl("usercontrol4Controller") ?>
 	<?php $layout2->end(); ?>
 <?php $layout1->next("border-bottom: 1px solid red;"); ?>
 Footer - 20%

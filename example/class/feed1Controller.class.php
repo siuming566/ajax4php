@@ -2,7 +2,7 @@
 // Class file name must be classname.class.php
 
 /** @ajaxenable */
-class feed1Controller
+class feed1Controller extends Controller
 {
 	/** @ajaxcall */
 	public function ask($param)
@@ -45,5 +45,4 @@ document.getElementById('outputtext2').value += 'Finish\\n';
 END
 );
 	}
-	
 }

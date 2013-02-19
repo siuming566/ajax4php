@@ -2,8 +2,18 @@
 // Class file name must be classname.class.php
 
 /** @ajaxenable */
-class usercontrol1Controller
+class usercontrol1Controller extends Controller
 {
+	public function pageLoad()
+	{
+		// load the model
+		global $model;
+		$model = a4p::Model("usercontrol1Model");
+
+		// Show view
+		a4p::View("usercontrol1.php");
+	}
+
 	/** @ajaxcall */
 	public function add($param)
 	{
@@ -13,5 +23,4 @@ class usercontrol1Controller
 		$model->textfield1 = $model->textfield1 + 1;
 		return "";
 	}
-	
 }

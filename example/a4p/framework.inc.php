@@ -9,11 +9,12 @@ require_once "push.inc.php";
 require_once "security.inc.php";
 require_once "ssl.inc.php";
 require_once "ui.inc.php";
+require_once "controller.inc.php";
 require_once "model.inc.php";
 require_once "layout.inc.php";
 include_once "db.inc.php";
 
-error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
+//error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
 
 session_cache_limiter("nocache");
 session_start();
@@ -37,25 +38,26 @@ class a4p
 	private static $requestscopestack = array();
 	private static $viewscopestack = array();
 
-	public static function Controller($classpath, $param = null)
+	public static function Controller($classpath)
 	{
 		$classname = basename($classpath);
 		if (!class_exists($classpath))
 			require_once "$classpath.class.php";
 
 		if (!isset(a4p::$requestscopestack["a4p." . $classname])) {
-			if ($param != null)
-				$instance = new $classname($param);
-			else
-				$instance = new $classname();
+			$instance = new $classname();
 			a4p::$requestscopestack["a4p." . $classname] = $instance;
 		} else
 			$instance = a4p::$requestscopestack["a4p." . $classname];
 		
-		if (method_exists($instance, 'init'))
-			$instance->init();
-		
 		return $instance;
+	}
+
+	public static function View($viewpath)
+	{
+		global $model;
+		global $controller;
+		require SITE_ROOT . "/view/" . $viewpath;
 	}
 
 	public static function Model($classpath, $defaults = null)
@@ -109,7 +111,7 @@ class a4p
 		return $instance;
 	}
 	
-	public static function ResetModel($classpath)
+	public static function Reset($classpath)
 	{
 		$classname = basename($classpath);
 		
@@ -126,7 +128,7 @@ class a4p
 
 	public static function loadScript()
 	{
-		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
+		$prefix = "/" . str_replace("\\", "/", dirname(substr(__FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
 
 		$isIE = false;
 		$user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -135,7 +137,7 @@ class a4p
 <link href="$prefix/ui.css" type="text/css" rel="Stylesheet" />
 END;
 
-		$phpself = $_SERVER["PHP_SELF"];
+		$phpself = $_SERVER["REQUEST_URI"];
 		$phpquery = $_SERVER["QUERY_STRING"];
 		print <<< END
 <link href="$prefix/framework.css" type="text/css" rel="Stylesheet" />
@@ -157,9 +159,9 @@ END;
 	
 	public static function localScript($param)
 	{
-		$phpself = $_SERVER["PHP_SELF"];
+		$phpself = $_SERVER["REQUEST_URI"];
 		$phpquery = $_SERVER["QUERY_STRING"];
-		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
+		$prefix = "/" . str_replace("\\", "/", dirname(substr(__FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
 		$param1 = $param;
 		$param2 = $param . "ui";
 		print <<< END
@@ -311,9 +313,12 @@ END;
 		}
 	}
 
-	public static function loadControl($file)
+	public static function loadControl($classpath)
 	{
-		require($file);
+		global $controller;
+		$controller = a4p::Controller($classpath);
+		if (method_exists($controller, 'pageLoad'))
+			$controller->pageLoad();
 	}
 }
 

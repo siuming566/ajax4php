@@ -11,5 +11,4 @@ class control2Controller
 		$control->setX("2");
 		$control->setY("3");
 	}
-	
 }

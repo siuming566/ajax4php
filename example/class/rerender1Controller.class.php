@@ -1,7 +1,7 @@
 <?php 
 // Class file name must be classname.class.php
 
-class rerender1Controller
+class rerender1Controller extends Controller
 {
 	public function getTime()
 	{

@@ -1,11 +1,3 @@
-<?php
-// include the framework
-require_once "a4p/framework.inc.php";
-
-// load the controller and model
-$controller = a4p::Controller("usercontrol3Controller");
-$model = a4p::Model("usercontrol3Model");
-?>
 <?php a4p::localScript("usercontrol4"); // add local script tags. give local script a unique namespace ?>
 <meta http-equiv="Content-type" content="text/html;charset=utf-8" /> 
 <form id="form2">
@@ -15,7 +7,7 @@ Title
 <div id="panel2">
 <p>
 <input type="text" name="textfield1" value="<?= $model->textfield1 ?>">
-<input type="button" value="Add" onclick="usercontrol4.action({controller: 'usercontrol3Controller', method: 'add', rerender: 'panel2', formname: 'form2'});">
+<input type="button" value="Add" onclick="usercontrol4.action({controller: 'usercontrol4Controller', method: 'add', rerender: 'panel2', formname: 'form2'});">
 </p>
 </div>
 <?php $layout3->next(); ?>

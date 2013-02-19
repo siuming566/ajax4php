@@ -6,7 +6,7 @@
 if (!$_SERVER['REQUEST_METHOD'] === 'POST')
 	exit();
 
-$page = $_SERVER["PHP_SELF"] = $_POST["page"];
+$page = $_SERVER["REQUEST_URI"] = $_POST["page"];
 $ids = $_POST["id"];
 $rerender = true;
 
@@ -14,7 +14,12 @@ $contents = array();
 $arr = explode(",", $ids);
 
 ob_start();
-require $_SERVER["DOCUMENT_ROOT"] . $page;
+if (strncmp($page, "control:", 8) == 0) {
+	$_POST["control"] = substr($page, 8);
+	require "control.php";
+}
+else
+	require dirname(dirname(__FILE__)) . "/route.php";;
 ob_end_flush();
 $html = ob_get_contents();
 ob_end_clean();

@@ -86,13 +86,15 @@ setInnerHTML: function (element, html) {
 	layout.resize();
 },
 
-loadControl: function (url, id) {
+loadControl: function (control, id) {
 	// request content
 	var self = this;
 	var event = this.newevent();
 	jQuery.ajax({
-		url: url,
+		url: a4p.prefix + '/control.php',
 		type: 'POST',
+		data: {	control: control,
+			time: (new Date()).getTime() },
 		success: function (response) {
 			var element = document.getElementById(id);
 			self.setInnerHTML(element, response);

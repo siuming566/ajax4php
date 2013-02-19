@@ -1,11 +1,3 @@
-<?php
-// include the framework
-require_once "a4p/framework.inc.php";
-
-// load the controller and model
-$controller = a4p::Controller("popup2Controller");
-$model = a4p::Model("popup2Model");
-?>
 <?php a4p::localScript("popup2"); // add local script tags. give local script a unique namespace ?>
 <meta http-equiv="Content-type" content="text/html;charset=utf-8" /> 
 Popup here, id is <?= $_GET["id"] ?>

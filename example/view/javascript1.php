@@ -1,10 +1,3 @@
-<?php
-// include the framework
-require_once "a4p/framework.inc.php";
-
-// load the controller
-$controller = a4p::Controller("rerender1Controller");
-?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
@@ -12,14 +5,19 @@ $controller = a4p::Controller("rerender1Controller");
 <?php a4p::loadScript(); // Need to load required script in header ?>
 </head>
 <body>
-<div id="panel1">
 <p>
-<?= $controller->getTime() ?>
+Call PHP code from Javascript directly
 </p>
 <p>
-<input type="button" value="Refresh" onclick="a4p.rerender('panel1');">
+<input type="button" value="Try" onclick="myfunc();">
 </p>
-</div>
+<script type="text/javascript">
+function myfunc()
+{
+	var msg = a4p.call({controller: 'javascript1Controller', method: 'getMessage', param: a4p.JSONEncode({ a: 'Hello', b: 'World'})});
+	alert(msg);
+}
+</script>
 <p><a href="index.html">Back to index</a></p>
 </body>
 </html>

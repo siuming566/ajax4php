@@ -2,8 +2,18 @@
 // Class file name must be classname.class.php
 
 /** @ajaxenable */
-class calculator1Controller
+class calculator1Controller extends Controller
 {
+	public function pageLoad()
+	{
+		// load the model
+		global $model;
+		$model = a4p::Model("calculator1Model");
+
+		// Show view
+		a4p::View("calculator1.php");
+	}	
+
 	/** @ajaxcall */
 	public function calculate($param)
 	{

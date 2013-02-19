@@ -1,7 +1,3 @@
-<?php
-// include the framework
-require_once "a4p/framework.inc.php";
-?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
@@ -10,10 +6,10 @@ require_once "a4p/framework.inc.php";
 </head>
 <body>
 <form>
+<p>Type something here and press "Go"</p>
 <p>
-<input type="button" value="Ask Question" onclick="a4p.action({controller: 'feed1Controller', method: 'ask', push: true});">
-<br/>
-<textarea id="outputtext2" rows="12" style="width: 300px;"></textarea>
+<input type="text" name="textfield1">
+<input type="button" value="Go" onclick="a4p.action({controller: 'page1Controller', method: 'go'});">
 </p>
 <p><a href="index.html">Back to index</a></p>
 </form>

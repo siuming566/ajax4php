@@ -1,11 +1,3 @@
-<?php
-// include the framework
-require_once "a4p/framework.inc.php";
-
-// load the controller and model
-$controller = a4p::Controller("datatable1Controller");
-$model = a4p::Model("datatable1Model");
-?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>

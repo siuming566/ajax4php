@@ -1,10 +1,3 @@
-<?php
-// include the framework
-require_once "a4p/framework.inc.php";
-
-// load the controller and model
-$model = a4p::Model("usercontrol1Model");
-?>
 <?php a4p::localScript("usercontrol1"); // add local script tags. give local script a unique namespace ?>
 <form id="usercontrol1form">
 <div id="panel1">

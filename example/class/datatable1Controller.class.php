@@ -1,13 +1,15 @@
 <?php 
 // Class file name must be classname.class.php
 
-class datatable1Controller
+class datatable1Controller extends Controller
 {
-	// Controller initialize method
-	public function init()
+	// Controller pageLoad method
+	public function pageLoad()
 	{
 		// load the model
+		global $model;
 		$model = a4p::Model("datatable1Model");
+
 		if (!isset($model->data)) {
 			// Just fill in some random data
 			$model->data = array();
@@ -19,5 +21,7 @@ class datatable1Controller
 				$model->data[] = $row;
 			}
 		}
+
+		a4p::View("datatable1.php");
 	}	
 }

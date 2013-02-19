@@ -2,7 +2,7 @@
 // Class file name must be classname.class.php
 
 /** @ajaxenable */
-class fileupload1Controller
+class fileupload1Controller extends Controller
 {
 	/** @ajaxcall */
 	public function upload($param)

@@ -2,7 +2,7 @@
 // Class file name must be classname.class.php
 
 /** @ajaxenable */
-class push1Controller
+class push1Controller extends Controller
 {
 	/** @ajaxcall */
 	public function start($param)
@@ -32,5 +32,4 @@ document.getElementById('progressbar').style.width = '300px';
 END
 );
 	}
-	
 }

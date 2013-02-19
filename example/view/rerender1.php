@@ -1,10 +1,3 @@
-<?php
-// include the framework
-require_once "a4p/framework.inc.php";
-
-// load the model
-$model = a4p::Model("page1Model");
-?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
@@ -12,8 +5,14 @@ $model = a4p::Model("page1Model");
 <?php a4p::loadScript(); // Need to load required script in header ?>
 </head>
 <body>
-<p>You typed: <?= $model->textfield1 ?></p>
-<p><a href="page1.php">Back to page 1</a></p>
+<div id="panel1">
+<p>
+<?= $controller->getTime() ?>
+</p>
+<p>
+<input type="button" value="Refresh" onclick="a4p.rerender('panel1');">
+</p>
+</div>
 <p><a href="index.html">Back to index</a></p>
 </body>
 </html>

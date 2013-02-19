@@ -2,8 +2,18 @@
 // Class file name must be classname.class.php
 
 /** @ajaxenable */
-class usercontrol3Controller
+class usercontrol3Controller extends Controller
 {
+	public function pageLoad()
+	{
+		// load the model
+		global $model;
+		$model = a4p::Model("usercontrol3Model");
+
+		// Show view
+		a4p::View("usercontrol3.php");
+	}
+
 	/** @ajaxcall */
 	public function add($param)
 	{
@@ -18,5 +28,4 @@ class usercontrol3Controller
 	{
 		return "server time: " . date('Y-m-d H:i:s e');
 	}
-	
 }
