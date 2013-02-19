@@ -2,7 +2,7 @@
 
 class Model
 {
-	public function __construct($defaults)
+	public function __construct($defaults = array())
 	{
 		foreach ($defaults as $key => $value)
 		{
