@@ -13,7 +13,7 @@ Features
 - Annotation
 - RequestScope, ViewScope and SessionScope Model
 - Implicit Navigation
-
+- Layout Control
 
 Requirements
 ============
@@ -25,4 +25,8 @@ Requirements
 Change Log
 ==========
 
+* 1.1.0 Version 1.1 (20-Feb-2013)
+  - Added Layout Control
+  - Improved Rerender Process 
+  
 * 1.0.0 Initial Release (28-Jan-2013)
