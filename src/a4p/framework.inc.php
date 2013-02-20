@@ -12,9 +12,10 @@ require_once "ui.inc.php";
 require_once "controller.inc.php";
 require_once "model.inc.php";
 require_once "layout.inc.php";
+require_once "template.inc.php";
 include_once "db.inc.php";
 
-error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
+//error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
 
 session_cache_limiter("nocache");
 session_start();
@@ -55,7 +56,7 @@ class a4p
 		return $instance;
 	}
 
-	private static $currentModel;
+	public static $currentModel;
 
 	public static function View($viewpath)
 	{
