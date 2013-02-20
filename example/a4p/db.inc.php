@@ -52,6 +52,11 @@ class db
 		return new db_sqldelete();
 	}
 
+	public static function join($table = "")
+	{
+		return new db_sqljoin($table);
+	}
+
 	public static function str($s)
 	{
 		return "'" . str_replace("'", "''", $s) . "'";
@@ -81,8 +86,12 @@ class db_sqlquery
 
 	public function where() {
 		foreach (func_get_args() as $s)
-			if (strlen($s) > 0)
-				$this->where .= " and " . $s;
+			if (strlen($s) > 0) {
+				if (strncasecmp($s, " or ", 4) == 0)
+					$this->where .= $s;
+				else
+					$this->where .= " and " . $s;
+			}
 		return $this;
 	}
 	
@@ -219,4 +228,75 @@ class db_sqldelete
 	public function sql() {
 		return (string) $this;
 	}	
+}
+
+class db_sqljoin
+{
+	private $table1 = "";
+	private $table2 = "";
+	private $join = "";
+	private $on = "";
+	
+	public function __contruct($table1 = "") {
+		$this->table1 = table1;
+	}
+	
+	public function table($table1) {
+		$this->table1 = $table1;
+		return $this;
+	}
+	
+	public function join($table2) {
+		$this->table1 = (string) $this;
+		$this->join = " join ";
+		$this->table2 = $table2;
+		return $this;
+	}
+
+	public function leftjoin($table2) {
+		$this->table1 = (string) $this;
+		$this->join = " left join ";
+		$this->table2 = $table2;
+		return $this;
+	}
+
+	public function rightjoin($table2) {
+		$this->table1 = (string) $this;
+		$this->join = " right join ";
+		$this->table2 = $table2;
+		return $this;
+	}
+
+	public function outerjoin($table2) {
+		$this->table1 = (string) $this;
+		$this->join = " outer join ";
+		$this->table2 = $table2;
+		return $this;
+	}
+
+	public function leftouterjoin($table2) {
+		$this->table1 = (string) $this;
+		$this->join = " left outer join ";
+		$this->table2 = $table2;
+		return $this;
+	}
+
+	public function rightouterjoin($table2) {
+		$this->table1 = (string) $this;
+		$this->join = " right outer join ";
+		$this->table2 = $table2;
+		return $this;
+	}
+
+	public function on($on) {
+		$this->on = $on;
+		return $this;
+	}
+	
+	public function __toString() {
+		if (strlen($this->join) > 0)
+			return trim($this->table1 . $this->join . $this->table2 . " on (" . $this->on . ")");
+		else
+			return trim($this->table1);
+	}
 }
