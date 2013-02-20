@@ -14,7 +14,7 @@ require_once "model.inc.php";
 require_once "layout.inc.php";
 include_once "db.inc.php";
 
-//error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
+error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
 
 session_cache_limiter("nocache");
 session_start();

@@ -33,6 +33,8 @@ END;
 	$html = $html4doctype . $html;
 }
 
+libxml_use_internal_errors(true);
+
 $dom = new DOMDocument();
 $dom->preserveWhiteSpace = false;
 $dom->loadHTML($html);
