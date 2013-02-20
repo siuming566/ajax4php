@@ -48,7 +48,7 @@ class a4p_session
 
 	public static function remove($name)
 	{
-		if (exists($name)) {
+		if (self::exists($name)) {
 			$session_var = self::$stack[$name];
 			fclose($session_var->file);
 			unset(self::$stack[$name]);
