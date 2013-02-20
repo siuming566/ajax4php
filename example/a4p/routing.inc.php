@@ -33,6 +33,6 @@ class routing
 		}
 
 		if (!$match)
-			header("Location: notfound.html");
+			header("Location: /notfound.html");
 	}
 }

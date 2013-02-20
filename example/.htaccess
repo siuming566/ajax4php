@@ -2,4 +2,5 @@ RewriteEngine On
 RewriteRule ^a4p/(.*)$ a4p/$1 [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !/notfound\.html$
 RewriteRule ^.*$ route.php [L]
