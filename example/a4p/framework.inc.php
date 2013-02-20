@@ -46,6 +46,8 @@ class a4p
 
 		if (!isset(a4p::$requestscopestack["a4p." . $classname])) {
 			$instance = new $classname();
+			if (property_exists($instance, 'name'))
+				$instance->name = $classpath;
 			a4p::$requestscopestack["a4p." . $classname] = $instance;
 		} else
 			$instance = a4p::$requestscopestack["a4p." . $classname];
@@ -320,17 +322,17 @@ END;
 
 	public static function loadControl($classpath)
 	{
-		global $ui, $controller;
+		global $ui, $controller, $model;
 
 		$_ui = $ui;
 		$_controller = $controller;
-		$_model = a4p::$currentModel;
+		$_model = $model;
 
 		$controller = a4p::Controller($classpath);
 		if (method_exists($controller, 'pageLoad'))
 			$controller->pageLoad();
 
-		a4p::$currentModel = $_model;
+		$model = $_model;
 		$controller = $_controller;
 		$ui = $_ui;
 	}

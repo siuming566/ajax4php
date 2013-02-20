@@ -18,7 +18,8 @@ class routing
 			$prefix = "";
 
 		global $uri;
-		$uri = substr($_SERVER["REQUEST_URI"], strlen($prefix) + 1);
+		$uri_parts = explode('?', $_SERVER['REQUEST_URI'], 2);
+		$uri = substr($uri_parts[0], strlen($prefix) + 1);
 		$match = false;
 		foreach ($routes as $route => $classpath) {
 			if (preg_match("/^" . $route . "(\?.*)*$/", $uri)) {
