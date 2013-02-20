@@ -320,10 +320,19 @@ END;
 
 	public static function loadControl($classpath)
 	{
-		global $controller;
+		global $ui, $controller;
+
+		$_ui = $ui;
+		$_controller = $controller;
+		$_model = a4p::$currentModel;
+
 		$controller = a4p::Controller($classpath);
 		if (method_exists($controller, 'pageLoad'))
 			$controller->pageLoad();
+
+		a4p::$currentModel = $_model;
+		$controller = $_controller;
+		$ui = $_ui;
 	}
 }
 
