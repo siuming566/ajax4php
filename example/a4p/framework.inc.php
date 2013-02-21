@@ -13,6 +13,7 @@ require_once "controller.inc.php";
 require_once "model.inc.php";
 require_once "layout.inc.php";
 require_once "template.inc.php";
+require_once "language.inc.php";
 include_once "db.inc.php";
 
 //error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
@@ -230,7 +231,7 @@ END;
 		return a4p::Model("Container");
 	}
 
-	private static function processBuffer($buffer, $js_call)
+	private static function &processBuffer(&$buffer, $js_call)
 	{
 		$max_len = 200;
 		$pos = -1;
@@ -269,7 +270,7 @@ END;
 		return $buffer;
 	}
 
-	public static function postProcess($buffer)
+	public static function &postProcess(&$buffer)
 	{
 		global $ui;
 		foreach(self::$js_name as $name) {
@@ -280,7 +281,7 @@ END;
 		return self::finalize($buffer);
 	}
 
-	private static function processLayout($buffer)
+	private static function &processLayout(&$buffer)
 	{
 		$placement = "<!-- layout info here -->";
 		$pos = -1;
@@ -296,9 +297,15 @@ END;
 		return $buffer;
 	}
 
-	public static function finalize($buffer)
+	private static function &processLanguage(&$buffer)
+	{
+		return language::process($buffer);
+	}
+
+	public static function &finalize(&$buffer)
 	{
 		$buffer = self::processLayout($buffer);
+		$buffer = self::processLanguage($buffer);
 		a4p_session::flush();
 		return $buffer;
 	}
