@@ -16,5 +16,6 @@ routing::setup(array(
 	"fileupload1" => "fileupload1Controller",
 	"control(1|2)" => "_defaultController",
 	"layout(1|2)" => "_defaultController",
-	"content1" => "content1Controller"
+	"content1" => "content1Controller",
+	"language1" => "language1Controller"
 ));
