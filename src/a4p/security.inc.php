@@ -9,28 +9,27 @@ class a4p_sec
 
 	public static $auth = false;
 
-    private static $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+	private static $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
 
 	public static function randomString($length) {
-	    $pass = array();
-	    $alphaLength = strlen(self::$alphabet) - 1;
-	    for ($i = 0; $i < $length; $i++) {
-	        $n = rand(0, $alphaLength);
-	        $pass[] = self::$alphabet[$n];
-	    }
-	    return implode($pass);
+		$pass = "";
+		$alphaLength = strlen(self::$alphabet) - 1;
+		for ($i = 0; $i < $length; $i++) {
+			$n = mt_rand(0, $alphaLength);
+			$pass .= self::$alphabet[$n];
+		}
+		return $pass;
 	}
 
 	public static function shiftString($map, $key) {
-	    $pass = array();
-	    $length = strlen($key);
-	    for ($i = 0; $i < $length; $i++) {
-	    	$c = $key[$i];
-	        $n = strpos(self::$alphabet, $c);
-	        //$pass[] = $map[$n];
-	        $pass[] = $n . ":";
-	    }
-	    return implode($pass);
+		$pass = "";
+		$length = strlen($key);
+		for ($i = 0; $i < $length; $i++) {
+			$c = $key[$i];
+			$n = strpos(self::$alphabet, $c);
+			$pass .= $n . ":";
+		}
+		return $pass;
 	}
 
 }

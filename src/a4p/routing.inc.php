@@ -2,7 +2,6 @@
 //
 // routing.inc - Routing
 //
-require "framework.inc.php";
 
 class routing
 {
@@ -23,6 +22,7 @@ class routing
 		$match = false;
 		foreach ($routes as $route => $classpath) {
 			if (preg_match("/^" . $route . "(\?.*)*$/", $uri)) {
+				require "framework.inc.php";
 				global $controller;
 				$controller = a4p::Controller($classpath);
 				if (method_exists($controller, 'pageLoad'))

@@ -23,13 +23,27 @@ class a4p_session
 
 	public static function init()
 	{
-		$session_files = glob(session_save_path() . DIRECTORY_SEPARATOR . "sess_*");
+		if (mt_rand(0, 99) != 0)
+			return;
+
+		$session_files = scandir(session_save_path());
+
 		foreach($session_files as $session_file) {
+			if (strncmp($session_file, "sess_", 5) != 0)
+				continue;
+			$pos = strpos($session_file, ".");
+			if ($pos === false) 
+				$sessions[] = $session_file;
+		}
+
+		foreach($session_files as $session_file) {
+			if (strncmp($session_file, "sess_", 5) != 0)
+				continue;
 			$pos = strpos($session_file, ".");
 			if ($pos != false) {
 				$session_name = substr($session_file, 0, $pos);
-				if (!in_array($session_name, $session_files))
-					unlink($session_file);
+				if (!in_array($session_name, $sessions))
+					unlink(session_save_path() . "/" . $session_file);
 			}
 		}
 	}
