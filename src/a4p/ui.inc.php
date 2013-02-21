@@ -229,7 +229,7 @@ class ui
 
 	private static $iframe = false;
 
-	public static function fileupload($controller, $method, $rerender = "") {
+	public static function fileupload($controller, $method, $rerender = "", $push = "false") {
 		global $ui;
 		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
 		echo <<< END
@@ -241,7 +241,7 @@ class ui
 END;
 		if (self::$iframe == false)
 			echo <<< END
-<iframe name="fileupload_iframe" style="display: none;" onload="$ui.fileupload({controller: '$controller', method: '$method', rerender: '$rerender', frame: this});"></iframe>
+<iframe name="fileupload_iframe" style="display: none;" onload="$ui.fileupload({controller: '$controller', method: '$method', rerender: '$rerender', push: '$push', frame: this});"></iframe>
 END;
 		self::$iframe = true;
 	}

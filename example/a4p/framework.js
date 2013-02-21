@@ -107,7 +107,12 @@ _ajaxRerender: function (id, event) {
 			id: id,
 			time: (new Date()).getTime() },
 		success: function (response) {
-			a4p.ajaxDisplay(response, id);
+			if (response.startsWith('@')) {
+				if (response.length > 1)
+					a4p.ajaxDisplay(response.substring(1), id);
+			}
+			else
+				document.body.innerHTML = response;
 			event._onComplete();
 			a4p.idle_func();		
 		}

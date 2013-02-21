@@ -142,7 +142,7 @@ fileupload: function(arg) {
 	if (response.length > 1) {
 		arg.frame.contentDocument.body.innerHTML = '';
 		if (response.startsWith('@'))
-			this.target.action({token: arg.token, controller: arg.controller, method: arg.method, param: response.substring(1), rerender: arg.rerender});
+			this.target.action({token: arg.token, controller: arg.controller, method: arg.method, param: response.substring(1), rerender: arg.rerender, push: arg.push});
 		else
 			document.body.innerHTML = response;
 	}
