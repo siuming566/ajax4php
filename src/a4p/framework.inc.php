@@ -58,7 +58,7 @@ class a4p
 
 	public static $currentModel;
 
-	public static function View($viewpath)
+	public static function View($viewpath, $env = array())
 	{
 		global $controller;
 		global $model;

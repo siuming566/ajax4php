@@ -32,7 +32,12 @@ class routing
 			}
 		}
 
-		if (!$match)
-			header("Location: /notfound.html");
+		if (!$match) {
+			global $rerender;
+			if (isset($rerender) && $rerender == true)
+				require $_SERVER["DOCUMENT_ROOT"] . $page;
+			else
+				header("Location: /notfound.html");
+		}
 	}
 }
