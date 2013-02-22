@@ -14,7 +14,7 @@ class a4p_sec
 	public static function randomString($length) {
 		$pass = "";
 		$alphaLength = strlen(self::$alphabet) - 1;
-		for ($i = 0; $i < $length; $i++) {
+		for ($i = 0; $i < $length; ++$i) {
 			$n = mt_rand(0, $alphaLength);
 			$pass .= self::$alphabet[$n];
 		}
@@ -24,7 +24,7 @@ class a4p_sec
 	public static function shiftString($map, $key) {
 		$pass = "";
 		$length = strlen($key);
-		for ($i = 0; $i < $length; $i++) {
+		for ($i = 0; $i < $length; ++$i) {
 			$c = $key[$i];
 			$n = strpos(self::$alphabet, $c);
 			$pass .= $n . ":";
