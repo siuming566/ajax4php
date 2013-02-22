@@ -35,6 +35,7 @@ $_SESSION = array();
 
 class a4p
 {
+	public static $http_port;
 	public static $ssl_port;
 
 	private static $requestscopestack = array();
@@ -310,11 +311,17 @@ END;
 		return $buffer;
 	}
 
-	public static function requireSSL()
+	public static function requireSSL($ssl = true)
 	{
-		if($_SERVER["HTTPS"] != "on") {
+		if($ssl == true && $_SERVER["HTTPS"] != "on") {
 			header("HTTP/1.1 301 Moved Permanently");
 			header("Location: https://" . $_SERVER["SERVER_NAME"] . ":" . self::$ssl_port . $_SERVER["REQUEST_URI"]);
+			exit();
+		}
+
+		if($ssl == false && $_SERVER["HTTPS"] == "on") {
+			header("HTTP/1.1 301 Moved Permanently");
+			header("Location: http://" . $_SERVER["SERVER_NAME"] . ":" . self::$http_port . $_SERVER["REQUEST_URI"]);
 			exit();
 		}
 	}
