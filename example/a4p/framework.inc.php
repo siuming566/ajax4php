@@ -346,6 +346,7 @@ END;
 	}
 }
 
+global $ui;
 $ui = "ui";
 
 if (!a4p::isAjaxCall())
