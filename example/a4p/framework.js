@@ -54,7 +54,7 @@ ajaxCall: function (arg) {
 	var element = document.getElementById(formname);
 	if (element == null)
 		document.forms[0].id = formname;
-	if (typeof arg.controller == 'undefined') {
+	if (typeof arg.controller == 'undefined' || arg.controller == '') {
 		arg.controller = this.controller;
 		arg.token += this.token;
 	}
@@ -159,7 +159,7 @@ JSONEncode: function (obj) {
 },
 
 phpCall: function (arg) {
-	if (typeof arg.controller == 'undefined') {
+	if (typeof arg.controller == 'undefined' || arg.controller == '') {
 		arg.controller = this.controller;
 		arg.token += this.token;
 	}
