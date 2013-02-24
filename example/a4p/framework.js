@@ -5,22 +5,26 @@ var a4p = {
 prefix: '',
 phpself: '',
 phpquery: '',
+controller: '',
+token: '',
 
 busy_func: function() {},
 
 idle_func: function() {},
 
-init: function (prefix, phpself, phpquery) {
+init: function (prefix, phpself, phpquery, controller, token) {
 	this.prefix = prefix;
 	this.phpself = phpself;
 	this.phpquery = phpquery;
+	this.controller = controller;
+	this.token = token;
 },
 
-setup: function (prefix, phpself, phpquery) {
+setup: function (prefix, phpself, phpquery, controller, token) {
 	var type = function() {};
 	type.prototype = a4p;
 	var obj = new type;
-	obj.init(prefix, phpself, phpquery);
+	obj.init(prefix, phpself, phpquery, controller, token);
 	return obj;
 },
 
@@ -50,6 +54,10 @@ ajaxCall: function (arg) {
 	var element = document.getElementById(formname);
 	if (element == null)
 		document.forms[0].id = formname;
+	if (typeof arg.controller == 'undefined') {
+		arg.controller = this.controller;
+		arg.token += this.token;
+	}
 	return this._ajaxCall(arg.token, arg.controller, arg.method, arg.param, formname, arg.rerender, arg.push);
 },
 
@@ -151,6 +159,10 @@ JSONEncode: function (obj) {
 },
 
 phpCall: function (arg) {
+	if (typeof arg.controller == 'undefined') {
+		arg.controller = this.controller;
+		arg.token += this.token;
+	}
 	return this._phpCall(arg.token, arg.controller, arg.method, arg.param);
 },
 

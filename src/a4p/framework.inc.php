@@ -149,6 +149,17 @@ END;
 
 		$phpself = $_SERVER["REQUEST_URI"];
 		$phpquery = $_SERVER["QUERY_STRING"];
+
+		global $controller;
+		if (isset($controller->name)) {
+			$controllername = $controller->name;
+			$token = a4p_sec::shiftString(a4p_sec::$map, $controller->name);
+		}
+		else {
+			$controllername = "";
+			$token = "";
+		}
+
 		print <<< END
 <link href="$prefix/framework.css" type="text/css" rel="Stylesheet" />
 <link href="$prefix/layout.css" type="text/css" rel="Stylesheet" />
@@ -158,29 +169,44 @@ END;
 <script type="text/javascript" src="$prefix/ui.js"></script>
 <script type="text/javascript" src="$prefix/layout.js"></script>
 <script type="text/javascript">
-a4p.init('$prefix', '$phpself', '$phpquery');
+a4p.init('$prefix', '$phpself', '$phpquery', '$controllername', '$token');
 ui.init(a4p);
 var layout_info = new Array();
 <!-- layout info here -->
 </script>
 END;
+
 		self::$js_name[] = "a4p";
 	}
 	
 	public static function localScript($param)
 	{
+		$prefix = "/" . str_replace("\\", "/", dirname(substr(__FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
+
 		$phpself = $_SERVER["REQUEST_URI"];
 		$phpquery = $_SERVER["QUERY_STRING"];
-		$prefix = "/" . str_replace("\\", "/", dirname(substr(__FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
+
+		global $controller;
+		if (isset($controller->name)) {
+			$controllername = $controller->name;
+			$token = a4p_sec::shiftString(a4p_sec::$map, $controller->name);
+		}
+		else {
+			$controllername = "";
+			$token = "";
+		}
+	
 		$param1 = $param;
 		$param2 = $param . "ui";
+
 		print <<< END
 <script type="text/javascript">
-$param1 = a4p.setup('$prefix', '$phpself', '$phpquery');
+$param1 = a4p.setup('$prefix', '$phpself', '$phpquery', '$controllername', '$token');
 $param2 = ui.setup($param1);
 <!-- layout info here -->
 </script>
 END;
+
 		global $ui;
 		$ui = $param2;
 		self::$js_name[] = $param;
@@ -234,25 +260,30 @@ END;
 
 	private static function &processBuffer(&$buffer, $js_call)
 	{
+		global $controller;
 		$max_len = 200;
 		$pos = -1;
 		while ($pos = strpos($buffer, $js_call, $pos + 1)) {
-			$controller_start = strpos($buffer, "controller:", $pos) + strlen("controller:");
-			if ($controller_start === false || $controller_start - $pos > $max_len)
-				continue;
-			$controller_end1 = strpos($buffer, ",", $controller_start);
-			$controller_end2 = strpos($buffer, "}", $controller_start);
-			if ($controller_end1 === false)
-				$controller_end1 = $controller_end2;
-			$controller_end = $controller_end1 < $controller_end2 ? $controller_end1 : $controller_end2;
-			if ($controller_end === false || $controller_end - $controller_start > $max_len)
-				continue;
-			$controller_raw = substr($buffer, $controller_start, $controller_end - $controller_start);
-			$controller = trim(str_replace("'", "", $controller_raw));
+			$controller_start = strpos($buffer, "controller:", $pos);
+			if ($controller_start === false || $controller_start - $pos > $max_len) {
+				$controllername = "";
+			} else {
+				$controller_start += strlen("controller:");
+				$controller_end1 = strpos($buffer, ",", $controller_start);
+				$controller_end2 = strpos($buffer, "}", $controller_start);
+				if ($controller_end1 === false)
+					$controller_end1 = $controller_end2;
+				$controller_end = $controller_end1 < $controller_end2 ? $controller_end1 : $controller_end2;
+				if ($controller_end === false || $controller_end - $controller_start > $max_len)
+					continue;
+				$controller_raw = substr($buffer, $controller_start, $controller_end - $controller_start);
+				$controller_name = trim(str_replace("'", "", $controller_raw));
+			}
 			
-			$method_start = strpos($buffer, "method:", $pos) + strlen("method:");
+			$method_start = strpos($buffer, "method:", $pos);
 			if ($method_start === false || $method_start - $pos > $max_len)
 				continue;
+			$method_start += strlen("method:");
 			$method_end1 = strpos($buffer, ",", $method_start);
 			$method_end2 = strpos($buffer, "}", $method_start);
 			if ($method_end1 === false)
@@ -263,7 +294,7 @@ END;
 			$method_raw = substr($buffer, $method_start, $method_end - $method_start);
 			$method = trim(str_replace("'", "", $method_raw));
 
-			$token = a4p_sec::shiftString(a4p_sec::$map, $method . $controller);
+			$token = a4p_sec::shiftString(a4p_sec::$map, $method . $controller_name);
 
 			$pos += strlen($js_call);
 			$buffer = substr($buffer, 0, $pos) . "token: '$token', " . substr($buffer, $pos);
