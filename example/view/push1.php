@@ -18,7 +18,7 @@ a4p.onIdle(function () {
 <body>
 <form>
 <p>
-<input type="button" value="Start Push" onclick="a4p.action({controller: 'push1Controller', method: 'start', push: true});">
+<input type="button" value="Start Push" onclick="a4p.action({method: 'start', push: true});">
 <br/>
 <textarea id="outputtext" rows="12" style="width: 300px;"></textarea>
 <br/>

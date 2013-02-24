@@ -13,7 +13,7 @@
 <input name="y" type="text" size="3" value="<?= $model->y ?>">
 =
 <input name="z" type="text" size="3" value="<?= $model->z ?>">
-<input type="button" onclick="a4p.action({controller: 'calculator1Controller', method: 'calculate', rerender: 'panel1'});" value="Calculate">
+<input type="button" onclick="a4p.action({method: 'calculate', rerender: 'panel1'});" value="Calculate">
 </p>
 </div>
 <p><a href="index.html">Back to index</a></p>

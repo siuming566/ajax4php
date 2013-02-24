@@ -14,7 +14,7 @@ Call PHP code from Javascript directly
 <script type="text/javascript">
 function myfunc()
 {
-	var msg = a4p.call({controller: 'javascript1Controller', method: 'getMessage', param: a4p.JSONEncode({ a: 'Hello', b: 'World'})});
+	var msg = a4p.call({method: 'getMessage', param: a4p.JSONEncode({ a: 'Hello', b: 'World'})});
 	alert(msg);
 }
 </script>

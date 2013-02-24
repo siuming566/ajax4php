@@ -4,7 +4,7 @@
 This is user control 1
 <p>
 <input type="text" name="textfield1" value="<?= $model->textfield1 ?>">
-<input type="button" value="Add" onclick="usercontrol1.action({controller: 'usercontrol1Controller', method: 'add', rerender: 'panel1', formname: 'usercontrol1form'});">
+<input type="button" value="Add" onclick="usercontrol1.action({method: 'add', rerender: 'panel1', formname: 'usercontrol1form'});">
 </p>
 </div>
 </form>

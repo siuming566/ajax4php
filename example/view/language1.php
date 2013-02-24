@@ -9,10 +9,10 @@
 <div id="panel1">
 <p>$sample.message</p>
 <p>
-<input type="button" value="English" onclick="a4p.action({controller: 'language1Controller', method: 'showEnglish', rerender: 'panel1'});">
+<input type="button" value="English" onclick="a4p.action({method: 'showEnglish', rerender: 'panel1'});">
 </p>
 <p>
-<input type="button" value="Chinese" onclick="a4p.action({controller: 'language1Controller', method: 'showChinese', rerender: 'panel1'});">
+<input type="button" value="Chinese" onclick="a4p.action({method: 'showChinese', rerender: 'panel1'});">
 </p>
 </div>
 <p><a href="index.html">Back to index</a></p>

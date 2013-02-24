@@ -5,7 +5,7 @@ Popup here, id is <?= $_GET["id"] ?>
 <div id="panel2">
 <p>
 <input type="text" name="textfield1" value="<?= $model->textfield1 ?>">
-<input type="button" value="Add" onclick="popup2.action({controller: 'popup2Controller', method: 'add', rerender: 'panel2', formname: 'form2'});">
+<input type="button" value="Add" onclick="popup2.action({method: 'add', rerender: 'panel2', formname: 'form2'});">
 </p>
 </div>
 <div id="panel3">

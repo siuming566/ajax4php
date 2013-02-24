@@ -7,7 +7,7 @@ Title
 <div id="panel2">
 <p>
 <input type="text" name="textfield1" value="<?= $model->textfield1 ?>">
-<input type="button" value="Add" onclick="usercontrol4.action({controller: 'usercontrol4Controller', method: 'add', rerender: 'panel2', formname: 'form2'});">
+<input type="button" value="Add" onclick="usercontrol4.action({method: 'add', rerender: 'panel2', formname: 'form2'});">
 </p>
 </div>
 <?php $layout3->next(); ?>
