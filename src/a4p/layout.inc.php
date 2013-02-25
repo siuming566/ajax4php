@@ -57,7 +57,7 @@ class layout_vertical_meta {
 
 	public function new_row() {
 		$count = count($this->table->rows);
-		$rowid = $this->table->id . "row" . ($count + 1);
+		$rowid = $this->table->id . "_row" . ($count + 1);
 		$rowheight = $this->rows[$count % count($this->rows)];
 		$row = new layout_row($rowid, $rowheight);
 		$this->table->rows[] = $row;
@@ -113,7 +113,7 @@ class layout_horizontal_meta {
 
 	public function new_column() {
 		$count = count($this->table->columns);
-		$colid = $this->table->id . "col" . ($count + 1);
+		$colid = $this->table->id . "_col" . ($count + 1);
 		$colwidth = $this->columns[$count % count($this->columns)];
 		$column = new layout_column($colid, $colwidth);
 		$this->table->columns[] = $column;
@@ -168,8 +168,7 @@ class layout
 
 	public static function vertical($width, $height, $rows, $padding = 0)
 	{
-		$count = count(self::$layout_info);
-		$id = "table" . ($count + 1);
+		$id = "table_" . a4p_sec::randomString(8);
 		$table = new layout_table($id, $width, $height, "vertical", $padding);
 		self::$layout_info[] = $table;
 
@@ -179,8 +178,7 @@ class layout
 
 	public static function horizontal($width, $height, $columns, $padding = 0)
 	{
-		$count = count(self::$layout_info);
-		$id = "table" . ($count + 1);
+		$id = "table_" . a4p_sec::randomString(8);
 		$table = new layout_table($id, $width, $height, "horizontal", $padding);
 		self::$layout_info[] = $table;
 
