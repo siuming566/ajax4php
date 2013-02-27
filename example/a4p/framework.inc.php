@@ -344,15 +344,18 @@ END;
 
 	public static function requireSSL($ssl = true)
 	{
-		if($ssl == true && $_SERVER["HTTPS"] != "on") {
+		$isHTTPS = isset($_SERVER["HTTPS"]) ? ($_SERVER["HTTPS"] == "on") : false;
+		$host = isset($_SERVER["HTTP_X_FORWARDED_HOST"]) ? $_SERVER["HTTP_X_FORWARDED_HOST"] : $_SERVER["SERVER_NAME"];
+
+		if($ssl == true && $isHTTPS == false) {
 			header("HTTP/1.1 301 Moved Permanently");
-			header("Location: https://" . $_SERVER["SERVER_NAME"] . ":" . self::$ssl_port . $_SERVER["REQUEST_URI"]);
+			header("Location: https://" . $host . ":" . self::$ssl_port . $_SERVER["REQUEST_URI"]);
 			exit();
 		}
 
-		if($ssl == false && $_SERVER["HTTPS"] == "on") {
+		if($ssl == false && $isHTTPS == true) {
 			header("HTTP/1.1 301 Moved Permanently");
-			header("Location: http://" . $_SERVER["SERVER_NAME"] . ":" . self::$http_port . $_SERVER["REQUEST_URI"]);
+			header("Location: http://" . $host . ":" . self::$http_port . $_SERVER["REQUEST_URI"]);
 			exit();
 		}
 	}
