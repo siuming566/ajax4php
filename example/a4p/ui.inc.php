@@ -241,7 +241,7 @@ class ui
 END;
 		if (self::$iframe == false)
 			echo <<< END
-<iframe name="fileupload_iframe" style="display: none;" onload="$ui.fileupload({controller: '$controller', method: '$method', rerender: '$rerender', push: '$push', frame: this});"></iframe>
+<iframe name="fileupload_iframe" style="display: none;" onload="$ui.fileupload({controller: '$controller', method: '$method', rerender: '$rerender', push: $push, frame: this});"></iframe>
 END;
 		self::$iframe = true;
 	}

@@ -43,7 +43,7 @@ _ajaxPoll: function (poll_id, pos, feed) {
 		success: function(response) {
 			if (response != '@END@') {
 				feed = eval(response);
-				setTimeout(function() { a4p._ajaxPoll(poll_id, pos + response.length, response.length > 0 ? feed : ''); }, 100);
+				setTimeout(function() { a4p._ajaxPoll(poll_id, pos + response.length, response.length > 0 ? '' + feed : ''); }, 100);
 			}
 		}
 	});
