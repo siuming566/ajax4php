@@ -15,6 +15,20 @@ class fileupload1Controller extends Controller
 		$size = $upload_file->size;
 		$tmp_name = $upload_file->tmp_name;
 
-		return "javascript:alert('Filename: $name\\nSize: $size');";
+		return "javascript:alert('Upload1: Filename: $name\\nSize: $size');";
+	}	
+
+	/** @ajaxcall */
+	public function upload2($param)
+	{
+		// decode the param to get the uploaded file
+		$upload_file = json_decode($param);
+
+		// get file properties
+		$name = $upload_file->name;
+		$size = $upload_file->size;
+		$tmp_name = $upload_file->tmp_name;
+
+		push::execJS("alert('Upload2: Filename: $name\\nSize: $size');");
 	}	
 }

@@ -5,7 +5,9 @@
 <?php a4p::loadScript(); // Need to load required script in header ?>
 </head>
 <body>
-<p><?php ui::fileupload("fileupload1Controller", "upload"); ?></p>
+<?php ui::fileupload("fileupload1Controller", "upload"); ?>
+<br/>
+<?php ui::fileupload("fileupload1Controller", "upload2", "", "true"); ?>
 <p><a href="index.html">Back to index</a></p>
 </body>
 </html>
