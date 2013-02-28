@@ -7,16 +7,15 @@ require_once "container.inc.php";
 require_once "form.inc.php";
 require_once "push.inc.php";
 require_once "security.inc.php";
-require_once "ssl.inc.php";
 require_once "ui.inc.php";
 require_once "controller.inc.php";
 require_once "model.inc.php";
 require_once "layout.inc.php";
 require_once "template.inc.php";
 require_once "language.inc.php";
-include_once "db.inc.php";
-
-//error_reporting(E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR);
+require_once "db.inc.php";
+require_once "config.inc.php";
+require_once "debug.inc.php";
 
 session_cache_limiter("nocache");
 session_start();
@@ -35,9 +34,6 @@ $_SESSION = array();
 
 class a4p
 {
-	public static $http_port;
-	public static $ssl_port;
-
 	private static $requestscopestack = array();
 	private static $viewscopestack = array();
 
@@ -349,13 +345,13 @@ END;
 
 		if($ssl == true && $isHTTPS == false) {
 			header("HTTP/1.1 301 Moved Permanently");
-			header("Location: https://" . $host . ":" . self::$ssl_port . $_SERVER["REQUEST_URI"]);
+			header("Location: https://" . $host . ":" . config::$ssl_port . $_SERVER["REQUEST_URI"]);
 			exit();
 		}
 
 		if($ssl == false && $isHTTPS == true) {
 			header("HTTP/1.1 301 Moved Permanently");
-			header("Location: http://" . $host . ":" . self::$http_port . $_SERVER["REQUEST_URI"]);
+			header("Location: http://" . $host . ":" . config::$http_port . $_SERVER["REQUEST_URI"]);
 			exit();
 		}
 	}

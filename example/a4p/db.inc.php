@@ -5,16 +5,12 @@
 
 class db
 {
-	private static $connect_string = "mysql:host=;dbname=";
-	private static $user = "";
-	private static $pass = "";
-
 	private static $conn = null;
 
 	public static function getConnection($new_connection = false)
 	{
 		if (self::$conn == null || $new_connection == true) {
-			self::$conn = new PDO(self::$connect_string, self::$user, self::$pass);
+			self::$conn = new PDO(config::$connect_string, config::$user, config::$pass);
 			self::$conn->exec("SET CHARACTER SET utf8");
 			self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
