@@ -227,22 +227,17 @@ class ui
 		return "";
 	}
 
-	private static $iframe = false;
-
 	public static function fileupload($controller, $method, $rerender = "", $push = "false") {
 		global $ui;
 		$prefix = "/" . str_replace("\\", "/", dirname(substr( __FILE__, strlen(realpath($_SERVER["DOCUMENT_ROOT"])) + 1)));
+		$name = a4p_sec::randomString(8);
 		echo <<< END
-<form action="$prefix/upload.php" method="post" enctype="multipart/form-data" target="fileupload_iframe">
+<form action="$prefix/upload.php" method="post" enctype="multipart/form-data" target="fileupload_iframe_$name">
 <label for="file">Filename:</label>
 <input type="file" name="file" id="file"><br>
 <input type="submit" name="submit" value="Submit">
 </form>
+<iframe name="fileupload_iframe_$name" style="display: none;" onload="$ui.fileupload({controller: '$controller', method: '$method', rerender: '$rerender', push: $push, frame: this});"></iframe>
 END;
-		if (self::$iframe == false)
-			echo <<< END
-<iframe name="fileupload_iframe" style="display: none;" onload="$ui.fileupload({controller: '$controller', method: '$method', rerender: '$rerender', push: $push, frame: this});"></iframe>
-END;
-		self::$iframe = true;
 	}
 }
