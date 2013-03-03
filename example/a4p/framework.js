@@ -86,11 +86,17 @@ _ajaxCall: function (token, controller, method, param, formname, rerender, push)
 },
 
 ajaxResponse: function (response, target, rerender, event) {
-	if (response.startsWith('@')) {
+	if (response.startsWith('@#')) {
+		if (response.length > 2) {
+			var iframe = document.createElement('iframe');
+			iframe.src = this.prefix + '/download.php?id=' + response.substring(2);
+			iframe.style.display = 'none';
+			document.body.appendChild(iframe);
+		}
+	} else if (response.startsWith('@')) {
 		if (response.length > 1)
 			window.location = response.substring(1);
-	}
-	else
+	} else
 		document.body.innerHTML = response;
 
 	if (typeof rerender == 'string' && rerender.length > 0)

@@ -244,7 +244,7 @@ END;
 	public static function isAjaxCall()
 	{
 		global $ajaxcall;
-		if (isset($ajaxcall) && $ajaxcall === true)
+		if (isset($ajaxcall) && $ajaxcall == true)
 			return true;
 		return false;
 	}
@@ -306,6 +306,8 @@ END;
 			$buffer = self::processBuffer($buffer, $name . ".call({");
 		}
 		$buffer = self::processBuffer($buffer, $ui . ".fileupload({");
+		$buffer = self::processLayout($buffer);
+		$buffer = self::processLanguage($buffer);
 		return self::finalize($buffer);
 	}
 
@@ -332,8 +334,6 @@ END;
 
 	public static function &finalize(&$buffer)
 	{
-		$buffer = self::processLayout($buffer);
-		$buffer = self::processLanguage($buffer);
 		a4p_session::flush();
 		return $buffer;
 	}
@@ -380,6 +380,19 @@ END;
 		$model = $_model;
 		$controller = $_controller;
 		$ui = $_ui;
+	}
+
+	public static function createDownloadFile()
+	{
+		return tempnam(sys_get_temp_dir(), 'a4p');
+	}
+
+	public static function redirectDownload($file, $headers)
+	{
+		$id = a4p_sec::randomString(16);
+		$info = array("filename" => $file, "headers" => $headers);
+		a4p_session::set("a4p.download_" . $id, $info);
+		return "#" . $id;
 	}
 }
 
