@@ -14,6 +14,7 @@ routing::setup(array(
 	"feed1" => "feed1Controller",
 	"datatable1" => "datatable1Controller",
 	"fileupload1" => "fileupload1Controller",
+	"filedownload1" => "filedownload1Controller",
 	"control(1|2)" => "_defaultController",
 	"layout(1|2)" => "_defaultController",
 	"content1" => "content1Controller",
