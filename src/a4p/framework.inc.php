@@ -143,7 +143,12 @@ class a4p
 <link href="$prefix/ui.css" type="text/css" rel="Stylesheet" />
 END;
 
-		$phpself = $_SERVER["REQUEST_URI"];
+		global $routed;
+		if (isset($routed) && $routed == true)
+			$phpself = $_SERVER["REQUEST_URI"];
+		else
+			$phpself = $_SERVER["PHP_SELF"];
+		
 		$phpquery = $_SERVER["QUERY_STRING"];
 
 		global $controller;

@@ -22,6 +22,8 @@ class routing
 		$match = false;
 		foreach ($routes as $route => $classpath) {
 			if (preg_match('/^' . $route . '(\?.*)*$/', $uri)) {
+				global $routed;
+				$routed = true;
 				require "framework.inc.php";
 				global $controller;
 				$controller = a4p::Controller($classpath);
