@@ -42,4 +42,5 @@ foreach ($arr as $id) {
 }
 
 $json = json_encode($contents);
+ob_start("ob_gzhandler");
 echo "@" . $json;
