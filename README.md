@@ -14,6 +14,9 @@ Features
 - RequestScope, ViewScope and SessionScope Model
 - Implicit Navigation
 - Layout Control
+- Routing Support
+- Multi-Language
+- Template
 
 Requirements
 ============
@@ -24,6 +27,11 @@ Requirements
 
 Change Log
 ==========
+
+* 1.2.0 Version 1.2 (8-Mar-2013)
+  - Added Routing
+  - Language support
+  - Template support
 
 * 1.1.0 Version 1.1 (20-Feb-2013)
   - Added Layout Control
