@@ -26,25 +26,10 @@ class a4p_session
 		if (mt_rand(0, 99) != 0)
 			return;
 
-		$session_files = scandir(session_save_path());
-
-		foreach($session_files as $session_file) {
-			if (strncmp($session_file, "sess_", 5) != 0)
-				continue;
-			$pos = strpos($session_file, ".");
-			if ($pos === false) 
-				$sessions[] = $session_file;
-		}
-
-		foreach($session_files as $session_file) {
-			if (strncmp($session_file, "sess_", 5) != 0)
-				continue;
-			$pos = strpos($session_file, ".");
-			if ($pos != false) {
-				$session_name = substr($session_file, 0, $pos);
-				if (!in_array($session_name, $sessions))
-					unlink(session_save_path() . "/" . $session_file);
-			}
+		$yesterday = strtotime(config::$tmp_expire_time);
+		foreach (glob(config::$tmp_path . DIRECTORY_SEPARATOR . "session_*") as $oldfile) {
+			if (filemtime($oldfile) < $yesterday)
+				unlink($oldfile);
 		}
 	}
 
@@ -53,7 +38,7 @@ class a4p_session
 		$session_var = new a4p_session_var();
 		$session_var->value = $value;
 
-		$filename = session_save_path() . DIRECTORY_SEPARATOR . "sess_" . self::$sid . "." . md5($name);
+		$filename = config::$tmp_path . DIRECTORY_SEPARATOR . "session_" . self::$sid . "." . md5($name);
 		$session_var->file = fopen($filename, "w");
 		flock($session_var->file, LOCK_EX);
 
@@ -68,7 +53,7 @@ class a4p_session
 			unset(self::$stack[$name]);
 		}
 
-		$filename = session_save_path() . DIRECTORY_SEPARATOR . "sess_" . self::$sid . "." . md5($name);
+		$filename = config::$tmp_path . DIRECTORY_SEPARATOR . "session_" . self::$sid . "." . md5($name);
 		if (file_exists($filename))
 			unlink($filename);
 	}
@@ -78,7 +63,7 @@ class a4p_session
 		if (isset(self::$stack[$name]))
 			return self::$stack[$name]->value;
 
-		$filename = session_save_path() . DIRECTORY_SEPARATOR . "sess_" . self::$sid . "." . md5($name);
+		$filename = config::$tmp_path . DIRECTORY_SEPARATOR . "session_" . self::$sid . "." . md5($name);
 		if (file_exists($filename)) {
 			$session_var = new a4p_session_var();
 			$session_var->file = fopen($filename, "r+");

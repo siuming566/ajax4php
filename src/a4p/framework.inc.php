@@ -2,6 +2,7 @@
 //
 // framework.inc - A simple PHP AJAX Toolkit
 //
+require_once "config.inc.php";
 require_once "session.inc.php";
 require_once "container.inc.php";
 require_once "form.inc.php";
@@ -14,11 +15,13 @@ require_once "layout.inc.php";
 require_once "template.inc.php";
 require_once "language.inc.php";
 require_once "db.inc.php";
-require_once "config.inc.php";
 require_once "debug.inc.php";
 
 session_cache_limiter("nocache");
 session_start();
+
+if (config::$tmp_path == null)
+	config::$tmp_path = session_save_path();
 
 a4p_session::$sid = session_id();
 a4p_session::init();

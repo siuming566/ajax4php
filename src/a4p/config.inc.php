@@ -14,4 +14,10 @@ class config
 	
 	// turn on/off debug message 
 	public static $debug = true;
+
+	// temp directory for working files, default use session_save_path() if null
+	public static $tmp_path = null;
+
+	// expire time for working files
+	public static $tmp_expire_time = "-1 days";
 }

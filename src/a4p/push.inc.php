@@ -9,13 +9,13 @@ class push
 
 	public static function create($poll_id)
 	{
-		$yesterday = strtotime('-1 days');
-		foreach (glob(session_save_path() . DIRECTORY_SEPARATOR . "push_*") as $oldfile) {
+		$yesterday = strtotime(config::$tmp_expire_time);
+		foreach (glob(config::$tmp_path . DIRECTORY_SEPARATOR . "push_*") as $oldfile) {
 			if (filemtime($oldfile) < $yesterday)
 				unlink($oldfile);
 		}
 
-		self::$polling_filename = session_save_path() . DIRECTORY_SEPARATOR . "push_" . $poll_id;
+		self::$polling_filename = config::$tmp_path . DIRECTORY_SEPARATOR . "push_" . $poll_id;
 		$polling_file = fopen(self::$polling_filename . ".lck", "w");
 		fclose($polling_file);
 		$polling_file = fopen(self::$polling_filename, "w");
@@ -57,7 +57,7 @@ class push
 
 	public static function poll($poll_id, $pos, $feed)
 	{
-		$polling_filename = session_save_path() . DIRECTORY_SEPARATOR . "push_" . $poll_id;
+		$polling_filename = config::$tmp_path . DIRECTORY_SEPARATOR . "push_" . $poll_id;
 		
 		if ($feed != "" && file_exists($polling_filename . ".lck")) {
 			$polling_file = fopen($polling_filename . ".feed", "w");
