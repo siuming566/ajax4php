@@ -37,7 +37,6 @@ class layout_column
 {
 	public $id;
 	public $width;
-	public $nested;
 
 	public function __construct($id, $width) {
 		$this->id = $id;
@@ -49,6 +48,8 @@ class layout_vertical_meta {
 
 	public $table;
 	public $rows;
+	public $cssstyle = "";
+	public $cssclass = "";
 
 	public function __construct($table, $rows) {
 		$this->table = $table;
@@ -64,29 +65,41 @@ class layout_vertical_meta {
 		return $rowid;
 	}
 
-	public function begin($style = "") {
-		if (strlen($style) > 0)
-			$style = "style=\"$style\"";
+	public function cssstyle($cssstyle) {
+		if (strlen($cssstyle) > 0)
+			$this->cssstyle = "style=\"$cssstyle\"";
+		return $this;
+	}
+
+	public function cssclass($cssclass) {
+		if (strlen($cssclass) > 0)
+			$this->cssclass = $cssclass;
+		return $this;
+	}
+
+	public function begin($attr = "") {
 		$id = $this->table->id;
 		$rowid = $this->new_row();
+		$cssstyle = $this->cssstyle;
+		$cssclass = $this->cssclass;
 		print <<< END
 <table class="layouttable" cellspacing="0" cellpadding="0" id="$id">
 <tr class="layoutcell">
-<td class="layoutrow" valign="top" $style><div class="layoutdiv" id="$rowid">
+<td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$rowid">
 END;
 		return $this;
 	}
 
-	public function next($style = "") {
-		if (strlen($style) > 0)
-			$style = "style=\"$style\"";
+	public function next($attr = "") {
 		$rowid = $this->new_row();
+		$cssstyle = $this->cssstyle;
+		$cssclass = $this->cssclass;
 		print <<< END
 	</div>
 </td>
 </tr>
 <tr class="layoutcell">
-<td class="layoutrow" valign="top" $style><div class="layoutdiv" id="$rowid">
+<td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$rowid">
 END;
 		return $this;
 	}
@@ -105,6 +118,8 @@ class layout_horizontal_meta {
 
 	public $table;
 	public $columns;
+	public $cssstyle = "";
+	public $cssclass = "";
 
 	public function __construct($table, $columns) {
 		$this->table = $table;
@@ -120,27 +135,39 @@ class layout_horizontal_meta {
 		return $colid;
 	}
 
-	public function begin($style = "") {
-		if (strlen($style) > 0)
-			$style = "style=\"$style\"";
+	public function cssstyle($cssstyle) {
+		if (strlen($cssstyle) > 0)
+			$this->cssstyle = "style=\"$cssstyle\"";
+		return $this;
+	}
+
+	public function cssclass($cssclass) {
+		if (strlen($cssclass) > 0)
+			$this->cssclass = $cssclass;
+		return $this;
+	}
+
+	public function begin($attr = "") {
 		$id = $this->table->id;
 		$colid = $this->new_column();
+		$cssstyle = $this->cssstyle;
+		$cssclass = $this->cssclass;
 		print <<< END
 <table class="layouttable" cellspacing="0" cellpadding="0" id="$id">
 <tr class="layoutcell">
-<td class="layoutrow" valign="top" $style><div class="layoutdiv" id="$colid">
+<td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$colid">
 END;
 		return $this;
 	}
 
-	public function next($style = "") {
-		if (strlen($style) > 0)
-			$style = "style=\"$style\"";
+	public function next($attr = "") {
 		$colid = $this->new_column();
+		$cssstyle = $this->cssstyle;
+		$cssclass = $this->cssclass;
 		print <<< END
 	</div>
 </td>
-<td class="layoutrow" valign="top" $style><div class="layoutdiv" id="$colid">
+<td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$colid">
 END;
 		return $this;
 	}
