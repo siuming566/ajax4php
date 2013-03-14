@@ -9,16 +9,16 @@ class layout_table
 	public $width;
 	public $height;
 	public $type;
-	public $padding;
+	public $pad_width = 0;
+	public $pad_height = 0;
 	public $rows = array();
 	public $columns = array();
 
-	public function __construct($id, $width, $height, $type, $padding) {
+	public function __construct($id, $width, $height, $type) {
 		$this->id = $id;
 		$this->width = $width;
 		$this->height = $height;
 		$this->type = $type;
-		$this->padding = $padding;
 	}
 }
 
@@ -65,6 +65,12 @@ class layout_vertical_meta {
 		return $rowid;
 	}
 
+	public function padding($width, $height) {
+		$this->table->pad_width = $width;
+		$this->table->pad_height = $height;
+		return $this;
+	}
+
 	public function cssstyle($cssstyle) {
 		if (strlen($cssstyle) > 0)
 			$this->cssstyle = "style=\"$cssstyle\"";
@@ -87,6 +93,8 @@ class layout_vertical_meta {
 <tr class="layoutcell">
 <td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$rowid">
 END;
+		$this->cssstyle = "";
+		$this->cssclass = "";
 		return $this;
 	}
 
@@ -101,6 +109,8 @@ END;
 <tr class="layoutcell">
 <td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$rowid">
 END;
+		$this->cssstyle = "";
+		$this->cssclass = "";
 		return $this;
 	}
 
@@ -135,6 +145,12 @@ class layout_horizontal_meta {
 		return $colid;
 	}
 
+	public function padding($width, $height) {
+		$this->table->pad_width = $width;
+		$this->table->pad_height = $height;
+		return $this;
+	}
+
 	public function cssstyle($cssstyle) {
 		if (strlen($cssstyle) > 0)
 			$this->cssstyle = "style=\"$cssstyle\"";
@@ -157,6 +173,8 @@ class layout_horizontal_meta {
 <tr class="layoutcell">
 <td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$colid">
 END;
+		$this->cssstyle = "";
+		$this->cssclass = "";
 		return $this;
 	}
 
@@ -169,6 +187,8 @@ END;
 </td>
 <td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$colid">
 END;
+		$this->cssstyle = "";
+		$this->cssclass = "";
 		return $this;
 	}
 
@@ -193,20 +213,20 @@ class layout
 		self::$bodymargin = $bodymargin;
 	}
 
-	public static function vertical($width, $height, $rows, $padding = 0)
+	public static function vertical($width, $height, $rows)
 	{
 		$id = "table_" . a4p_sec::randomString(8);
-		$table = new layout_table($id, $width, $height, "vertical", $padding);
+		$table = new layout_table($id, $width, $height, "vertical");
 		self::$layout_info[] = $table;
 
 		$meta = new layout_vertical_meta($table, $rows);
 		return $meta;
 	}
 
-	public static function horizontal($width, $height, $columns, $padding = 0)
+	public static function horizontal($width, $height, $columns)
 	{
 		$id = "table_" . a4p_sec::randomString(8);
-		$table = new layout_table($id, $width, $height, "horizontal", $padding);
+		$table = new layout_table($id, $width, $height, "horizontal");
 		self::$layout_info[] = $table;
 
 		$meta = new layout_horizontal_meta($table, $columns);

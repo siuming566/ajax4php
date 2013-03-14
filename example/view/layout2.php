@@ -6,10 +6,10 @@
 </head>
 <body>
 <?php layout::bodymargin(0); ?>
-<?php $layout1 = layout::vertical("100%", "100%", "100px,*,20%", 3)->cssstyle("border-bottom: 1px solid lightgrey;")->begin(); // pad 3 pixels for borders ?>
+<?php $layout1 = layout::vertical("100%", "100%", "100px,*,20%")->padding(0, 3)->cssstyle("border-bottom: 1px solid lightgrey;")->begin(); // pad 3 pixels for borders ?>
 Header - Fixed 100px
 <?php $layout1->cssstyle("border-bottom: 1px solid lightgrey;")->next(); ?>
-	<?php $layout2 = layout::horizontal("100%", "100%", "150px,*", 1)->cssstyle("border-right: 1px solid lightgrey;")->begin(); // pad 1 pixel for border  ?>
+	<?php $layout2 = layout::horizontal("100%", "100%", "150px,*")->padding(1, 0)->cssstyle("border-right: 1px solid lightgrey;")->begin(); // pad 1 pixel for border  ?>
 	Menu - Fixed 150px
 	<?php $layout2->next(); ?>
 	<?php a4p::loadControl("usercontrol4Controller") ?>

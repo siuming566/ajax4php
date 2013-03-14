@@ -12,17 +12,13 @@ _resizeElement: function(table, width, height) {
 	if (table.height.endsWith('px'))
 		element.style.height = table.height;
 
-	width = parseInt(element.style.width);
-	height = parseInt(element.style.height);
+	width = parseInt(element.style.width) - table.pad_width;
+	height = parseInt(element.style.height) - table.pad_height;
 
-	if (table.type == 'vertical') {
-		height -= table.padding;
+	if (table.type == 'vertical')
 		layout._resizeVertical(table, width, height);
-	}
-	if (table.type == 'horizontal') {
-		width -= table.padding;
+	else if (table.type == 'horizontal')
 		layout._resizeHorizontal(table, width, height);
-	}
 },
 
 _resize: function(table) {
