@@ -160,7 +160,7 @@ class ui
 			$allrow = &$data;
 	
 		$total = count($allrow);
-		$dataTable->totalPage = floor($total / $rowcount) + 1;
+		$dataTable->totalPage = ceil($total / $rowcount);
 		$dataTable->data = self::array_filter($allrow, $dataTable->currentPage, $rowcount, $total);
 		
 		return $dataTable;
