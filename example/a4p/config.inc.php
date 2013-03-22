@@ -7,7 +7,6 @@ class config
 	public static $user = "";
 	public static $pass = "";
 
-
 	// server port settings for SSL
 	public static $http_port = 80;
 	public static $ssl_port = 443;

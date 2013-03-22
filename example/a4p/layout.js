@@ -22,6 +22,10 @@ _resizeElement: function(table, width, height) {
 },
 
 _resize: function(table) {
+	var element = document.getElementById(table.id);
+	if (typeof element == 'undefined' || element == null)
+		return;
+
 	var element = document.getElementById(table.id).parentNode;
 	while (element.nodeName != 'BODY' && !(element.style.width.endsWith('px') && element.style.width.endsWith('px')))
 		element = element.parentNode;
