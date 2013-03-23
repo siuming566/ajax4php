@@ -33,7 +33,10 @@ END;
 	$html = $html4doctype . $html;
 }
 
-$dom = new DOMDocument();
+libxml_use_internal_errors(true);
+
+$html = mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8");
+$dom = new DOMDocument("1.0", "utf-8");
 $dom->preserveWhiteSpace = false;
 $dom->loadHTML($html);
 foreach ($arr as $id) {

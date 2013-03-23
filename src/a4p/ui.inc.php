@@ -141,7 +141,7 @@ class ui
 	
 	public static function resetTable($name)
 	{
-		return getTable($name, true);
+		return self::getTable($name, true);
 	}
 	
 	public static function dataTable($name, &$data, $rowcount, $pager = "")
@@ -162,7 +162,8 @@ class ui
 		$total = count($allrow);
 		$dataTable->totalPage = ceil($total / $rowcount);
 		$dataTable->data = self::array_filter($allrow, $dataTable->currentPage, $rowcount, $total);
-		
+		if ($dataTable->currentPage > ($dataTable->totalPage - 1))
+			$dataTable->currentPage = $dataTable->totalPage - 1;
 		return $dataTable;
 	}
 	
