@@ -90,8 +90,8 @@ class layout_vertical_meta {
 		$cssclass = $this->cssclass;
 		print <<< END
 <table class="layouttable" cellspacing="0" cellpadding="0" id="$id">
-<tr class="layoutcell">
-<td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$rowid">
+<tr class="layoutrow">
+<td class="layoutcell $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$rowid">
 END;
 		$this->cssstyle = "";
 		$this->cssclass = "";
@@ -103,11 +103,9 @@ END;
 		$cssstyle = $this->cssstyle;
 		$cssclass = $this->cssclass;
 		print <<< END
-	</div>
-</td>
-</tr>
-<tr class="layoutcell">
-<td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$rowid">
+</div></td>
+</tr><tr class="layoutrow">
+<td class="layoutcell $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$rowid">
 END;
 		$this->cssstyle = "";
 		$this->cssclass = "";
@@ -170,8 +168,8 @@ class layout_horizontal_meta {
 		$cssclass = $this->cssclass;
 		print <<< END
 <table class="layouttable" cellspacing="0" cellpadding="0" id="$id">
-<tr class="layoutcell">
-<td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$colid">
+<tr class="layoutrow">
+<td class="layoutcell $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$colid">
 END;
 		$this->cssstyle = "";
 		$this->cssclass = "";
@@ -183,9 +181,8 @@ END;
 		$cssstyle = $this->cssstyle;
 		$cssclass = $this->cssclass;
 		print <<< END
-	</div>
-</td>
-<td class="layoutrow $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$colid">
+</div></td>
+<td class="layoutcell $cssclass" valign="top" $cssstyle $attr><div class="layoutdiv" id="$colid">
 END;
 		$this->cssstyle = "";
 		$this->cssclass = "";
