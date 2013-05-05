@@ -1,3 +1,5 @@
+var ui_stack = new Array();
+
 var ui = {
 		
 target: null,
@@ -45,11 +47,15 @@ popup: function (url, width, height, rerender) {
 	});
 	overlay.css('opacity', 0.75);
 
+	ui_stack.push(this);
+	parent_ui = this;
+
 	var self = this;
 	var event = this.newevent();
 	modalControl.click(function () {
 		self.modalHide(overlay, modalWindow, rerender);
 		event._onClose();
+		parent_ui = ui_stack.pop();
 	});
 	
 	this.closePopup = function () { modalControl.click(); };
@@ -150,3 +156,4 @@ fileupload: function(arg) {
 
 };
 
+ui_stack.push(ui);
