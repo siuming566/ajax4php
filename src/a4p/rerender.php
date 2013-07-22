@@ -41,7 +41,7 @@ $dom->preserveWhiteSpace = false;
 $dom->loadHTML($html);
 foreach ($arr as $id) {
 	$tag = $dom->getElementById($id);
-	$contents[$id] = $dom->saveXML($tag);
+	$contents[$id] = str_replace('&#13;', '', $dom->saveXML($tag));
 }
 
 $json = json_encode($contents);
