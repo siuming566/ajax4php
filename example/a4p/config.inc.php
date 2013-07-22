@@ -20,3 +20,5 @@ class config
 	// expire time for working files
 	public static $tmp_expire_time = "-1 days";
 }
+
+ini_set('date.timezone', 'Asia/Hong_Kong');
