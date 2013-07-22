@@ -12,12 +12,12 @@ class plugin
 		self::$plugin_list = array_merge(self::$plugin_list, $list);
 	}
 
-	public static function element($name)
+	public static function element($name, $env)
 	{
 		foreach(self::$plugin_list as $plugin) {
 			$plugin_file = $_SERVER['DOCUMENT_ROOT'] . '/plugin/' . $plugin . '/' . $name . '.php';
 			if (file_exists($plugin_file))
-				include($plugin_file);
+				require $plugin_file;
 		}
 	}
 }
