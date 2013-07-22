@@ -94,8 +94,12 @@ ajaxResponse: function (response, target, rerender, event) {
 			document.body.appendChild(iframe);
 		}
 	} else if (response.startsWith('@')) {
-		if (response.length > 1)
-			window.location = response.substring(1);
+		if (response.length > 1) {
+			if (response.startsWith('@javascript:'))
+				eval(response.substring('@javascript:'.length));
+			else
+				window.location = response.substring(1);
+		}
 	} else
 		document.body.innerHTML = response;
 
@@ -143,7 +147,8 @@ onIdle: function (func) {
 
 setInnerHTML: function (element, html) {
 	jQuery(element).replaceWith(html);
-	layout.resize();
+	if (typeof layout != 'undefined')
+		layout.resize();
 },
 
 ajaxDisplay: function (response, id) {
