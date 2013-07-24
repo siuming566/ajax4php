@@ -230,7 +230,7 @@ END;
 			unset($_SESSION["a4p._auth"]);
 		}
 
-		if ($session_started) {
+		if (!$session_started) {
 			session_write_close();
 			$_SESSION = array();
 		}
