@@ -15,6 +15,10 @@ $ajaxcall = true;
 
 require_once "framework.inc.php";
 require_once "nocache.inc.php";
+require_once "routing.inc.php";
+require_once "plugin.inc.php";
+
+require_once "../plugin/plugin.php";
 
 if ($controller != "ui" && $token != a4p_sec::shiftString(a4p_sec::$map, $method . $controller)) {
 	echo "Bad token";
