@@ -2,6 +2,7 @@
 //
 // routing.inc - Routing
 //
+require_once "common.inc.php";
 
 class routing
 {
@@ -31,14 +32,29 @@ class routing
 		$match = false;
 		foreach (self::$routes as $route => $classpath) {
 			if (preg_match('/^' . $route . '(\?.*)*$/', $uri)) {
-				if (!self::endsWith($classpath, '.php')) {
-					global $routed;
-					$routed = true;
-					require "framework.inc.php";
-					global $controller;
-					$controller = a4p::Controller($classpath);
-					if (method_exists($controller, "pageLoad"))
+				if (!endsWith($classpath, '.php')) {
+					$param = explode("@", $classpath);
+					$classname = $param[0];
+					if (isset($param[1])) {
+						global $ajaxcall;
+						$ajaxcall = true;
+						require "framework.inc.php";
+						global $controller;
+						$controller = a4p::Controller($classname);
+						$method = $param[1];
+						try {
+							echo $controller->$method();
+						} catch (Exception $e) {
+							echo $e->getMessage();
+						}
+					} else {
+						global $routed;
+						$routed = true;
+						require "framework.inc.php";
+						global $controller;
+						$controller = a4p::Controller($classname);
 						$controller->pageLoad();
+					}
 				} else {
 					require $classpath;
 				}
@@ -56,14 +72,5 @@ class routing
 				echo "<h1>Not Found</h1>";
 			}
 		}
-	}
-
-	private static function endsWith($haystack, $needle)
-	{
-		$length = strlen($needle);
-		if ($length == 0)
-			return true;
-
-		return (substr($haystack, -$length) === $needle);
 	}
 }
