@@ -170,20 +170,25 @@ JSONEncode: function (obj) {
 },
 
 phpCall: function (arg) {
+	var formname = typeof arg.formname == 'string' ? arg.formname : 'form1';
+	var element = document.getElementById(formname);
+	if (element == null)
+		formname = document.forms[0].id;
 	if (typeof arg.controller == 'undefined' || arg.controller == '') {
 		arg.controller = this.controller;
 		arg.token += this.token;
 	}
-	return this._phpCall(arg.token, arg.controller, arg.method, arg.param);
+	return this._phpCall(arg.token, arg.controller, arg.method, arg.param, formname);
 },
 
-_phpCall: function (token, controller, method, param) {
+_phpCall: function (token, controller, method, param, formname) {
 	var result = '';
 	if (typeof param == 'undefined')
 		param = '';
 	jQuery.ajax({
 		url: this.prefix + '/ajaxcall.php?controller=' + controller + '&method=' + method + '&param=' + escape(param) + '&token=' + token + '&time=' + (new Date()).getTime() + '&' + this.phpquery,
 		type: 'POST',
+		data: jQuery('#' + formname).serialize(),
 		async: false,
 		success: function (response) {
 			if (response.startsWith('@')) {
