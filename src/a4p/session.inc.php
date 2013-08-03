@@ -8,6 +8,8 @@ class a4p_session_var
 
 class a4p_session
 {
+	public static $global;
+	
 	public static $sid = "";
 
 	private static $stack = array();

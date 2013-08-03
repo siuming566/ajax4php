@@ -2,6 +2,7 @@
 //
 // framework.inc - A simple PHP AJAX Toolkit
 //
+require_once "common.inc.php";
 require_once "config.inc.php";
 require_once "session.inc.php";
 require_once "container.inc.php";
@@ -24,6 +25,7 @@ if (config::$tmp_path == null)
 	config::$tmp_path = session_save_path();
 
 a4p_session::$sid = session_id();
+a4p_session::$global = $_SESSION;
 a4p_session::init();
 
 if (!isset($_SESSION["a4p._map"]))
