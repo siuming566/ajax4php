@@ -53,7 +53,7 @@ ajaxCall: function (arg) {
 	var formname = typeof arg.formname == 'string' ? arg.formname : 'form1';
 	var element = document.getElementById(formname);
 	if (element == null)
-		document.forms[0].id = formname;
+		formname = document.forms[0].id;
 	if (typeof arg.controller == 'undefined' || arg.controller == '') {
 		arg.controller = this.controller;
 		arg.token += this.token;
@@ -75,7 +75,7 @@ _ajaxCall: function (token, controller, method, param, formname, rerender, push)
 	}
 	a4p.busy_func();
 	jQuery.ajax({
-		url: this.prefix + '/ajaxcall.php?controller=' + controller + '&method=' + method + '&param=' + escape(param) + '&token=' + token + '&time=' + (new Date()).getTime() + poll_str + '&' + this.phpquery,
+		url: this.prefix + '/ajaxcall.php?controller=' + controller + '&method=' + method + '&param=' + encodeURIComponent(param) + '&token=' + token + '&time=' + (new Date()).getTime() + poll_str + '&' + this.phpquery,
 		type: 'POST',
 		data: jQuery('#' + formname).serialize(),
 		success: function(response) {
