@@ -30,7 +30,7 @@ setup: function (prefix, phpself, phpquery, controller, token) {
 
 newevent: function () {
 	var type = function() {};
-	type.prototype = _event;
+	type.prototype = a4p_event;
 	var obj = new type;
 	return obj;
 },
@@ -52,8 +52,11 @@ _ajaxPoll: function (poll_id, pos, feed) {
 ajaxCall: function (arg) {
 	var formname = typeof arg.formname == 'string' ? arg.formname : 'form1';
 	var element = document.getElementById(formname);
-	if (element == null)
+	if (element == null && typeof document.forms[0] != 'undefined') {
+		if (document.forms[0].id == '')
+			document.forms[0].id = 'form1';
 		formname = document.forms[0].id;
+	}
 	if (typeof arg.controller == 'undefined' || arg.controller == '') {
 		arg.controller = this.controller;
 		arg.token += this.token;
@@ -172,8 +175,11 @@ JSONEncode: function (obj) {
 phpCall: function (arg) {
 	var formname = typeof arg.formname == 'string' ? arg.formname : 'form1';
 	var element = document.getElementById(formname);
-	if (element == null)
+	if (element == null && typeof document.forms[0] != 'undefined') {
+		if (document.forms[0].id == '')
+			document.forms[0].id = 'form1';
 		formname = document.forms[0].id;
+	}
 	if (typeof arg.controller == 'undefined' || arg.controller == '') {
 		arg.controller = this.controller;
 		arg.token += this.token;
@@ -186,7 +192,7 @@ _phpCall: function (token, controller, method, param, formname) {
 	if (typeof param == 'undefined')
 		param = '';
 	jQuery.ajax({
-		url: this.prefix + '/ajaxcall.php?controller=' + controller + '&method=' + method + '&param=' + escape(param) + '&token=' + token + '&time=' + (new Date()).getTime() + '&' + this.phpquery,
+		url: this.prefix + '/ajaxcall.php?controller=' + controller + '&method=' + method + '&param=' + encodeURIComponent(param) + '&token=' + token + '&time=' + (new Date()).getTime() + '&' + this.phpquery,
 		type: 'POST',
 		data: jQuery('#' + formname).serialize(),
 		async: false,
@@ -229,7 +235,7 @@ get: function (url) {
 
 };
 
-var _event = {
+var a4p_event = {
 
 _onComplete: function () {},
 
