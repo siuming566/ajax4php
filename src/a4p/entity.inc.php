@@ -2,6 +2,8 @@
 
 class Entity
 {
+	public $_new = true;
+
 	public static function findById($id)
 	{
 		return orm::findById(get_called_class(), $id);
@@ -25,5 +27,13 @@ class Entity
 	public function Update()
 	{
 		return orm::update(get_called_class(), $this);
+	}
+
+	public function SaveOrUpdate()
+	{
+		if ($this->_new)
+			Insert();
+		else
+			Update();
 	}
 }

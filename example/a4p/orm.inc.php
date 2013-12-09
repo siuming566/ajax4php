@@ -45,6 +45,7 @@ class orm
 			if (property_exists($obj, $attr))
 				$obj->$attr = $row[$column];
 		}
+		$obj->_new = false;
 		return $obj;
 	}
 
@@ -82,7 +83,9 @@ class orm
 			$query->values($column, ":" . $attr);
 			$binding[":" . $attr] = $value->$attr;
 		}
-		return $value->$entity["primarykey"] = $query->execute($binding);
+		$value->$entity["primarykey"] = $query->execute($binding);
+		$value->_new = false;
+		return $value->$entity["primarykey"];
 	}
 
 	public static function delete($obj, $value)
