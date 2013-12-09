@@ -35,6 +35,8 @@ class <?= canonize($table, true) ?> extends Entity
 {
 <?php
 	foreach ($cols as $col) {
+		if ($col["CONSTRAINT_TYPE"] != null && $col["CONSTRAINT_TYPE"] != "PRIMARY KEY")
+			continue;
 ?>
 	/** <?= $col["CONSTRAINT_TYPE"] == "PRIMARY KEY" ? "@id" : "@column" ?> <?= $col["COLUMN_NAME"] ?> */
 	public $<?= canonize($col["COLUMN_NAME"]) ?>;
