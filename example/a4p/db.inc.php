@@ -7,10 +7,23 @@ class db
 {
 	private static $conn = null;
 
+	private static $connect_string = null;
+	private static $user = null;
+	private static $pass = null;
+
 	public static function getConnection($new_connection = false)
 	{
+		if (self::$connect_string == null)
+			self::$connect_string = config::$connect_string;
+
+		if (self::$user == null)
+			self::$user = config::$user;
+
+		if (self::$pass == null)
+			self::$pass = config::$pass;
+
 		if (self::$conn == null || $new_connection == true) {
-			self::$conn = new PDO(config::$connect_string, config::$user, config::$pass);
+			self::$conn = new PDO(self::$connect_string, self::$user, self::$pass);
 			self::$conn->exec("SET NAMES utf8");
 			self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
@@ -28,9 +41,9 @@ class db
 		return $obj;
 	}
 
-	public static function query()
+	public static function select()
 	{
-		return new db_sqlquery();
+		return new db_sqlquery(func_get_args());
 	}
 
 	public static function insert()
@@ -38,9 +51,9 @@ class db
 		return new db_sqlinsert();
 	}
 
-	public static function update()
+	public static function update($table)
 	{
-		return new db_sqlupdate();
+		return new db_sqlupdate($table);
 	}
 
 	public static function delete()
@@ -67,6 +80,12 @@ class db_sqlquery
 	private $groupby = "";
 	private $orderby = "";
 	private $top = "";
+
+	public function __construct($args) {
+		foreach ($args as $s)
+			$this->select .= ", " . $s;
+		return $this;
+	}
 	
 	public function select() {
 		foreach (func_get_args() as $s)
@@ -131,6 +150,22 @@ class db_sqlquery
 	public function _as($alias) {
 		return "(" . $this->sql() . ") as " . $alias;
 	}
+
+	public function fetchAll($param) {
+		$sql = (string) $this;
+		$conn = db::getConnection();
+		$stmt = $conn->prepare($sql);
+		$stmt->execute($param);
+		return $stmt->fetchAll();
+	}
+
+	public function fetchOneRow($param) {
+		$sql = (string) $this;
+		$conn = db::getConnection();
+		$stmt = $conn->prepare($sql);
+		$stmt->execute($param);
+		return $stmt->fetch();
+	}
 }
 
 class db_sqlinsert
@@ -157,6 +192,14 @@ class db_sqlinsert
 	public function sql() {
 		return (string) $this;
 	}
+
+	public function execute($param) {
+		$sql = (string) $this;
+		$conn = db::getConnection();
+		$stmt = $conn->prepare($sql);
+		$result = $stmt->execute($param);
+		return $stmt->rowCount() == 1 ? $conn->lastInsertId() : null;
+	}
 }
 
 class db_sqlupdate
@@ -165,14 +208,18 @@ class db_sqlupdate
 	private $set = "";
 	private $where = "";
 	
+	public function __construct($table) {
+		$this->table = $table;
+		return $this;
+	}
+	
 	public function update($table) {
 		$this->table = $table;
 		return $this;
 	}
 
-	public function set() {
-		foreach (func_get_args() as $s)
-			$this->set .= ", " . $s;
+	public function set($column, $value) {
+		$this->set .= ", " . $column . " = " . $value;
 		return $this;
 	}
 
@@ -193,6 +240,14 @@ class db_sqlupdate
 
 	public function sql() {
 		return (string) $this;
+	}
+
+	public function execute($param) {
+		$sql = (string) $this;
+		$conn = db::getConnection();
+		$stmt = $conn->prepare($sql);
+		$result = $stmt->execute($param);
+		return $stmt->rowCount();
 	}
 }
 
@@ -224,6 +279,14 @@ class db_sqldelete
 	public function sql() {
 		return (string) $this;
 	}	
+
+	public function execute($param) {
+		$sql = (string) $this;
+		$conn = db::getConnection();
+		$stmt = $conn->prepare($sql);
+		$result = $stmt->execute($param);
+		return $stmt->rowCount();
+	}
 }
 
 class db_sqljoin
@@ -233,8 +296,8 @@ class db_sqljoin
 	private $join = "";
 	private $on = "";
 	
-	public function __contruct($table1 = "") {
-		$this->table1 = table1;
+	public function __construct($table1 = "") {
+		$this->table1 = $table1;
 	}
 	
 	public function table($table1) {

@@ -16,6 +16,8 @@ require_once "layout.inc.php";
 require_once "template.inc.php";
 require_once "language.inc.php";
 require_once "db.inc.php";
+require_once "orm.inc.php";
+require_once "entity.inc.php";
 require_once "debug.inc.php";
 
 session_cache_limiter("nocache");
