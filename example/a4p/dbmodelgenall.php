@@ -17,7 +17,19 @@ function canonize($name, $upper = false) {
 	return $canonize;
 }
 
-$table = strtoupper($_SERVER["QUERY_STRING"]);
+$file = tempnam(session_save_path(), "zip");
+$zip = new ZipArchive();
+$zip->open($file, ZipArchive::OVERWRITE);
+
+$tables = db::select("TABLE_NAME")
+			->from("INFORMATION_SCHEMA.TABLES")
+			->where("TABLE_TYPE = 'BASE TABLE'")
+			->orderby("TABLE_NAME")
+			->fetchAll();
+
+foreach ($tables as $table) {
+
+$table = $table["TABLE_NAME"];
 
 $cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME")
 		->from(
@@ -29,7 +41,10 @@ $cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME")
 		->orderby("c.ORDINAL_POSITION")
 		->fetchAll(array(":table" => $table));
 
-?><pre>&lt;?php
+ob_start();
+echo "<?php";
+?>
+
 
 /** @table <?= $table ?> */
 class <?= canonize($table, true) ?> extends Entity
@@ -46,3 +61,15 @@ class <?= canonize($table, true) ?> extends Entity
 	}
 ?>
 }
+<?php	
+$content = ob_get_clean();
+
+$zip->addFromString(canonize($table, true) . ".class.php", $content);
+}
+
+$zip->close();
+header('Content-Type: application/zip');
+header('Content-Length: ' . filesize($file));
+header('Content-Disposition: attachment; filename="file.zip"');
+readfile($file);
+unlink($file);

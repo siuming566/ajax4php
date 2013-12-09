@@ -26,6 +26,7 @@ $cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME")
 			->leftjoin("INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc")->on("c.TABLE_NAME = tc.TABLE_NAME and cu.CONSTRAINT_NAME = tc.CONSTRAINT_NAME")
 		)
 		->where("c.TABLE_NAME = :table")
+		->orderby("c.ORDINAL_POSITION")
 		->fetchAll(array(":table" => $table));
 
 ?><pre>&lt;?php

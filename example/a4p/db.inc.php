@@ -151,7 +151,7 @@ class db_sqlquery
 		return "(" . $this->sql() . ") as " . $alias;
 	}
 
-	public function fetchAll($param) {
+	public function fetchAll($param = array()) {
 		$sql = (string) $this;
 		$conn = db::getConnection();
 		$stmt = $conn->prepare($sql);
@@ -159,7 +159,7 @@ class db_sqlquery
 		return $stmt->fetchAll();
 	}
 
-	public function fetchOneRow($param) {
+	public function fetchOneRow($param = array()) {
 		$sql = (string) $this;
 		$conn = db::getConnection();
 		$stmt = $conn->prepare($sql);
@@ -193,7 +193,7 @@ class db_sqlinsert
 		return (string) $this;
 	}
 
-	public function execute($param) {
+	public function execute($param = array()) {
 		$sql = (string) $this;
 		$conn = db::getConnection();
 		$stmt = $conn->prepare($sql);
@@ -242,7 +242,7 @@ class db_sqlupdate
 		return (string) $this;
 	}
 
-	public function execute($param) {
+	public function execute($param = array()) {
 		$sql = (string) $this;
 		$conn = db::getConnection();
 		$stmt = $conn->prepare($sql);
@@ -280,7 +280,7 @@ class db_sqldelete
 		return (string) $this;
 	}	
 
-	public function execute($param) {
+	public function execute($param = array()) {
 		$sql = (string) $this;
 		$conn = db::getConnection();
 		$stmt = $conn->prepare($sql);
