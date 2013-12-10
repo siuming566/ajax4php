@@ -91,7 +91,7 @@ class orm
 	public static function findFirst($obj, $filter, $param = array())
 	{
 		$entity = self::getEntity($obj);
-		$rows = db::select("*")
+		$row = db::select("*")
 				->from($entity["table"])
 				->where($filter)
 				->fetchOneRow($param);
