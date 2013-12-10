@@ -312,6 +312,13 @@ class db_sqljoin
 		return $this;
 	}
 
+	public function innerjoin($table2) {
+		$this->table1 = (string) $this;
+		$this->join = " inner join ";
+		$this->table2 = $table2;
+		return $this;
+	}
+
 	public function leftjoin($table2) {
 		$this->table1 = (string) $this;
 		$this->join = " left join ";

@@ -2,6 +2,20 @@
 
 class orm
 {
+	public static function canonize($name, $upper = false) {
+		$canonize = "";
+		$arr = str_split($name);
+		foreach ($arr as $c) {
+			if ($c == "_")
+				$upper = true;
+			else {
+				$canonize .= $upper ? strtoupper($c) : strtolower($c);
+				$upper = false;
+			}
+		}
+		return $canonize;
+	}
+
 	private static function getParam($comment, $word)
 	{
 		$params = array();
@@ -21,9 +35,10 @@ class orm
 
 		$table = self::getParam($comment, "table");
 		
-		$primarykey = "";
+		$primarykey = null;
 
 		$columns = array();
+		$fks = array();
 		$props = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
 		foreach ($props as $prop) {
 			$comment = $prop->getDocComment();
@@ -34,16 +49,31 @@ class orm
 				$column = self::getParam($comment, "column");
 			if ($column != null)
 				$columns[$column] = $prop->getName();
+			$fk = self::getParam($comment, "fk");
+			if ($fk != null)
+				$fks[$fk] = $prop->getName();
 		}
 
-		return array("table" => $table, "primarykey" => $primarykey, "columns" => $columns);
+		return array("table" => $table, "primarykey" => $primarykey, "columns" => $columns, "fks" => $fks);
 	}
 
-	private static function bind($row, $mapping, $obj)
+	private static function bind($row, $entity, $obj)
 	{
-		foreach ($mapping as $column => $attr) {
+		foreach ($entity["columns"] as $column => $attr) {
 			if (property_exists($obj, $attr))
 				$obj->$attr = $row[$column];
+		}
+		foreach ($entity["fks"] as $fk => $attr) {
+			if (property_exists($obj, $attr)) {
+				$loader = new orm_Loader();
+				$loader->obj = $obj;
+				$loader->attr = $attr;
+				$loader->pk_column = self::canonize($entity["primarykey"]);
+				$arr = explode(".", $fk);
+				$loader->fk_table = $arr[0];
+				$loader->fk_column = $arr[1];
+				$obj->$attr = $loader;
+			}
 		}
 		$obj->_new = false;
 		return $obj;
@@ -56,10 +86,10 @@ class orm
 				->from($entity["table"])
 				->where($entity["primarykey"] . " = :id")
 				->fetchOneRow(array(":id" => $id));
-		return self::bind($row, $entity["columns"], new $obj());
+		return self::bind($row, $entity, new $obj());
 	}
 
-	public static function find($obj, $filter, $param = array())
+	public static function findAll($obj, $filter, $param = array())
 	{
 		$entity = self::getEntity($obj);
 		$rows = db::select("*")
@@ -68,8 +98,18 @@ class orm
 				->fetchAll($param);
 		$result = array();
 		foreach ($rows as $row)
-			$result[] = self::bind($row, $entity["columns"], new $obj());
+			$result[] = self::bind($row, $entity, new $obj());
 		return $result;
+	}
+
+	public static function findFirst($obj, $filter, $param = array())
+	{
+		$entity = self::getEntity($obj);
+		$rows = db::select("*")
+				->from($entity["table"])
+				->where($filter)
+				->fetchOneRow($param);
+		return self::bind($row, $entity, new $obj());
 	}
 
 	public static function insert($obj, $value)
@@ -83,7 +123,8 @@ class orm
 			$query->values($column, ":" . $attr);
 			$binding[":" . $attr] = $value->$attr;
 		}
-		$value->$entity["primarykey"] = $query->execute($binding);
+		if ($entity["primarykey"] != null)
+			$value->$entity["primarykey"] = $query->execute($binding);
 		$value->_new = false;
 		return $value->$entity["primarykey"];
 	}
@@ -110,5 +151,22 @@ class orm
 		}
 		$binding[":id"] = $value->$entity["primarykey"];
 		return $query->where($entity["primarykey"] . " = :id")->execute($binding);
+	}
+}
+
+class orm_loader
+{
+	public $obj;
+	public $attr;
+	public $pk_column;
+	public $fk_table;
+	public $fk_column;
+
+	public function load()
+	{
+		$obj = $this->obj;
+		$attr = $this->attr; 
+		$pk_column = $this->pk_column;
+		$obj->$attr = orm::findAll(orm::canonize($this->fk_table, true), $this->fk_column . " = :id", array(":id" => $obj->$pk_column));
 	}
 }

@@ -59,6 +59,23 @@ class <?= canonize($table, true) ?> extends Entity
 
 <?php
 	}
+$fks = db::select("fk.TABLE_NAME", "cu.COLUMN_NAME")
+		->from(
+			db::join("INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS c")
+			->innerjoin("INFORMATION_SCHEMA.TABLE_CONSTRAINTS fk")->on("c.CONSTRAINT_NAME = fk.CONSTRAINT_NAME")
+			->innerjoin("INFORMATION_SCHEMA.TABLE_CONSTRAINTS pk")->on("c.UNIQUE_CONSTRAINT_NAME = pk.CONSTRAINT_NAME")
+			->innerjoin("INFORMATION_SCHEMA.KEY_COLUMN_USAGE cu")->on("c.CONSTRAINT_NAME = cu.CONSTRAINT_NAME")
+		)
+		->where("pk.TABLE_NAME = :table")
+		->fetchAll(array(":table" => $table));
+
+	foreach ($fks as $fk) {
+?>
+	/** @fk <?= $fk["TABLE_NAME"] ?>.<?= $fk["COLUMN_NAME"] ?> */
+	public $<?= canonize($fk["TABLE_NAME"]) ?>;
+
+<?php
+	}
 ?>
 }
 <?php	
@@ -70,6 +87,6 @@ $zip->addFromString(canonize($table, true) . ".class.php", $content);
 $zip->close();
 header('Content-Type: application/zip');
 header('Content-Length: ' . filesize($file));
-header('Content-Disposition: attachment; filename="file.zip"');
+header('Content-Disposition: attachment; filename="dbmodel.zip"');
 readfile($file);
 unlink($file);
