@@ -3,10 +3,8 @@
 // db.inc - Database connection
 //
 
-class db
+class db extends _db
 {
-	private static $conn = null;
-
 	private static $connect_string = null;
 	private static $user = null;
 	private static $pass = null;
@@ -29,7 +27,12 @@ class db
 		}
 		return self::$conn;
 	}
-	
+}
+
+class _db
+{
+	protected static $conn = null;
+
 	public static function map($row, $obj)
 	{
 		foreach ($row as $key => $value)

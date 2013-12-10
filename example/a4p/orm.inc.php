@@ -2,20 +2,6 @@
 
 class orm
 {
-	public static function canonize($name, $upper = false) {
-		$canonize = "";
-		$arr = str_split($name);
-		foreach ($arr as $c) {
-			if ($c == "_")
-				$upper = true;
-			else {
-				$canonize .= $upper ? strtoupper($c) : strtolower($c);
-				$upper = false;
-			}
-		}
-		return $canonize;
-	}
-
 	private static function getParam($comment, $word)
 	{
 		$params = array();
@@ -68,7 +54,7 @@ class orm
 				$loader = new orm_Loader();
 				$loader->obj = $obj;
 				$loader->attr = $attr;
-				$loader->pk_column = self::canonize($entity["primarykey"]);
+				$loader->pk_column = $entity["primarykey"];
 				$arr = explode(".", $fk);
 				$loader->fk_table = $arr[0];
 				$loader->fk_column = $arr[1];
@@ -162,11 +148,25 @@ class orm_loader
 	public $fk_table;
 	public $fk_column;
 
+	private static function canonize($name, $upper = false) {
+		$canonize = "";
+		$arr = str_split($name);
+		foreach ($arr as $c) {
+			if ($c == "_")
+				$upper = true;
+			else {
+				$canonize .= $upper ? strtoupper($c) : strtolower($c);
+				$upper = false;
+			}
+		}
+		return $canonize;
+	}
+
 	public function load()
 	{
 		$obj = $this->obj;
 		$attr = $this->attr; 
-		$pk_column = $this->pk_column;
-		$obj->$attr = orm::findAll(orm::canonize($this->fk_table, true), $this->fk_column . " = :id", array(":id" => $obj->$pk_column));
+		$pk_column = self::canonize($this->pk_column);
+		$obj->$attr = orm::findAll(self::canonize($this->fk_table, true), $this->fk_column . " = :id", array(":id" => $obj->$pk_column));
 	}
 }
