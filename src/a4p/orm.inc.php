@@ -130,12 +130,14 @@ class orm
 		$query = db::update($entity["table"]);
 		$binding = array();
 		foreach ($entity["columns"] as $column => $attr) {
-			if ($column == $entity["primarykey"])
+			if ($column == $entity["primarykey"]) {
+				$pk = $attr;
 				continue;
+			}
 			$query->set($column, ":" . $attr);
 			$binding[":" . $attr] = $value->$attr;
 		}
-		$binding[":id"] = $value->$entity["primarykey"];
+		$binding[":id"] = $value->$pk;
 		return $query->where($entity["primarykey"] . " = :id")->execute($binding);
 	}
 }

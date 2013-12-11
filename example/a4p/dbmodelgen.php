@@ -17,9 +17,26 @@ function canonize($name, $upper = false) {
 	return $canonize;
 }
 
+$defaults = array(
+	'int' => "0",
+	'decimal' => "0",
+	'text' => "''",
+	'varchar' => "''",
+	'datetime' => "date('Y-m-d\\TH:i:s', time())",
+	'numeric' => "0",
+	'tinyint' => "0",
+	'float' => "0",
+	'date' => "date('Y-m-d\\TH:i:s', time())",
+	'char' => "''",
+	'bigint' => "0",
+	'ntext' => "''",
+	'nvarchar' => "''",
+	'bit' => "0"
+);
+
 $table = strtoupper($_SERVER["QUERY_STRING"]);
 
-$cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME")
+$cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME", "c.DATA_TYPE")
 		->from(
 			db::join("INFORMATION_SCHEMA.COLUMNS c")
 			->leftjoin("INFORMATION_SCHEMA.KEY_COLUMN_USAGE cu")->on("c.TABLE_NAME = cu.TABLE_NAME and c.ORDINAL_POSITION = cu.ORDINAL_POSITION")
@@ -63,4 +80,16 @@ $fks = db::select("fk.TABLE_NAME", "cu.COLUMN_NAME")
 <?php
 	}
 ?>
+	public function __construct() {
+		parent::__construct();
+<?php
+	foreach ($cols as $col) {
+		if ($col["CONSTRAINT_TYPE"] != null && $col["CONSTRAINT_TYPE"] != "PRIMARY KEY")
+			continue;
+?>
+		$this-><?= canonize($col["COLUMN_NAME"]) ?> = <?= $defaults[$col["DATA_TYPE"]] ?>;
+<?php
+	}
+?>
+	}
 }

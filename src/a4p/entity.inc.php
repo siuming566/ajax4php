@@ -3,6 +3,10 @@
 class Entity
 {
 	public $_new = true;
+	
+	public function __construct()
+	{
+	}
 
 	public static function findById($id)
 	{
@@ -37,8 +41,8 @@ class Entity
 	public function SaveOrUpdate()
 	{
 		if ($this->_new)
-			Insert();
+			$this->Insert();
 		else
-			Update();
+			$this->Update();
 	}
 }
