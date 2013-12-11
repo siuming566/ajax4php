@@ -73,6 +73,11 @@ class _db
 	{
 		return "'" . str_replace("'", "''", $s) . "'";
 	}
+	
+	public static function datetime($time)
+	{
+		return date('Y-m-d\\TH:i:s', $time);
+	}
 }
 
 class db_sqlquery
