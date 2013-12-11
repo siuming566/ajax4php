@@ -75,7 +75,7 @@ class orm
 		return self::bind($row, $entity, new $obj());
 	}
 
-	public static function findAll($obj, $filter, $param = array())
+	public static function findAll($obj, $filter = "", $param = array())
 	{
 		$entity = self::getEntity($obj);
 		$rows = db::select("*")
@@ -88,7 +88,7 @@ class orm
 		return $result;
 	}
 
-	public static function findFirst($obj, $filter, $param = array())
+	public static function findFirst($obj, $filter = "", $param = array())
 	{
 		$entity = self::getEntity($obj);
 		$row = db::select("*")

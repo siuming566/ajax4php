@@ -9,12 +9,12 @@ class Entity
 		return orm::findById(get_called_class(), $id);
 	}
 
-	public static function findAll($filter, $param = array())
+	public static function findAll($filter = "", $param = array())
 	{
 		return orm::findAll(get_called_class(), $filter, $param);
 	}
 
-	public static function findFirst($filter, $param = array())
+	public static function findFirst($filter = "", $param = array())
 	{
 		return orm::findFirst(get_called_class(), $filter, $param);
 	}
