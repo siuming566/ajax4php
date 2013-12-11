@@ -34,7 +34,31 @@ $defaults = array(
 	'bit' => "0"
 );
 
-$table = strtoupper($_SERVER["QUERY_STRING"]);
+if (!isset($_POST["table"])) {
+
+$tables = db::select("TABLE_NAME")
+			->from("INFORMATION_SCHEMA.TABLES")
+			->where("TABLE_TYPE = 'BASE TABLE'")
+			->orderby("TABLE_NAME")
+			->fetchAll();
+?>
+<html>
+<body>
+	<form method="post">
+		<?php foreach ($tables as $table) { ?>
+			<input type="checkbox" name="table[]" value="<?= $table["TABLE_NAME"] ?>" /><?= $table["TABLE_NAME"] ?><br/>
+		<?php } ?>
+		<input type="submit" />
+	</form>
+</body>
+</html>
+<?php
+
+} else {
+
+$tables = $_POST["table"];
+
+foreach ($tables as $table) {
 
 $cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME", "c.DATA_TYPE")
 		->from(
@@ -46,7 +70,10 @@ $cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME", "c.DATA_TYPE")
 		->orderby("c.ORDINAL_POSITION")
 		->fetchAll(array(":table" => $table));
 
-?><pre>&lt;?php
+ob_start();
+echo "<?php";
+?>
+
 
 /** @table <?= $table ?> */
 class <?= canonize($table, true) ?> extends Entity
@@ -92,4 +119,18 @@ $fks = db::select("fk.TABLE_NAME", "cu.COLUMN_NAME")
 	}
 ?>
 	}
+}
+<?php
+
+$content = ob_get_clean();
+
+$filename = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "entity" . DIRECTORY_SEPARATOR . canonize($table, true) . ".class.php";
+file_put_contents($filename, $content);
+
+echo $filename . "<br/>";
+
+}
+
+echo "Done";
+
 }
