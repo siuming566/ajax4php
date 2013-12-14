@@ -9,6 +9,7 @@ class arr
 	private $from = array();
 	private $where = "";
 	private $orderby = array();
+	private $sort = "";
 
 	public function __construct($select) {
 		$this->select = $select;
@@ -32,6 +33,16 @@ class arr
 	
 	public function orderby() {
 		$this->orderby = func_get_args();
+		return $this;
+	}
+
+	public function sort($sort) {
+		$this->sort = $sort;
+		return $this;
+	}
+
+	public function nosort() {
+		$this->sort = "";
 		return $this;
 	}
 
@@ -60,17 +71,26 @@ class arr
 		if (strlen($this->where) > 5) {
 			$regex = '/{(\w+)}/';
 			$where = preg_replace($regex, '$a->$1', substr($this->where, 5));
+			$where = str_replace('{}', '$a', $where);
 			$condition = create_function('$a', "return $where;");
 			foreach ($this->from as $row) {
-				$obj = (object) $row;
+				$obj = is_array($row) ? (object) $row : $row;
 				if ($condition($obj))
 					$filter[] = $obj;
 			}
-		} else
-			$filter = &$this->from;
+		} else {
+			foreach ($this->from as $obj)
+				$filter[] = $obj;
+		}
 
 		if (count($this->orderby) > 0)
 			usort($filter, array($this, "_cmp"));
+
+		if (strtolower($this->sort) == "asc")
+			sort($filter);
+
+		if (strtolower($this->sort) == "desc")
+			rsort($filter);
 
 		if ($n == -1)
 			$n = count($filter);
