@@ -92,7 +92,6 @@ class db_sqlquery
 	public function __construct($args) {
 		foreach ($args as $s)
 			$this->select .= ", " . $s;
-		return $this;
 	}
 	
 	public function select() {
@@ -218,7 +217,6 @@ class db_sqlupdate
 	
 	public function __construct($table) {
 		$this->table = $table;
-		return $this;
 	}
 	
 	public function update($table) {
