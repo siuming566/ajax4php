@@ -158,7 +158,7 @@ class db_sqlinsert
 	private $values = "";
 	private $db = "";
 	
-	public function __construct($db, $table) {
+	public function __construct($db) {
 		$this->db = $db;
 	}
 
