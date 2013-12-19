@@ -72,7 +72,10 @@ class orm
 				->from($entity["table"])
 				->where($entity["primarykey"] . " = :id")
 				->fetchOneRow(array(":id" => $id));
-		return self::bind($row, $entity, new $obj());
+		if ($row == null)
+			return null;
+		else
+			return self::bind($row, $entity, new $obj());
 	}
 
 	public static function findAll($obj, $filter = "", $param = array())
@@ -95,7 +98,10 @@ class orm
 				->from($entity["table"])
 				->where($filter)
 				->fetchOneRow($param);
-		return self::bind($row, $entity, new $obj());
+		if ($row == null)
+			return null;
+		else
+			return self::bind($row, $entity, new $obj());
 	}
 
 	public static function insert($obj, $value)
@@ -110,9 +116,9 @@ class orm
 			$binding[":" . $attr] = $value->$attr;
 		}
 		if ($entity["primarykey"] != null)
-			$value->$entity["primarykey"] = $query->execute($binding);
+			$value->$entity['columns'][$entity["primarykey"]] = $query->execute($binding);
 		$value->_new = false;
-		return $value->$entity["primarykey"];
+		return $value->$entity['columns'][$entity["primarykey"]];
 	}
 
 	public static function delete($obj, $value)
