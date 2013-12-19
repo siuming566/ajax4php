@@ -20,8 +20,8 @@ class arr
 		return new arr(func_get_args());
 	}
 
-	public function from($from) {
-		$this->from = $from;
+	public function from(&$from) {
+		$this->from = &$from;
 		return $this;
 	}
 
@@ -246,5 +246,19 @@ class arr
 		}
 		else
 			return array_sum($match);
+	}
+
+	public function remove() {
+		if (strlen($this->where) > 5) {
+			$regex = '/{(\w+)}/';
+			$where = preg_replace($regex, '$a->$1', substr($this->where, 5));
+			$where = str_replace('{}', '$a', $where);
+			$condition = create_function('$a', "return $where;");
+			foreach ($this->from as $key => $row) {
+				$obj = is_array($row) ? (object) $row : $row;
+				if ($condition($obj))
+					unset($this->from[$key]);
+			}
+		}
 	}
 }
