@@ -60,7 +60,7 @@ $tables = $_POST["table"];
 
 foreach ($tables as $table) {
 
-$cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME", "c.DATA_TYPE")
+$cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME", "c.DATA_TYPE", "c.IS_NULLABLE")
 		->from(
 			db::join("INFORMATION_SCHEMA.COLUMNS c")
 			->leftjoin("INFORMATION_SCHEMA.KEY_COLUMN_USAGE cu")->on("c.TABLE_NAME = cu.TABLE_NAME and c.ORDINAL_POSITION = cu.ORDINAL_POSITION")
@@ -114,7 +114,7 @@ $fks = db::select("fk.TABLE_NAME", "cu.COLUMN_NAME")
 		if ($col["CONSTRAINT_TYPE"] != null && $col["CONSTRAINT_TYPE"] != "PRIMARY KEY")
 			continue;
 ?>
-		$this-><?= canonize($col["COLUMN_NAME"]) ?> = <?= $defaults[$col["DATA_TYPE"]] ?>;
+		$this-><?= canonize($col["COLUMN_NAME"]) ?> = <?= $col["IS_NULLABLE"] == "NO" ? $defaults[$col["DATA_TYPE"]] : "null" ?>;
 <?php
 	}
 ?>
