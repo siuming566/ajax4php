@@ -6,10 +6,8 @@ class orm
 	{
 		$params = array();
 		foreach (explode("\n", $comment) as $line) {
-			if (preg_match('/\*\s+@(.[^\s]+)\s+(.[^\s]+)/', trim($line), $match)) {
-				if ($match[1] == $word)
-					return $match[2];
-			}
+			if (preg_match('/\*\s+@' . $word . '\s+(.[^\s]+)/', trim($line), $match))
+				return $match[1];
 		}
 		return null;
 	}
@@ -28,16 +26,22 @@ class orm
 		$props = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
 		foreach ($props as $prop) {
 			$comment = $prop->getDocComment();
-			$column = self::getParam($comment, "id");
-			if ($column != null)
-				$primarykey = $column;
-			else
-				$column = self::getParam($comment, "column");
-			if ($column != null)
+			$column = self::getParam($comment, "column");
+			if ($column != null) {
 				$columns[$column] = $prop->getName();
+				continue;
+			}
 			$fk = self::getParam($comment, "fk");
-			if ($fk != null)
+			if ($fk != null) {
 				$fks[$fk] = $prop->getName();
+				continue;
+			}
+			$column = self::getParam($comment, "id");
+			if ($column != null) {
+				$primarykey = $column;
+				$columns[$column] = $prop->getName();
+				continue;
+			}
 		}
 
 		return array("table" => $table, "primarykey" => $primarykey, "columns" => $columns, "fks" => $fks);
@@ -127,7 +131,7 @@ class orm
 		return db::delete()
 		->from($entity["table"])
 		->where($entity["primarykey"] . " = :id")
-		->execute(array(":id" => $value->$entity["primarykey"]));
+		->execute(array(":id" => $value->$entity['columns'][$entity["primarykey"]]));
 	}
 
 	public static function update($obj, $value)
@@ -170,11 +174,11 @@ class orm_loader
 		return $canonize;
 	}
 
-	public function load()
+	public function load($val = null)
 	{
 		$obj = $this->obj;
 		$attr = $this->attr; 
 		$pk_column = self::canonize($this->pk_column);
-		$obj->$attr = orm::findAll(self::canonize($this->fk_table, true), $this->fk_column . " = :id", array(":id" => $obj->$pk_column));
+		$obj->$attr = orm::findAll(self::canonize($this->fk_table, true), $this->fk_column . " = :id", array(":id" => $val == null ? $obj->$pk_column : $val));
 	}
 }

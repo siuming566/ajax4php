@@ -97,6 +97,7 @@ $fks = db::select("fk.TABLE_NAME", "cu.COLUMN_NAME")
 			->innerjoin("INFORMATION_SCHEMA.KEY_COLUMN_USAGE cu")->on("c.CONSTRAINT_NAME = cu.CONSTRAINT_NAME")
 		)
 		->where("pk.TABLE_NAME = :table")
+		->orderby("fk.TABLE_NAME", "cu.COLUMN_NAME")
 		->fetchAll(array(":table" => $table));
 
 	foreach ($fks as $fk) {
@@ -115,6 +116,12 @@ $fks = db::select("fk.TABLE_NAME", "cu.COLUMN_NAME")
 			continue;
 ?>
 		$this-><?= canonize($col["COLUMN_NAME"]) ?> = <?= $col["IS_NULLABLE"] == "NO" ? $defaults[$col["DATA_TYPE"]] : "null" ?>;
+<?php
+	}
+
+	foreach ($fks as $fk) {
+?>
+		$this-><?= canonize($fk["TABLE_NAME"]) ?> = array();
 <?php
 	}
 ?>
