@@ -11,7 +11,11 @@ class arr
 	private $orderby = array();
 	private $groupby = array();
 	private $sort = "";
-
+	private $param = array();
+	private $mode = "select";
+	private $key = "";
+	private $value = "";
+	
 	public function __construct($select) {
 		$this->select = $select;
 	}
@@ -20,15 +24,28 @@ class arr
 		return new arr(func_get_args());
 	}
 
+	public static function assoc($key, $value) {
+		$arr = new arr(array());
+		$arr->set_assoc($key, $value);
+		return $arr;
+	}
+	
 	public function from(&$from) {
 		$this->from = &$from;
+		if ($this->mode == "assoc")
+			return $this->value_pair();
 		return $this;
 	}
 
 	public function where() {
 		foreach (func_get_args() as $s)
 			if (strlen($s) > 0)
-				$this->where .= " and " . $s;
+				$this->where .= " && " . $s;
+		return $this;
+	}
+	
+	public function param(array $param) {
+		$this->param = $param;
 		return $this;
 	}
 	
@@ -80,19 +97,21 @@ class arr
 
 	private function _filter() {
 		$match = array();
-		if (strlen($this->where) > 5) {
+		if (strlen($this->where) > 4) {
 			$regex = '/{(\w+)}/';
-			$where = preg_replace($regex, '$a->$1', substr($this->where, 5));
+			$where = preg_replace($regex, '$a->$1', substr($this->where, 4));
 			$where = str_replace('{}', '$a', $where);
-			$condition = create_function('$a', "return $where;");
+			$condition = create_function('$a,&$param', "return $where;");
 			foreach ($this->from as $row) {
 				$obj = is_array($row) ? (object) $row : $row;
-				if ($condition($obj))
+				if ($condition($obj, $this->param))
 					$match[] = $obj;
 			}
 		} else {
-			foreach ($this->from as $obj)
+			foreach ($this->from as $row) {
+				$obj = is_array($row) ? (object) $row : $row;
 				$match[] = $obj;
+			}
 		}
 		return $match;
 	}
@@ -249,16 +268,33 @@ class arr
 	}
 
 	public function remove() {
-		if (strlen($this->where) > 5) {
+		if (strlen($this->where) > 4) {
 			$regex = '/{(\w+)}/';
-			$where = preg_replace($regex, '$a->$1', substr($this->where, 5));
+			$where = preg_replace($regex, '$a->$1', substr($this->where, 4));
 			$where = str_replace('{}', '$a', $where);
-			$condition = create_function('$a', "return $where;");
+			$condition = create_function('$a,&$param', "return $where;");
 			foreach ($this->from as $key => $row) {
 				$obj = is_array($row) ? (object) $row : $row;
-				if ($condition($obj))
+				if ($condition($obj, $this->param))
 					unset($this->from[$key]);
 			}
 		}
+	}
+	
+	private function set_assoc($key, $value) {
+		$this->key = $key;
+		$this->value = $value;
+		$this->mode = "assoc";
+	}
+	
+	private function value_pair() {
+		$arr = array();
+		$key = $this->key;
+		$value = $this->value;
+		foreach ($this->from as $row) {
+			$obj = is_array($row) ? (object) $row : $row;
+			$arr[$obj->$key] = $obj->$value;
+		}
+		return $arr;
 	}
 }

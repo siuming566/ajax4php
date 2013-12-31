@@ -38,25 +38,31 @@ class routing
 					if (isset($param[1])) {
 						global $ajaxcall;
 						$ajaxcall = true;
-						require "framework.inc.php";
+						require_once "framework.inc.php";
 						global $controller;
-						$controller = a4p::Controller($classname);
+						$controller = a4p::controller($classname);
 						$method = $param[1];
 						try {
-							echo $controller->$method();
+							echo $controller->$method($parts);
+							db::commit();
 						} catch (Exception $e) {
-							echo $e->getMessage();
+							echo $e;
 						}
 					} else {
 						global $routed;
 						$routed = true;
-						require "framework.inc.php";
+						require_once "framework.inc.php";
 						global $controller;
 						$controller = a4p::Controller($classname);
-						$controller->pageLoad();
+						try {
+							$controller->pageLoad($parts);
+							db::commit();
+						} catch (Exception $e) {
+							echo $e;
+						}
 					}
 				} else {
-					require $classpath;
+					require_once $classpath;
 				}
 				$match = true;
 				break;

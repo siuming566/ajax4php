@@ -46,7 +46,7 @@ $tables = db::select("TABLE_NAME")
 <body>
 	<form method="post">
 		<?php foreach ($tables as $table) { ?>
-			<input type="checkbox" name="table[]" value="<?= $table["TABLE_NAME"] ?>" /><?= $table["TABLE_NAME"] ?><br/>
+			<input type="checkbox" name="table[]" value="<?= $table ?>" /><?= $table ?><br/>
 		<?php } ?>
 		<input type="submit" />
 	</form>

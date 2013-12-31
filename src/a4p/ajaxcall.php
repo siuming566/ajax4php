@@ -53,9 +53,11 @@ if (isset($_GET["poll_id"])) {
 }
 
 try {
-    echo "@" . $class->$method($param);
+    $result = $class->$method($param);
+    db::commit();
+    echo "@" . $result;
 } catch (Exception $e) {
-    echo $e->getMessage();
+    echo $e;
 }
 
 if ($polling) {

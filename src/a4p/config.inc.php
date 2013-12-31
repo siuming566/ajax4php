@@ -26,13 +26,4 @@ class db extends _db
 	public static $connect_string = "mysql:host=;dbname=";
 	public static $user = "";
 	public static $pass = "";
-
-	public static function getConnection($new_connection = false)
-	{
-		if (self::$conn == null || $new_connection == true) {
-			self::$conn = new PDO(self::$connect_string, self::$user, self::$pass);
-			self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		}
-		return self::$conn;
-	}
 }

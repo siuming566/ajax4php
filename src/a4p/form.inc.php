@@ -38,4 +38,24 @@ class form
 		
 		return $obj;
 	}
+	
+	public static function optionValue(array $arr, $selected = null)
+	{
+		$str = "";
+		foreach ($arr as $option) {
+			$isSelected = ($option == $selected) ? ' selected="true"' : "";
+			$str .= "<option value=\"$option\"$isSelected>$option</option>\r\n";
+		}
+		return $str;
+	}
+
+	public static function optionValuePair(array $arr, $selected = null)
+	{
+		$str = "";
+		foreach ($arr as $key => $value) {
+			$isSelected = ($key == $selected) ? ' selected="true"' : "";
+			$str .= "<option value=\"$key\"$isSelected>$value</option>\r\n";
+		}
+		return $str;
+	}
 }

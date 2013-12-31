@@ -7,6 +7,15 @@ class _db
 {
 	protected static $conn = null;
 
+	public static function getConnection($new_connection = false)
+	{
+		if (self::$conn == null || $new_connection == true) {
+			self::$conn = new PDO(static::$connect_string, static::$user, static::$pass);
+			self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		}
+		return self::$conn;
+	}
+	
 	public static function map($row, $obj)
 	{
 		foreach ($row as $key => $value)
@@ -43,6 +52,12 @@ class _db
 		return new db_sqljoin($table);
 	}
 
+	public static function execute($sql)
+	{
+		$conn = call_user_func(get_called_class() . "::getConnection");
+		return $conn->exec($sql);
+	}
+	
 	public static function str($s)
 	{
 		return "'" . str_replace("'", "''", $s) . "'";
@@ -50,7 +65,34 @@ class _db
 	
 	public static function datetime($time)
 	{
-		return date('Y-m-d\\TH:i:s', $time);
+		return $time == null ? null : date('Y-m-d\\TH:i:s', $time);
+	}
+	
+	public static function in(array $arr)
+	{
+		return ' (' . implode(',', array_fill(0, count($arr), '?')) . ')';
+	}
+	
+	public function beginTransaction()
+	{
+		$conn = call_user_func(get_called_class() . "::getConnection");
+		if (!$conn->inTransaction())
+			$conn->beginTransaction();
+		return $conn;
+	}
+
+	public static function commit()
+	{
+		$conn = call_user_func(get_called_class() . "::getConnection");
+		if ($conn->inTransaction())
+			$conn->commit();
+	}
+
+	public static function rollback()
+	{
+		$conn = call_user_func(get_called_class() . "::getConnection");
+		if ($conn->inTransaction())
+			$conn->rollback();
 	}
 }
 
@@ -139,7 +181,14 @@ class db_sqlquery
 		$conn = call_user_func($this->db . "::getConnection");
 		$stmt = $conn->prepare($sql);
 		$stmt->execute($param);
-		return $stmt->fetchAll();
+		$result =  $stmt->fetchAll();	
+		if ($result !== false && $stmt->columnCount() == 1) {
+			$arr = array();
+			foreach ($result as $row)
+				$arr[] = $row[0];
+			return $arr;
+		}
+		return $result;
 	}
 
 	public function fetchOneRow($param = array()) {
@@ -147,7 +196,10 @@ class db_sqlquery
 		$conn = call_user_func($this->db . "::getConnection");
 		$stmt = $conn->prepare($sql);
 		$stmt->execute($param);
-		return $stmt->fetch();
+		$result = $stmt->fetch();
+		if ($result !== false && $stmt->columnCount() == 1)
+			return $result[0];
+		return $result;
 	}
 }
 
@@ -183,7 +235,7 @@ class db_sqlinsert
 
 	public function execute($param = array()) {
 		$sql = (string) $this;
-		$conn = call_user_func($this->db . "::getConnection");
+		$conn = call_user_func($this->db . "::beginTransaction");
 		$stmt = $conn->prepare($sql);
 		$result = $stmt->execute($param);
 		return $stmt->rowCount() == 1 ? $conn->lastInsertId() : null;
@@ -233,7 +285,7 @@ class db_sqlupdate
 
 	public function execute($param = array()) {
 		$sql = (string) $this;
-		$conn = call_user_func($this->db . "::getConnection");
+		$conn = call_user_func($this->db . "::beginTransaction");
 		$stmt = $conn->prepare($sql);
 		$result = $stmt->execute($param);
 		return $stmt->rowCount();
@@ -276,7 +328,7 @@ class db_sqldelete
 
 	public function execute($param = array()) {
 		$sql = (string) $this;
-		$conn = call_user_func($this->db . "::getConnection");
+		$conn = call_user_func($this->db . "::beginTransaction");
 		$stmt = $conn->prepare($sql);
 		$result = $stmt->execute($param);
 		return $stmt->rowCount();
