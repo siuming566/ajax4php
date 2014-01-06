@@ -73,7 +73,7 @@ class _db
 		return ' (' . implode(',', array_fill(0, count($arr), '?')) . ')';
 	}
 	
-	public function beginTransaction()
+	public static function beginTransaction()
 	{
 		$conn = call_user_func(get_called_class() . "::getConnection");
 		if (!$conn->inTransaction())
@@ -83,16 +83,14 @@ class _db
 
 	public static function commit()
 	{
-		$conn = call_user_func(get_called_class() . "::getConnection");
-		if ($conn->inTransaction())
-			$conn->commit();
+		if (self::$conn != null && self::$conn->inTransaction())
+			self::$conn->commit();
 	}
 
 	public static function rollback()
 	{
-		$conn = call_user_func(get_called_class() . "::getConnection");
-		if ($conn->inTransaction())
-			$conn->rollback();
+		if (self::$conn != null && self::$conn->inTransaction())
+			self::$conn->rollback();
 	}
 }
 
