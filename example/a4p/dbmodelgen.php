@@ -43,12 +43,16 @@ $tables = db::select("TABLE_NAME")
 			->fetchAll();
 ?>
 <html>
+<head>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+</head>
 <body>
 	<form method="post">
 		<?php foreach ($tables as $table) { ?>
 			<input type="checkbox" name="table[]" value="<?= $table ?>" /><?= $table ?><br/>
 		<?php } ?>
 		<input type="submit" />
+		<input type="button" value="select all" onclick="$('input:checkbox').prop('checked', true);" />
 	</form>
 </body>
 </html>
@@ -131,7 +135,11 @@ $fks = db::select("fk.TABLE_NAME", "cu.COLUMN_NAME")
 
 $content = ob_get_clean();
 
-$filename = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "entity" . DIRECTORY_SEPARATOR . canonize($table, true) . ".class.php";
+$dirname = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "entity";
+if (!file_exists($dirname))
+	mkdir($dirname, 0755, true);
+
+$filename = $dirname . DIRECTORY_SEPARATOR . canonize($table, true) . ".class.php";
 file_put_contents($filename, $content);
 
 echo $filename . "<br/>";
