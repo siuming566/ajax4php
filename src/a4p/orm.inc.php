@@ -21,6 +21,7 @@ class orm
 		
 		$primarykey = null;
 
+		$lengths = array();
 		$columns = array();
 		$fks = array();
 		$props = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
@@ -28,7 +29,13 @@ class orm
 			$comment = $prop->getDocComment();
 			$column = self::getParam($comment, "column");
 			if ($column != null) {
-				$columns[$column] = $prop->getName();
+				$colspec = explode(":", $column);
+				$column_name = $colspec[0];
+				$columns[$column_name] = $prop->getName();
+				if (isset($colspec[1])) {
+					$column_length = $colspec[1];
+					$lengths[$column_name] = $column_length;
+				}
 				continue;
 			}
 			$fk = self::getParam($comment, "fk");
@@ -44,7 +51,7 @@ class orm
 			}
 		}
 
-		return array("table" => $table, "primarykey" => $primarykey, "columns" => $columns, "fks" => $fks);
+		return array("table" => $table, "primarykey" => $primarykey, "columns" => $columns, "fks" => $fks, "lengths" => $lengths);
 	}
 
 	private static function bind($row, $entity, $obj)
@@ -111,13 +118,17 @@ class orm
 	public static function insert($obj, $value)
 	{
 		$entity = self::getEntity($obj);
+		$lengths = $entity["lengths"];
 		$query = db::insert()->into($entity["table"]);
 		$binding = array();
 		foreach ($entity["columns"] as $column => $attr) {
 			if ($column == $entity["primarykey"])
 				continue;
 			$query->values($column, ":" . $attr);
-			$binding[":" . $attr] = $value->$attr;
+			if (isset($lengths[$column]) && db::$autoTrim == true)
+				$binding[":" . $attr] = substr($value->$attr, 0, $lengths[$column]);
+			else
+				$binding[":" . $attr] = $value->$attr;
 		}
 		if ($entity["primarykey"] != null)
 			$value->$entity['columns'][$entity["primarykey"]] = $query->execute($binding);
@@ -137,6 +148,7 @@ class orm
 	public static function update($obj, $value)
 	{
 		$entity = self::getEntity($obj);
+		$lengths = $entity["lengths"];
 		$query = db::update($entity["table"]);
 		$binding = array();
 		foreach ($entity["columns"] as $column => $attr) {
@@ -145,7 +157,10 @@ class orm
 				continue;
 			}
 			$query->set($column, ":" . $attr);
-			$binding[":" . $attr] = $value->$attr;
+			if (isset($lengths[$column]) && db::$autoTrim == true)
+				$binding[":" . $attr] = substr($value->$attr, 0, $lengths[$column]);
+			else
+				$binding[":" . $attr] = $value->$attr;
 		}
 		$binding[":id"] = $value->$pk;
 		return $query->where($entity["primarykey"] . " = :id")->execute($binding);
@@ -180,5 +195,6 @@ class orm_loader
 		$attr = $this->attr; 
 		$pk_column = self::canonize($this->pk_column);
 		$obj->$attr = orm::findAll(self::canonize($this->fk_table, true), $this->fk_column . " = :id", array(":id" => $val == null ? $obj->$pk_column : $val));
+		return $obj->$attr;
 	}
 }

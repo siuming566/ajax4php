@@ -6,6 +6,8 @@
 class _db
 {
 	protected static $conn = null;
+	
+	public static $autoTrim = false;
 
 	public static function getConnection($new_connection = false)
 	{

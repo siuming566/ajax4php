@@ -64,7 +64,7 @@ $tables = $_POST["table"];
 
 foreach ($tables as $table) {
 
-$cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME", "c.DATA_TYPE", "c.IS_NULLABLE")
+$cols = db::select("tc.CONSTRAINT_TYPE", "c.COLUMN_NAME", "c.DATA_TYPE", "c.IS_NULLABLE", "c.CHARACTER_MAXIMUM_LENGTH")
 		->from(
 			db::join("INFORMATION_SCHEMA.COLUMNS c")
 			->leftjoin("INFORMATION_SCHEMA.KEY_COLUMN_USAGE cu")->on("c.TABLE_NAME = cu.TABLE_NAME and c.ORDINAL_POSITION = cu.ORDINAL_POSITION")
@@ -87,7 +87,7 @@ class <?= canonize($table, true) ?> extends Entity
 		if ($col["CONSTRAINT_TYPE"] != null && $col["CONSTRAINT_TYPE"] != "PRIMARY KEY")
 			continue;
 ?>
-	/** <?= $col["CONSTRAINT_TYPE"] == "PRIMARY KEY" ? "@id" : "@column" ?> <?= $col["COLUMN_NAME"] ?> */
+	/** <?= $col["CONSTRAINT_TYPE"] == "PRIMARY KEY" ? "@id" : "@column" ?> <?= $col["COLUMN_NAME"] ?><?= $col["CHARACTER_MAXIMUM_LENGTH"] != null && $col["CHARACTER_MAXIMUM_LENGTH"] > 0 && $col["CHARACTER_MAXIMUM_LENGTH"] < 10000 ? ":" . $col["CHARACTER_MAXIMUM_LENGTH"] : "" ?> */
 	public $<?= canonize($col["COLUMN_NAME"]) ?>;
 
 <?php
