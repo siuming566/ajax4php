@@ -97,10 +97,11 @@ $fks = db::select("fk.TABLE_NAME", "cu.COLUMN_NAME")
 		->from(
 			db::join("INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS c")
 			->innerjoin("INFORMATION_SCHEMA.TABLE_CONSTRAINTS fk")->on("c.CONSTRAINT_NAME = fk.CONSTRAINT_NAME")
-			->innerjoin("INFORMATION_SCHEMA.TABLE_CONSTRAINTS pk")->on("c.UNIQUE_CONSTRAINT_NAME = pk.CONSTRAINT_NAME")
+			//->innerjoin("INFORMATION_SCHEMA.TABLE_CONSTRAINTS pk")->on("c.UNIQUE_CONSTRAINT_NAME = pk.CONSTRAINT_NAME")
 			->innerjoin("INFORMATION_SCHEMA.KEY_COLUMN_USAGE cu")->on("c.CONSTRAINT_NAME = cu.CONSTRAINT_NAME")
 		)
-		->where("pk.TABLE_NAME = :table")
+		//->where("pk.TABLE_NAME = :table")
+		->where("cu.REFERENCED_TABLE_NAME = :table")
 		->orderby("fk.TABLE_NAME", "cu.COLUMN_NAME")
 		->fetchAll(array(":table" => $table));
 

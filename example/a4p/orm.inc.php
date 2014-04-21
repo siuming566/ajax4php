@@ -125,7 +125,7 @@ class orm
 			if ($column == $entity["primarykey"])
 				continue;
 			$query->values($column, ":" . $attr);
-			if (isset($lengths[$column]) && db::$autoTrim == true)
+			if (isset($lengths[$column]) && db::$autoTrim == true && $value->$attr != null)
 				$binding[":" . $attr] = substr($value->$attr, 0, $lengths[$column]);
 			else
 				$binding[":" . $attr] = $value->$attr;
@@ -157,7 +157,7 @@ class orm
 				continue;
 			}
 			$query->set($column, ":" . $attr);
-			if (isset($lengths[$column]) && db::$autoTrim == true)
+			if (isset($lengths[$column]) && db::$autoTrim == true && $value->$attr != null)
 				$binding[":" . $attr] = substr($value->$attr, 0, $lengths[$column]);
 			else
 				$binding[":" . $attr] = $value->$attr;
